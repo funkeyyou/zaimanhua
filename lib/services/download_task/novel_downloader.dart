@@ -124,7 +124,9 @@ class NovelDownloader {
       if (e is DioException) {
         if (e.type == DioExceptionType.cancel) rethrow;
         if (status == DownloadStatus.waitNetwork ||
-            status == DownloadStatus.pauseCellular) rethrow;
+            status == DownloadStatus.pauseCellular) {
+          rethrow;
+        }
         if (retryTime < 3) {
           retryTime++;
           await Future.delayed(const Duration(seconds: 1));
@@ -166,7 +168,9 @@ class NovelDownloader {
       if (e is DioException) {
         if (e.type == DioExceptionType.cancel) rethrow;
         if (status == DownloadStatus.waitNetwork ||
-            status == DownloadStatus.pauseCellular) rethrow;
+            status == DownloadStatus.pauseCellular) {
+          rethrow;
+        }
         if (retryTime < 3) {
           retryTime++;
           await Future.delayed(const Duration(seconds: 1));
