@@ -26,7 +26,7 @@ class NovelLatestView extends StatelessWidget {
         separatorBuilder: (context, i) => Divider(
           endIndent: 12,
           indent: 12,
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           height: 1,
         ),
         itemBuilder: (context, i) {

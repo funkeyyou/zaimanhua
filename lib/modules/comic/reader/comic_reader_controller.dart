@@ -301,7 +301,7 @@ class ComicReaderController extends BaseController {
             ),
             Divider(
               height: 1.0,
-              color: Colors.grey.withOpacity(.2),
+              color: Colors.grey.withValues(alpha: .2),
             ),
             Expanded(
               child: ScrollablePositionedList.separated(
@@ -311,7 +311,7 @@ class ComicReaderController extends BaseController {
                   indent: 12,
                   endIndent: 12,
                   height: 1.0,
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.grey.withValues(alpha: .2),
                 ),
                 itemBuilder: (_, i) {
                   var item = chapters[i];
@@ -428,7 +428,7 @@ class ComicReaderController extends BaseController {
             ),
             Divider(
               height: 1.0,
-              color: Colors.grey.withOpacity(.2),
+              color: Colors.grey.withValues(alpha: .2),
             ),
             Expanded(
               child: EasyRefresh(
@@ -476,7 +476,7 @@ class ComicReaderController extends BaseController {
                             indent: 12,
                             endIndent: 12,
                             height: 1.0,
-                            color: Colors.grey.withOpacity(.2),
+                            color: Colors.grey.withValues(alpha: .2),
                           ),
                           itemBuilder: (_, i) {
                             var item = viewPoints[i];

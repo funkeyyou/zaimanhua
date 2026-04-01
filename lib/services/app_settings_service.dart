@@ -75,32 +75,28 @@ class AppSettingsService extends GetxController {
       SimpleDialog(
         title: const Text("设置主题"),
         children: [
-          RadioListTile<int>(
-            title: const Text("跟随系统"),
-            value: 0,
+          RadioGroup<int>(
             groupValue: themeMode.value,
             onChanged: (e) {
               Get.back();
               setTheme(e ?? 0);
             },
-          ),
-          RadioListTile<int>(
-            title: const Text("浅色模式"),
-            value: 1,
-            groupValue: themeMode.value,
-            onChanged: (e) {
-              Get.back();
-              setTheme(e ?? 1);
-            },
-          ),
-          RadioListTile<int>(
-            title: const Text("深色模式"),
-            value: 2,
-            groupValue: themeMode.value,
-            onChanged: (e) {
-              Get.back();
-              setTheme(e ?? 2);
-            },
+            child: const Column(
+              children: [
+                RadioListTile<int>(
+                  title: Text("跟随系统"),
+                  value: 0,
+                ),
+                RadioListTile<int>(
+                  title: Text("浅色模式"),
+                  value: 1,
+                ),
+                RadioListTile<int>(
+                  title: Text("深色模式"),
+                  value: 2,
+                ),
+              ],
+            ),
           ),
         ],
       ),

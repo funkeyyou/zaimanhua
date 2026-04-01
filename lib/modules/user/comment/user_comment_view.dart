@@ -36,7 +36,7 @@ class UserCommentView extends StatelessWidget {
         separatorBuilder: (context, i) => Divider(
           endIndent: 12,
           indent: 12,
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           height: 1,
         ),
         itemBuilder: (context, i) {
@@ -70,7 +70,7 @@ class UserCommentView extends StatelessWidget {
                       Container(
                         padding: AppStyle.edgeInsetsA8,
                         decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(.1),
+                          color: Colors.grey.withValues(alpha: .1),
                           borderRadius: AppStyle.radius4,
                         ),
                         child: Column(
@@ -82,7 +82,7 @@ class UserCommentView extends StatelessWidget {
                               visible: item.mastercomment != null,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(.1),
+                                  color: Colors.grey.withValues(alpha: .1),
                                   borderRadius: AppStyle.radius4,
                                 ),
                                 padding: AppStyle.edgeInsetsA4,

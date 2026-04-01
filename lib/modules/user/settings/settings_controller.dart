@@ -57,19 +57,25 @@ class SettingsController extends GetxController {
     Get.dialog(
       SimpleDialog(
         title: const Text("漫画最大任务数"),
-        children: [0, 1, 2, 3, 4, 5]
-            .map(
-              (e) => RadioListTile<int>(
-                title: Text(e == 0 ? "无限制" : "$e个"),
-                value: e,
-                groupValue: settings.downloadComicTaskCount.value,
-                onChanged: (e) {
-                  Get.back();
-                  settings.setDownloadComicTaskCount(e ?? 0);
-                },
-              ),
-            )
-            .toList(),
+        children: [
+          RadioGroup<int>(
+            groupValue: settings.downloadComicTaskCount.value,
+            onChanged: (e) {
+              Get.back();
+              settings.setDownloadComicTaskCount(e ?? 0);
+            },
+            child: Column(
+              children: [0, 1, 2, 3, 4, 5]
+                  .map(
+                    (e) => RadioListTile<int>(
+                      title: Text(e == 0 ? "无限制" : "$e个"),
+                      value: e,
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -78,19 +84,25 @@ class SettingsController extends GetxController {
     Get.dialog(
       SimpleDialog(
         title: const Text("小说最大任务数"),
-        children: [0, 1, 2, 3, 4, 5]
-            .map(
-              (e) => RadioListTile<int>(
-                title: Text(e == 0 ? "无限制" : "$e个"),
-                value: e,
-                groupValue: settings.downloadNovelTaskCount.value,
-                onChanged: (e) {
-                  Get.back();
-                  settings.setDownloadNovelTaskCount(e ?? 0);
-                },
-              ),
-            )
-            .toList(),
+        children: [
+          RadioGroup<int>(
+            groupValue: settings.downloadNovelTaskCount.value,
+            onChanged: (e) {
+              Get.back();
+              settings.setDownloadNovelTaskCount(e ?? 0);
+            },
+            child: Column(
+              children: [0, 1, 2, 3, 4, 5]
+                  .map(
+                    (e) => RadioListTile<int>(
+                      title: Text(e == 0 ? "无限制" : "$e个"),
+                      value: e,
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ],
       ),
     );
   }

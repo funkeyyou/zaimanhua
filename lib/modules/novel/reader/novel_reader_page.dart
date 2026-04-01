@@ -536,7 +536,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                           style: TextStyle(
                             fontSize: 12,
                             height: 1.0,
-                            color: color.withOpacity(.6),
+                            color: color.withValues(alpha: .6),
                           ),
                         )
                       : Text(
@@ -544,7 +544,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                           style: TextStyle(
                             fontSize: 12,
                             height: 1.0,
-                            color: color.withOpacity(.6),
+                            color: color.withValues(alpha: .6),
                           ),
                         ),
                 ],
@@ -595,12 +595,12 @@ class NovelReaderPage extends GetView<NovelReaderController> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon, size: 12, color: color.withOpacity(.6)),
+        Icon(icon, size: 12, color: color.withValues(alpha: .6)),
         AppStyle.hGap4,
         Text(
           name,
           style: TextStyle(
-              fontSize: 12, height: 1.0, color: color.withOpacity(.6)),
+              fontSize: 12, height: 1.0, color: color.withValues(alpha: .6)),
         ),
         AppStyle.hGap8,
       ],
@@ -633,11 +633,11 @@ class NovelReaderPage extends GetView<NovelReaderController> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          //Icon(icon, size: 12, color: color.withOpacity(.6)),
+          //Icon(icon, size: 12, color: color.withValues(alpha: .6)),
           Text(
             "电量 $battery%",
             style: TextStyle(
-                fontSize: 12, height: 1.0, color: color.withOpacity(.6)),
+                fontSize: 12, height: 1.0, color: color.withValues(alpha: .6)),
           ),
           AppStyle.hGap8,
         ],

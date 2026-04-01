@@ -44,7 +44,7 @@ class UserHomeController extends GetxController {
       applicationIcon: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.grey.withOpacity(.2),
+            color: Colors.grey.withValues(alpha: .2),
           ),
           borderRadius: AppStyle.radius12,
         ),

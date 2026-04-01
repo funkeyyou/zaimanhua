@@ -25,7 +25,7 @@ class ShadowCard extends StatelessWidget {
             : [
                 BoxShadow(
                   blurRadius: 4,
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.grey.withValues(alpha: .2),
                 )
               ],
       ),

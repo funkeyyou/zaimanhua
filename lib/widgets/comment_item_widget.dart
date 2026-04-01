@@ -162,7 +162,7 @@ class CommentItemWidget extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(4)),
           padding: AppStyle.edgeInsetsA8,
           child: Center(
@@ -206,7 +206,7 @@ class CommentItemWidget extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(4)),
           padding: AppStyle.edgeInsetsA8,
           child: Column(

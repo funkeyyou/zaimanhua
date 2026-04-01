@@ -77,7 +77,7 @@ class ComicDetailPage extends StatelessWidget {
                               },
                             ),
                             Divider(
-                              color: Colors.grey.withOpacity(.2),
+                              color: Colors.grey.withValues(alpha: .2),
                               height: 1.0,
                             ),
                           ],
@@ -310,7 +310,7 @@ class ComicDetailPage extends StatelessWidget {
         ),
         AppStyle.vGap12,
         Divider(
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           height: 1.0,
         ),
       ],

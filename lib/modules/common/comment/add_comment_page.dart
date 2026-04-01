@@ -33,7 +33,7 @@ class AddCommentPage extends StatelessWidget {
             visible: replyItem != null,
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(.2),
+                color: Colors.grey.withValues(alpha: .2),
                 borderRadius: AppStyle.radius4,
               ),
               margin: AppStyle.edgeInsetsB12,
