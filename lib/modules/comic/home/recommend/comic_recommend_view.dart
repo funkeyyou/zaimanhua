@@ -28,18 +28,9 @@ class ComicRecommendView extends StatelessWidget {
         itemBuilder: (context, i) {
           var item = controller.list[i];
           //大图推荐
-          if (item.categoryId == 109) {
+          if (item.categoryId == 95) {
             return buildBanner(item);
           }
-          //随便看看
-          // if (item.categoryId == 50) {
-          //   return buildCard(
-          //     context,
-          //     child: buildTreeColumnGridView(item.data),
-          //     title: item.title.toString(),
-          //     action: buildRefresh(onRefresh: controller.loadRandom),
-          //   );
-          // }
           //我的订阅
           if (item.categoryId == 49) {
             return buildCard(
@@ -50,19 +41,19 @@ class ComicRecommendView extends StatelessWidget {
             );
           }
           //近期必看\国漫\热门连载\最新上架
-          if (item.categoryId == 110 ||
-              item.categoryId == 111 ||
-              item.categoryId == 112 ||
+          if (item.categoryId == 47 ||
+              item.categoryId == 52 ||
+              item.categoryId == 54 ||
               item.categoryId == 56) {
             Widget? action;
             //刷新国漫
-            if (item.categoryId == 110) {
+            if (item.categoryId == 47) {
               action = buildRefresh(onRefresh: controller.refreshRecommend);
             }
-            if (item.categoryId == 111) {
+            if (item.categoryId == 52) {
               action = buildRefresh(onRefresh: controller.refreshGuoman);
             }
-            if (item.categoryId == 112) {
+            if (item.categoryId == 54) {
               action = buildRefresh(onRefresh: controller.refreshHot);
             }
             return buildCard(
@@ -72,7 +63,12 @@ class ComicRecommendView extends StatelessWidget {
               action: action,
             );
           }
-          //火热专题\美漫大事件\条漫
+
+          if (item.categoryId == 45) {
+            return const SizedBox.shrink();
+          }
+
+           //火热专题\美漫大事件\条漫
           if (item.categoryId == 48 ||
               item.categoryId == 53 ||
               item.categoryId == 55) {

@@ -31,44 +31,17 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   Future<List<ComicRecommendModel>> getData(int page, int pageSize) async {
     var ls = await request.recommend();
 
-    // ls.insert(
-    //   ls.length > 3 ? 2 : 1,
-    //   ComicRecommendModel(
-    //     categoryId: 50,
-    //     title: "随便看看",
-    //     sort: 6,
-    //     data: [],
-    //   ),
-    // );
-    //loadRandom();
     if (UserService.instance.logined.value) {
       loadSubscribe();
     }
     return ls;
   }
 
-  // /// 加载随机漫画
-  // Future<void> loadRandom() async {
-  //   try {
-  //     var result = await request.refreshRecommend(50);
-  //     var index = list.indexWhere((x) => x.categoryId == 50);
-  //     if (index != -1) {
-  //       list[index].data  = result;
-  //     } else {
-  //       list.insert(
-  //         list.length > 3 ? 2 : 1,
-  //         result,
-  //       );
-  //     }
-  //   } catch (e) {
-  //     Log.logPrint(e);
-  //   }
-  // }
 
   /// 刷新国漫
   Future<void> refreshGuoman() async {
     try {
-      var index = list.indexWhere((x) => x.categoryId == 111);
+      var index = list.indexWhere((x) => x.categoryId == 52);
       var result =
           await request.refreshRecommend(111, size: 6, page: list[index].page);
 
@@ -85,7 +58,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   /// 刷新近期必看
   Future<void> refreshRecommend() async {
     try {
-      var index = list.indexWhere((x) => x.categoryId == 110);
+      var index = list.indexWhere((x) => x.categoryId == 47);
 
       var result = await request.refreshRecommend(110, page: list[index].page);
 
@@ -117,7 +90,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   /// 刷新热门连载
   Future<void> refreshHot() async {
     try {
-      var index = list.indexWhere((x) => x.categoryId == 112);
+      var index = list.indexWhere((x) => x.categoryId == 54);
       var result =
           await request.refreshRecommend(112, page: list[index].page, size: 6);
 

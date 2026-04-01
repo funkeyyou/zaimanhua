@@ -101,8 +101,6 @@ class ComicRequest {
     for (var item in result["cateList"]) {
       list.add(ComicCategoryItemModel.fromJson(item));
     }
-    // 百合赛高
-    list.add(ComicCategoryItemModel(tagId: 3243, title: "ゆり", cover: ""));
     return list;
   }
 
