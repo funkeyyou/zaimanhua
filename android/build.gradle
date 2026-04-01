@@ -6,11 +6,45 @@ allprojects {
 }
 
 rootProject.buildDir = '../build'
-subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+subprojects { subproject ->
+    // Avoid cross-drive path issues on Windows for plugins from Pub cache.
+    if (subproject.projectDir.toPath().startsWith(rootProject.projectDir.toPath())) {
+        subproject.buildDir = "${rootProject.buildDir}/${subproject.name}"
+    }
 }
 subprojects {
     project.evaluationDependsOn(':app')
+}
+
+subprojects { subproject ->
+    def applyNamespaceFallback = {
+        def androidExt = subproject.extensions.findByName("android")
+        if (androidExt == null || !androidExt.hasProperty("namespace")) {
+            return
+        }
+        def currentNamespace = androidExt.namespace
+        if (currentNamespace != null && currentNamespace.toString().trim()) {
+            return
+        }
+
+        def manifestFile = subproject.file("src/main/AndroidManifest.xml")
+        if (!manifestFile.exists()) {
+            return
+        }
+        def manifestText = manifestFile.getText("UTF-8")
+        def packageMatcher = manifestText =~ /\bpackage\s*=\s*"([^"]+)"/
+        def manifestPackage = packageMatcher.find() ? packageMatcher.group(1) : null
+        if (manifestPackage != null && manifestPackage.trim()) {
+            androidExt.namespace = manifestPackage.trim()
+        }
+    }
+
+    subproject.plugins.withId("com.android.library") {
+        applyNamespaceFallback()
+    }
+    subproject.plugins.withId("com.android.application") {
+        applyNamespaceFallback()
+    }
 }
 
 tasks.register("clean", Delete) {

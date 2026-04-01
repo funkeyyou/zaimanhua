@@ -3,7 +3,7 @@ version: 1.0.3+10003
 publish_to: none
 description: "ZAI-X"
 environment: 
-  sdk: '>=2.17.3 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies: 
   #图标ICON
@@ -42,7 +42,7 @@ dependencies:
   url_launcher: ^6.2.4 #打开链接
   webview_flutter: ^4.7.0 #WebView
   package_info_plus: ^5.0.1 #包信息
-  flutter_widget_from_html_core: ^0.14.11 #HTML转Widget
+  flutter_widget_from_html_core: ^0.17.0 #HTML转Widget
   share_plus: ^7.2.2 #分享
   permission_handler: ^11.3.0 #权限检查
   path_provider: ^2.1.2 #常用目录
