@@ -167,6 +167,7 @@ class ComicRequest {
         'rank_type': rankType,
         'page': page
       },
+      needLogin: true // 登录可以更多内容
     );
     var list = <ComicRankListItemModel>[];
     for (var item in result["data"]) {

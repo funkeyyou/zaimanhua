@@ -39,6 +39,7 @@ class UserService extends GetxService {
   String get dmzjToken => userAuthInfo?.token ?? '';
   String get userId => userAuthInfo?.uid.toString() ?? '';
   String get nickname => userAuthInfo?.nickname ?? '';
+  String get photo => userAuthInfo?.photo ?? '';
 
   bool get isVip => (userProfile.value?.userfeeinfo?.isVip ?? false);
 

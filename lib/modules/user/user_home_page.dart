@@ -42,7 +42,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     visible: UserService.instance.logined.value,
                     child: ListTile(
                       leading: UserPhoto(
-                        url: UserService.instance.userProfile.value?.cover,
+                        url: UserService.instance.photo,
                         size: 48,
                       ),
                       title: Text.rich(
