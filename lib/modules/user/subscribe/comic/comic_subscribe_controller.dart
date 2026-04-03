@@ -26,9 +26,8 @@ class ComicSubscribeController
 
   Map<int, String> types = {
     1: "全部订阅",
-    2: "未读",
-    3: "已读",
-    4: "完结",
+    2: "连载中",
+    3: "已完结",
   };
   var type = 1.obs;
 

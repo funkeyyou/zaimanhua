@@ -217,26 +217,26 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                                     icon: const Icon(Remix.skip_back_line),
                                   ),
                                 ),
-                                // Obx(
-                                //   () => Visibility(
-                                //     visible: controller.settings
-                                //         .comicReaderShowViewPoint.value,
-                                //     child: Expanded(
-                                //       child: IconButton(
-                                //         onPressed: controller.showComment,
-                                //         icon: Badge(
-                                //           label: Text(
-                                //             "${controller.viewPoints.length}",
-                                //             style: const TextStyle(
-                                //                 color: Colors.white),
-                                //           ),
-                                //           child: const Icon(
-                                //               Remix.chat_smile_2_line),
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ),
-                                //),
+                                Obx(
+                                  () => Visibility(
+                                    visible: controller.settings
+                                        .comicReaderShowViewPoint.value,
+                                    child: Expanded(
+                                      child: IconButton(
+                                        onPressed: controller.showComment,
+                                        icon: Badge(
+                                          label: Text(
+                                            "${controller.viewPoints.length}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                          child: const Icon(
+                                              Remix.chat_smile_2_line),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 Expanded(
                                   child: IconButton(
                                     onPressed: controller.showMenu,
@@ -460,7 +460,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       onPressed: () {
-                        controller.likeViewPoint(e);
+                        // controller.likeViewPoint(e);
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -471,19 +471,19 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                                 fontSize: 14, color: Colors.white),
                           ),
                           AppStyle.hGap12,
-                          const Icon(
-                            Remix.thumb_up_line,
-                            size: 16,
-                          ),
-                          AppStyle.hGap4,
-                          Obx(
-                            () => Text(
-                              "${e.num.value}",
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
+                          // const Icon(
+                          //   Remix.thumb_up_line,
+                          //   size: 16,
+                          // ),
+                          // AppStyle.hGap4,
+                          // Obx(
+                          //   () => Text(
+                          //     "${e.num.value}",
+                          //     style: const TextStyle(
+                          //       fontSize: 14,
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

@@ -39,7 +39,7 @@ class UserService extends GetxService {
   String get dmzjToken => userAuthInfo?.token ?? '';
   String get userId => userAuthInfo?.uid.toString() ?? '';
   String get nickname => userAuthInfo?.nickname ?? '';
-  String get photo => userAuthInfo?.photo ?? '';
+  String get photo => userProfile.value?.photo ?? '';
 
   bool get isVip => (userProfile.value?.userfeeinfo?.isVip ?? false);
 
@@ -112,8 +112,6 @@ class UserService extends GetxService {
         return;
       }
       userProfile.value = await request.userProfile();
-      //updateCookie();
-      updateBindStatus();
     } catch (e) {
       Log.logPrint(e);
     }
@@ -139,20 +137,6 @@ class UserService extends GetxService {
   void syncRemoteNovelHistory() async {
     try {
       await request.novelHistory();
-    } catch (e) {
-      Log.logPrint(e);
-    }
-  }
-
-  /// 更新绑定状态
-  void updateBindStatus() async {
-    try {
-      if (!logined.value) {
-        return;
-      }
-      var result = await request.isBindTelPwd();
-      bindTel.value = result.isBindTel == 1;
-      setPwd.value = result.isBindTel == 1;
     } catch (e) {
       Log.logPrint(e);
     }

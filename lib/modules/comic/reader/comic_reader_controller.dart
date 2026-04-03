@@ -447,7 +447,7 @@ class ComicReaderController extends BaseController {
                               children: viewPoints.map<Widget>((item) {
                                 return InkWell(
                                   onTap: () {
-                                    likeViewPoint(item);
+                                    // likeViewPoint(item);
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
@@ -495,20 +495,20 @@ class ComicReaderController extends BaseController {
                                     ),
                                   ),
                                   AppStyle.hGap12,
-                                  TextButton.icon(
-                                    style: TextButton.styleFrom(
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    onPressed: () {
-                                      likeViewPoint(item);
-                                    },
-                                    icon: const Icon(
-                                      Remix.thumb_up_line,
-                                      size: 16,
-                                    ),
-                                    label: Obx(() => Text("${item.num.value}")),
-                                  ),
+                                  // TextButton.icon(
+                                  //   style: TextButton.styleFrom(
+                                  //     tapTargetSize:
+                                  //         MaterialTapTargetSize.shrinkWrap,
+                                  //   ),
+                                  //   onPressed: () {
+                                  //     likeViewPoint(item);
+                                  //   },
+                                  //   icon: const Icon(
+                                  //     Remix.thumb_up_line,
+                                  //     size: 16,
+                                  //   ),
+                                  //   label: Obx(() => Text("${item.num.value}")),
+                                  // ),
                                 ],
                               ),
                             );

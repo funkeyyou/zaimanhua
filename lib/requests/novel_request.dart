@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/novel/category_filter_model.dart';
 import 'package:flutter_dmzj/models/novel/category_model.dart';
 import 'package:flutter_dmzj/models/novel/category_novel_model.dart';
@@ -113,9 +114,16 @@ class NovelRequest {
   }) async {
     var list = <NovelRankModel>[];
     var result = await HttpClient.instance.getJson(
-      '/novel/rank/$sort/$tagId/$page.json',
+      '/novel/rank/list',
+      queryParameters: {
+        "page": page,
+        "tagId": tagId,
+        "rankType": sort,
+      },
+      checkCode: true,
     );
-    for (var item in result) {
+    var resList = result['rankList'];
+    for (var item in resList) {
       list.add(NovelRankModel.fromJson(item));
     }
     return list;

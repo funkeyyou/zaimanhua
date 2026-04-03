@@ -145,7 +145,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
 
   void toSpecial() {
     var homeController = Get.find<ComicHomeController>();
-    homeController.tabController.animateTo(4);
+    homeController.tabController.animateTo(3);
   }
 
   void toMySubscribe() {

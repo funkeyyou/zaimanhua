@@ -131,32 +131,17 @@ class NovelRankView extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
-                  Text.rich(
-                    TextSpan(children: [
-                      const WidgetSpan(
-                          child: Icon(
-                        Icons.account_circle,
-                        color: Colors.grey,
-                        size: 18,
-                      )),
-                      const TextSpan(
-                        text: " ",
-                      ),
-                      TextSpan(
-                          text: item.authors,
-                          style:
-                              const TextStyle(color: Colors.grey, fontSize: 14))
-                    ]),
-                  ),
+                   Text(item.authors,
+                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
                   Text(item.types.join("/"),
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
+                  Text(item.status,
+                  style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   Text(item.lastUpdateChapterName,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
-                  Text("更新于${Utils.formatTimestamp(item.lastUpdateTime)}",
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),
             ),
