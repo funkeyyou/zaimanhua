@@ -23,7 +23,7 @@ class IndexController extends GetxController {
 
   final MultiSplitViewController multiSplitViewController =
       MultiSplitViewController(areas: [
-    Area(minimalSize: 400, size: 500),
+    Area(min: 400, size: 500),
   ]);
 
   /// 双击退出Flag

@@ -17,6 +17,18 @@ subprojects {
 }
 
 subprojects { subproject ->
+    subproject.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            jvmTarget = "17"
+        }
+    }
+    subproject.tasks.withType(JavaCompile).configureEach {
+        sourceCompatibility = JavaVersion.VERSION_17.toString()
+        targetCompatibility = JavaVersion.VERSION_17.toString()
+    }
+}
+
+subprojects { subproject ->
     def applyNamespaceFallback = {
         def androidExt = subproject.extensions.findByName("android")
         if (androidExt == null || !androidExt.hasProperty("namespace")) {
