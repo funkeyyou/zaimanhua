@@ -427,15 +427,14 @@ class ComicRequest {
       required String content,
       required int page}) async {
     await HttpClient.instance.postJson(
-      '/viewpoint/addv2',
+      '/viewpoint/add',
       checkCode: true,
+      needLogin: true,
       data: {
-        "sub_type": comicId,
-        "uid": UserService.instance.userId,
-        "dmzj_token": UserService.instance.dmzjToken,
+        "comicId": comicId,
         "page": page,
         "type": 0,
-        "third_type": chapterId,
+        "chapterId": chapterId,
         "content": content,
       },
     );

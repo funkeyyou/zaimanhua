@@ -15,6 +15,7 @@ import 'package:flutter_dmzj/app/controller/base_controller.dart';
 import 'package:flutter_dmzj/app/log.dart';
 import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
 import 'package:flutter_dmzj/requests/novel_request.dart';
+import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_dmzj/services/novel_download_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -90,6 +91,7 @@ class NovelReaderController extends BaseController {
   RxList<String> pictures = RxList<String>();
 
   var contentLength = 0;
+  int _restoreIndex = 0;
 
   /// 是否显示控制器
   var showControls = false.obs;
@@ -185,6 +187,7 @@ class NovelReaderController extends BaseController {
       currentIndex.value = 0;
       isLocal = false;
       chapter = chapters[chapterIndex.value];
+      _restoreIndex = _historyIndexForCurrentChapter();
 
       //查询本地是否存在
       var localInfo = NovelDownloadService.instance.box
@@ -241,7 +244,7 @@ class NovelReaderController extends BaseController {
       preloadContent();
       //TODO 阅读记录跳转
       //上传记录
-      uploadHistory();
+      restoreHistoryPosition();
     } catch (e) {
       pageError.value = true;
       errorMsg.value = e.toString();
@@ -297,7 +300,7 @@ class NovelReaderController extends BaseController {
       preloadContent();
       //TODO 阅读记录跳转
       //上传记录
-      uploadHistory();
+      restoreHistoryPosition();
     } catch (e) {
       pageError.value = true;
       errorMsg.value = e.toString();
@@ -325,11 +328,12 @@ class NovelReaderController extends BaseController {
   /// 上传历史记录
   void uploadHistory() {
     var chapter = chapters[chapterIndex.value];
+    var ratio = currentProgressRatio();
+    var index = (ratio * 10000).round();
     UserService.instance.updateNovelHistory(
       novelId: novelId,
       chapterId: chapter.chapterId,
-      //TODO 已读位置计算
-      index: 0,
+      index: index,
       total: contentLength,
       novelCover: novelCover,
       novelName: novelTitle,
@@ -346,6 +350,7 @@ class NovelReaderController extends BaseController {
       return;
     }
 
+    uploadHistory();
     chapterIndex.value += 1;
     loadContent();
   }
@@ -357,6 +362,7 @@ class NovelReaderController extends BaseController {
       return;
     }
 
+    uploadHistory();
     chapterIndex.value -= 1;
     loadContent();
   }
@@ -701,6 +707,7 @@ class NovelReaderController extends BaseController {
                     title: Text(item.chapterName),
                     subtitle: Text(item.volumeName),
                     onTap: () {
+                      uploadHistory();
                       chapterIndex.value = i;
                       loadContent();
                       Get.back();
@@ -758,6 +765,94 @@ class NovelReaderController extends BaseController {
       SystemUiMode.edgeToEdge,
       overlays: SystemUiOverlay.values,
     );
+  }
+
+  int _historyIndexForCurrentChapter() {
+    var history = DBService.instance.getNovelHistory(novelId);
+    if (history == null || history.chapterId != chapter.chapterId) {
+      return 0;
+    }
+    return history.index;
+  }
+
+  double currentProgressRatio() {
+    if (direction.value == ReaderDirection.kUpToDown) {
+      if (scrollController.hasClients &&
+          scrollController.position.maxScrollExtent > 0) {
+        return (scrollController.position.pixels /
+                scrollController.position.maxScrollExtent)
+            .clamp(0.0, 1.0);
+      }
+      return progress.value.clamp(0.0, 1.0);
+    }
+
+    var max = maxPage.value;
+    if (max <= 1) {
+      return 0.0;
+    }
+    return (currentIndex.value / (max - 1)).clamp(0.0, 1.0);
+  }
+
+  void restoreHistoryPosition() {
+    if (_restoreIndex <= 0) {
+      return;
+    }
+    var ratio = (_restoreIndex / 10000).clamp(0.0, 1.0);
+    if (ratio <= 0) {
+      return;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _tryRestoreByRatio(ratio, retry: 0);
+    });
+  }
+
+  void _tryRestoreByRatio(double ratio, {required int retry}) {
+    if (direction.value == ReaderDirection.kUpToDown) {
+      if (!scrollController.hasClients) {
+        if (retry < 10) {
+          Future.delayed(
+            const Duration(milliseconds: 80),
+            () => _tryRestoreByRatio(ratio, retry: retry + 1),
+          );
+        }
+        return;
+      }
+      var maxExtent = scrollController.position.maxScrollExtent;
+      if (maxExtent > 0) {
+        scrollController.jumpTo(maxExtent * ratio);
+      }
+      return;
+    }
+
+    if (!pageController.hasClients) {
+      if (retry < 10) {
+        Future.delayed(
+          const Duration(milliseconds: 80),
+          () => _tryRestoreByRatio(ratio, retry: retry + 1),
+        );
+      }
+      return;
+    }
+
+    var max = maxPage.value;
+    if (max <= 0 && pageController.position.viewportDimension > 0) {
+      max = (pageController.position.maxScrollExtent /
+                  pageController.position.viewportDimension)
+              .round() +
+          1;
+    }
+    if (max <= 0) {
+      if (retry < 10) {
+        Future.delayed(
+          const Duration(milliseconds: 80),
+          () => _tryRestoreByRatio(ratio, retry: retry + 1),
+        );
+      }
+      return;
+    }
+    var target = ((max - 1) * ratio).round().clamp(0, max - 1);
+    jumpToPage(target);
+    currentIndex.value = target;
   }
 
   void keyDown(LogicalKeyboardKey key) {

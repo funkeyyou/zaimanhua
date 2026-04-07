@@ -17,7 +17,7 @@ class NovelRequest {
   Future<List<NovelRecommendModel>> recommend() async {
     var list = <NovelRecommendModel>[];
     var result =
-        await HttpClient.instance.getJson('/novel/recommend', checkCode: true);
+        await HttpClient.instance.getJson('/novel/recommend', checkCode: true, withDefaultParameter: true);
     for (var item in result["recommendList"]) {
       list.add(NovelRecommendModel.fromJson(item));
     }
