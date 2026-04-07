@@ -4,7 +4,6 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/models/user/comic_history_model.dart';
-import 'package:flutter_dmzj/models/user/bind_status_model.dart';
 import 'package:flutter_dmzj/models/user/login_result_model.dart';
 import 'package:flutter_dmzj/models/user/novel_history_model.dart';
 import 'package:flutter_dmzj/models/user/subscribe_comic_model.dart';
@@ -89,7 +88,7 @@ class UserRequest {
       '/novel/sub/list',
       queryParameters: {
         //uid=$uid&sub_type=$subType&letter=$letter&dmzj_token=$token&page=$page&type=$type
-        "status": subType,
+        ...(subType != 0 ? {"status": subType} : {}),
         "firstLetter": letter,
         "page": page,
         "size": 20
@@ -307,24 +306,19 @@ class UserRequest {
   }) async {
     var data = {
       novelId.toString(): chapterId.toString(),
-      "lnovel_id": novelId.toString(),
-      "volume_id": volumeId.toString(),
+      "bizId": novelId.toString(),
+      "volumeId": volumeId.toString(),
       "chapterId": chapterId.toString(),
-      "total_num": total,
       "page": page,
-      "time": (time.millisecondsSinceEpoch ~/ 1000).toString()
     };
-    await HttpClient.instance.getJson(
-      "/api/record/getRe",
-      baseUrl: Api.BASE_URL_INTERFACE,
+    await HttpClient.instance.postJson(
+      "/readingRecord/add",
+      baseUrl: Api.BASE_URL,
       queryParameters: {
-        "st": "novel",
-        "uid": UserService.instance.userId,
-        "callback": "record_jsonpCallback",
-        "type": 3,
+        "source": "x",
         "json": "[${json.encode(data)}]",
       },
-      withDefaultParameter: true,
+      needLogin: true,
       checkCode: true,
     );
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/novel/rank_model.dart';
 import 'package:flutter_dmzj/modules/novel/home/rank/novel_rank_controller.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
