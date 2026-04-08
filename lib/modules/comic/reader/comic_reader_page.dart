@@ -458,6 +458,10 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                     (e) => OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                       ),
                       onPressed: () {
                         // controller.likeViewPoint(e);
@@ -470,7 +474,6 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.white),
                           ),
-                          AppStyle.hGap12,
                           // const Icon(
                           //   Remix.thumb_up_line,
                           //   size: 16,

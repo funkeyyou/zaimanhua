@@ -168,7 +168,7 @@ class ComicRequest {
         needLogin: true // 登录可以更多内容
         );
     var list = <ComicRankListItemModel>[];
-    for (var item in result["data"]) {
+    for (var item in result["data"] ?? []) {
       list.add(ComicRankListItemModel.fromJson(item));
     }
     return list;
@@ -181,12 +181,7 @@ class ComicRequest {
       queryParameters: {"source": 1},
       checkCode: true,
     );
-    Map<int, String> map = {0: "全部分类", 3243: "ゆり"};
-    for (var item in result["cateList"]) {
-      map.addAll({
-        item["tagId"]: item["title"],
-      });
-    }
+    Map<int, String> map = {0: "全部分类"};
     return map;
   }
 
