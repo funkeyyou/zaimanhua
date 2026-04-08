@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
 class NovelDownloadingView extends StatelessWidget {
-  const NovelDownloadingView({Key? key}) : super(key: key);
+  const NovelDownloadingView({super.key});
 
   @override
   Widget build(BuildContext context) {

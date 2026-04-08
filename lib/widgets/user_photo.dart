@@ -11,8 +11,8 @@ class UserPhoto extends StatelessWidget {
     this.url,
     this.showBoder = true,
     this.size = 48,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

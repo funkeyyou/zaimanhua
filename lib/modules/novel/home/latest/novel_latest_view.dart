@@ -12,9 +12,7 @@ import 'package:get/get.dart';
 
 class NovelLatestView extends StatelessWidget {
   final NovelLatestController controller;
-  NovelLatestView({Key? key})
-      : controller = Get.put(NovelLatestController()),
-        super(key: key);
+  NovelLatestView({super.key}) : controller = Get.put(NovelLatestController());
 
   @override
   Widget build(BuildContext context) {

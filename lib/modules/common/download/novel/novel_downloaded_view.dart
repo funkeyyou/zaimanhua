@@ -9,7 +9,7 @@ import 'package:flutter_dmzj/widgets/status/app_empty_widget.dart';
 import 'package:get/get.dart';
 
 class NovelDownloadedView extends StatelessWidget {
-  const NovelDownloadedView({Key? key}) : super(key: key);
+  const NovelDownloadedView({super.key});
 
   @override
   Widget build(BuildContext context) {

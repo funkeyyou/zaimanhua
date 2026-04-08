@@ -18,8 +18,8 @@ class NovelHorizontalReader extends StatefulWidget {
     this.padding,
     this.reverse = false,
     this.onPageChanged,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<NovelHorizontalReader> createState() => _NovelHorizontalReaderState();

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 class UserLoginDialog extends StatelessWidget {
   final UserLoginController controller = Get.put(UserLoginController());
-  UserLoginDialog({Key? key}) : super(key: key);
+  UserLoginDialog({super.key});
 
   @override
   Widget build(BuildContext context) {

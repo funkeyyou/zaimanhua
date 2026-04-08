@@ -19,7 +19,7 @@ import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ComicReaderPage extends GetView<ComicReaderController> {
-  const ComicReaderPage({Key? key}) : super(key: key);
+  const ComicReaderPage({super.key});
 
   @override
   Widget build(BuildContext context) {

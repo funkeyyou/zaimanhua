@@ -11,15 +11,14 @@ class CommentListView extends StatelessWidget {
   final bool isHot;
   final CommentListController controller;
   CommentListView({
-    Key? key,
+    super.key,
     required this.objId,
     required this.type,
     required this.isHot,
-  })  : controller = Get.put(
+  }) : controller = Get.put(
           CommentListController(objId: objId, type: type, isHot: isHot),
           tag: "${objId}_${type}_${isHot ? 1 : 0}",
-        ),
-        super(key: key);
+        );
 
   @override
   Widget build(BuildContext context) {

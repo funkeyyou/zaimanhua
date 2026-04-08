@@ -10,15 +10,14 @@ class AddCommentPage extends StatelessWidget {
   final CommentItem? replyItem;
   final AddCommentController controller;
   AddCommentPage({
-    Key? key,
+    super.key,
     required this.objId,
     required this.type,
     this.replyItem,
-  })  : controller = Get.put(
+  }) : controller = Get.put(
           AddCommentController(objId: objId, type: type, replyItem: replyItem),
           tag: DateTime.now().millisecondsSinceEpoch.toString(),
-        ),
-        super(key: key);
+        );
 
   @override
   Widget build(BuildContext context) {

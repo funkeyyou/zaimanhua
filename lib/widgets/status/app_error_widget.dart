@@ -11,8 +11,7 @@ class AppErrorWidget extends StatelessWidget {
   final String errorMsg;
   final Error? error;
   const AppErrorWidget(
-      {this.errorMsg = "", this.onRefresh, this.error, Key? key})
-      : super(key: key);
+      {this.errorMsg = "", this.onRefresh, this.error, super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -16,7 +16,7 @@ import 'package:remixicon/remixicon.dart';
 // ignore: must_be_immutable
 class CommentItemWidget extends StatelessWidget {
   final CommentItem item;
-  CommentItemWidget(this.item, {Key? key}) : super(key: key);
+  CommentItemWidget(this.item, {super.key});
   var expand = false.obs;
   @override
   Widget build(BuildContext context) {

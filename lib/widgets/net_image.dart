@@ -15,8 +15,7 @@ class NetImage extends StatefulWidget {
       this.fit = BoxFit.cover,
       this.borderRadius = 0,
       this.progress = false,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   State<NetImage> createState() => _NetImageState();

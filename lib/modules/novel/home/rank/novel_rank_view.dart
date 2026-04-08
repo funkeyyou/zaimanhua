@@ -12,9 +12,7 @@ import 'package:get/get.dart';
 
 class NovelRankView extends StatelessWidget {
   final NovelRankController controller;
-  NovelRankView({Key? key})
-      : controller = Get.put(NovelRankController()),
-        super(key: key);
+  NovelRankView({super.key}) : controller = Get.put(NovelRankController());
 
   @override
   Widget build(BuildContext context) {
@@ -130,14 +128,14 @@ class NovelRankView extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
-                   Text(item.authors,
+                  Text(item.authors,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
                   Text(item.types.join("/"),
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
                   Text(item.status,
-                  style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   Text(item.lastUpdateChapterName,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),

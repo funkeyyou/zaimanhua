@@ -32,7 +32,7 @@ class IndexController extends GetxController {
   /// 双击退出Timer
   Timer? doubleClickTimer;
 
-  final pages = [
+  final List<Widget> pages = [
     const ComicHomePage(),
     const SizedBox(),
     const SizedBox(),
@@ -47,7 +47,7 @@ class IndexController extends GetxController {
   @override
   void onClose() {}
 
-  void setIndex(i) {
+  void setIndex(int i) {
     if (i == 1 && pages[i] is SizedBox) {
       Get.put(NewsHomeController());
       pages[i] = const NewsHomePage();

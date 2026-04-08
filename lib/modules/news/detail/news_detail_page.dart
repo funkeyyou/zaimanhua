@@ -20,12 +20,11 @@ class NewsDetailPage extends StatelessWidget {
     required this.newsUrl,
     this.title = "资讯详情",
     required this.newsId,
-    Key? key,
-  })  : controller = Get.put(
+    super.key,
+  }) : controller = Get.put(
           NewsDetailController(id: newsId, newsUrl: newsUrl, title: title),
           tag: DateTime.now().millisecondsSinceEpoch.toString(),
-        ),
-        super(key: key);
+        );
 
   @override
   Widget build(BuildContext context) {

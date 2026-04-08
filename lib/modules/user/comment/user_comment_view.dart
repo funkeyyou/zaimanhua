@@ -17,15 +17,14 @@ class UserCommentView extends StatelessWidget {
   UserCommentView({
     required this.type,
     required this.userId,
-    Key? key,
-  })  : controller = Get.put(
+    super.key,
+  }) : controller = Get.put(
           UserCommentController(
             type: type,
             userId: userId,
           ),
           tag: "${userId}_$type",
-        ),
-        super(key: key);
+        );
 
   @override
   Widget build(BuildContext context) {

@@ -29,8 +29,8 @@ class PageListView extends StatelessWidget {
     this.onLoginSuccess,
     this.loadMore = true,
     this.header,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

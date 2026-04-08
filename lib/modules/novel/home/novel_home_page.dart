@@ -8,7 +8,7 @@ import 'package:flutter_dmzj/widgets/tab_appbar.dart';
 import 'package:get/get.dart';
 
 class NovelHomePage extends GetView<NovelHomeController> {
-  const NovelHomePage({Key? key}) : super(key: key);
+  const NovelHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

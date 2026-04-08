@@ -364,7 +364,8 @@ class SettingsPage extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: AppStyle.radius4,
               color: AppColor
-                  .novelThemes[controller.settings.novelReaderTheme]!.first,
+                  .novelThemes[controller.settings.novelReaderTheme.value]!
+                  .first,
             ),
             child: Text(
               """这是一段测试文字，可以预览上面的设置效果。
@@ -378,7 +379,8 @@ class SettingsPage extends StatelessWidget {
                     controller.settings.novelReaderFontSize.value.toDouble(),
                 height: controller.settings.novelReaderLineSpacing.value,
                 color: AppColor
-                    .novelThemes[controller.settings.novelReaderTheme]!.last,
+                    .novelThemes[controller.settings.novelReaderTheme.value]!
+                    .last,
               ),
             ),
           ),

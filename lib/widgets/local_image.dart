@@ -16,8 +16,7 @@ class LocalImage extends StatelessWidget {
       this.fit = BoxFit.cover,
       this.borderRadius = 0,
       this.progress = false,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   Widget build(BuildContext context) {

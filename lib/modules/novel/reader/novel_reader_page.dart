@@ -19,7 +19,7 @@ import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
 class NovelReaderPage extends GetView<NovelReaderController> {
-  const NovelReaderPage({Key? key}) : super(key: key);
+  const NovelReaderPage({super.key});
 
   Color get color =>
       AppColor.novelThemes[controller.settings.novelReaderTheme.value]!.last;

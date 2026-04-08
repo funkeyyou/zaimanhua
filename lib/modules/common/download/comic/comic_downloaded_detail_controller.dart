@@ -174,7 +174,7 @@ class ComicDownloadedDetailController extends GetxController {
 
   void selectItem(ComicDetailChapterItem item) {
     if (selectItems.contains(item)) {
-      selectItems.remove(item.chapterId);
+      selectItems.remove(item);
     } else {
       selectItems.add(item);
     }

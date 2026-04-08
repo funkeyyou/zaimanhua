@@ -12,9 +12,8 @@ import 'package:get/get.dart';
 
 class ComicRecommendView extends StatelessWidget {
   final ComicRecommendController controller;
-  ComicRecommendView({Key? key})
-      : controller = Get.put(ComicRecommendController()),
-        super(key: key);
+  ComicRecommendView({super.key})
+      : controller = Get.put(ComicRecommendController());
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +67,7 @@ class ComicRecommendView extends StatelessWidget {
             return const SizedBox.shrink();
           }
 
-           //火热专题\美漫大事件\条漫
+          //火热专题\美漫大事件\条漫
           if (item.categoryId == 48 ||
               item.categoryId == 53 ||
               item.categoryId == 55) {

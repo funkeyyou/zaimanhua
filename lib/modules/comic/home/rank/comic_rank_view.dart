@@ -13,9 +13,7 @@ import 'package:get/get.dart';
 
 class ComicRankView extends StatelessWidget {
   final ComicRankController controller;
-  ComicRankView({Key? key})
-      : controller = Get.put(ComicRankController()),
-        super(key: key);
+  ComicRankView({super.key}) : controller = Get.put(ComicRankController());
 
   @override
   Widget build(BuildContext context) {

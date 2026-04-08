@@ -13,9 +13,7 @@ import 'package:get/get.dart';
 
 class ComicLatestView extends StatelessWidget {
   final ComicLatestController controller;
-  ComicLatestView({Key? key})
-      : controller = Get.put(ComicLatestController()),
-        super(key: key);
+  ComicLatestView({super.key}) : controller = Get.put(ComicLatestController());
 
   @override
   Widget build(BuildContext context) {

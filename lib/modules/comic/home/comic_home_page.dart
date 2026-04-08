@@ -9,7 +9,7 @@ import 'package:flutter_dmzj/widgets/tab_appbar.dart';
 import 'package:get/get.dart';
 
 class ComicHomePage extends GetView<ComicHomeController> {
-  const ComicHomePage({Key? key}) : super(key: key);
+  const ComicHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

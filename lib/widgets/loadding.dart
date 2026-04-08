@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 
 class LoaddingWidget extends StatelessWidget {
-  const LoaddingWidget({Key? key}) : super(key: key);
+  const LoaddingWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

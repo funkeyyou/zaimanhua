@@ -9,9 +9,8 @@ import 'package:get/get.dart';
 
 class NovelCategoryView extends StatelessWidget {
   final NovelCategoryController controller;
-  NovelCategoryView({Key? key})
-      : controller = Get.put(NovelCategoryController()),
-        super(key: key);
+  NovelCategoryView({super.key})
+      : controller = Get.put(NovelCategoryController());
 
   @override
   Widget build(BuildContext context) {

@@ -12,8 +12,8 @@ class BorderText extends StatelessWidget {
     this.color = Colors.white,
     this.fontSize = 16,
     this.strokeWidth = 2.0,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -89,7 +89,7 @@ class AppScrollBehavior extends MaterialScrollBehavior {
 }
 
 class DMZJApp extends StatelessWidget {
-  const DMZJApp({Key? key}) : super(key: key);
+  const DMZJApp({super.key});
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(

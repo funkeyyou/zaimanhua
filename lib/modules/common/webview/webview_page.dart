@@ -9,12 +9,11 @@ import 'package:webview_flutter/webview_flutter.dart';
 class WebViewPage extends StatelessWidget {
   final String url;
   final WebViewPageController controller;
-  WebViewPage({required this.url, Key? key})
+  WebViewPage({required this.url, super.key})
       : controller = Get.put(
           WebViewPageController(url),
           tag: DateTime.now().millisecondsSinceEpoch.toString(),
-        ),
-        super(key: key);
+        );
 
   @override
   Widget build(BuildContext context) {

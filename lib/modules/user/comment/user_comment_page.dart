@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 class UserCommentPage extends StatelessWidget {
   final int userId;
-  const UserCommentPage(this.userId, {Key? key}) : super(key: key);
+  const UserCommentPage(this.userId, {super.key});
 
   @override
   Widget build(BuildContext context) {

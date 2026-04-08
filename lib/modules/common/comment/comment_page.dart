@@ -7,8 +7,7 @@ import 'package:get/get.dart';
 class CommentPage extends StatelessWidget {
   final int objId;
   final int type;
-  const CommentPage({required this.objId, required this.type, Key? key})
-      : super(key: key);
+  const CommentPage({required this.objId, required this.type, super.key});
 
   @override
   Widget build(BuildContext context) {

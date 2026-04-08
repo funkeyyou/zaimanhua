@@ -13,9 +13,8 @@ import 'package:get/get.dart';
 class NewsListView extends StatelessWidget {
   final NewsTagModel tag;
   final NewsListController controller;
-  NewsListView({Key? key, required this.tag})
-      : controller = Get.put(NewsListController(tag), tag: tag.id.toString()),
-        super(key: key);
+  NewsListView({super.key, required this.tag})
+      : controller = Get.put(NewsListController(tag), tag: tag.id.toString());
 
   @override
   Widget build(BuildContext context) {
