@@ -70,12 +70,17 @@ class UserService extends GetxService {
     if (value.isEmpty) {
       return;
     }
-    LoginResultModel info = LoginResultModel.fromJson(json.decode(value));
+    try {
+      LoginResultModel info = LoginResultModel.fromJson(json.decode(value));
 
-    userAuthInfo = info;
-    logined.value = true;
-    if (logined.value) {
-      //syncRemoteHistory();
+      userAuthInfo = info;
+      logined.value = info.token.isNotEmpty;
+      if (logined.value) {
+        //syncRemoteHistory();
+      }
+    } catch (e) {
+      Log.logPrint(e);
+      storage.removeValue(LocalStorageService.kUserAuthInfo);
     }
   }
 

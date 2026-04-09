@@ -176,11 +176,11 @@ class ComicRequest {
 
   /// 排行榜-分类
   Future<Map<int, String>> rankFilter() async {
-    var result = await HttpClient.instance.getJson(
-      '/comic/filter/category',
-      queryParameters: {"source": 1},
-      checkCode: true,
-    );
+    // var result = await HttpClient.instance.getJson(
+    //   '/comic/filter/category',
+    //   queryParameters: {"source": 1},
+    //   checkCode: true,
+    // );
     Map<int, String> map = {0: "全部分类"};
     return map;
   }
