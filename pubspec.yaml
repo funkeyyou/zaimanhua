@@ -1,5 +1,5 @@
 name: flutter_dmzj
-version: 1.0.3+10003
+version: 1.0.4
 publish_to: none
 description: "ZAI-X"
 environment: 
@@ -45,7 +45,7 @@ dependencies:
   flutter_widget_from_html_core: ^0.17.2 #HTML转Widget
   share_plus: ^12.0.2 #分享
   permission_handler: ^12.0.1 #权限检查
-  path_provider: ^2.1.2 #常用目录
+  path_provider: ^2.1.5 #常用目录
   image_gallery_saver_plus: ^4.0.1 #保存图片至相册
   connectivity_plus: ^7.1.0 #连接状态
   battery_plus: ^7.0.0 #电池状态
@@ -66,6 +66,9 @@ dev_dependencies:
   msix: ^3.9.1
   flutter_test: 
     sdk: flutter
+
+dependency_overrides:
+  path_provider_android: 2.3.1
 
 flutter: 
   uses-material-design: true
