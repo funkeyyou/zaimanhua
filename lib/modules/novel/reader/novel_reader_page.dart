@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,10 @@ class NovelReaderPage extends GetView<NovelReaderController> {
   Color get color =>
       AppColor.novelThemes[controller.settings.novelReaderTheme.value]!.last;
 
+  Widget _readerBody(Widget child) {
+    return Platform.isWindows ? ExcludeSemantics(child: child) : child;
+  }
+
   @override
   Widget build(BuildContext context) {
     return KeyboardListener(
@@ -42,7 +48,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColor
                 .novelThemes[controller.settings.novelReaderTheme.value]!.first,
-            body: Stack(
+            body: _readerBody(Stack(
               children: [
                 Obx(
                   () => Offstage(
@@ -211,7 +217,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                   ),
                 ),
               ],
-            ),
+            )),
           ),
         ),
       ),

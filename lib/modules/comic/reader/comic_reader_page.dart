@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +23,10 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 class ComicReaderPage extends GetView<ComicReaderController> {
   const ComicReaderPage({super.key});
 
+  Widget _readerBody(Widget child) {
+    return Platform.isWindows ? ExcludeSemantics(child: child) : child;
+  }
+
   @override
   Widget build(BuildContext context) {
     return KeyboardListener(
@@ -36,7 +42,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         data: AppStyle.darkTheme,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          body: Stack(
+          body: _readerBody(Stack(
             children: [
               Obx(
                 () => Offstage(
@@ -265,7 +271,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                 ),
               ),
             ],
-          ),
+          )),
         ),
       ),
     );

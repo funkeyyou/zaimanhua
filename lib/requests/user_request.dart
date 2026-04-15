@@ -233,12 +233,16 @@ class UserRequest {
   Future<List<UserComicHistoryModel>> comicHistory({int page = 0}) async {
     var list = <UserComicHistoryModel>[];
     var result = await HttpClient.instance.getJson(
-      '/api/getReInfo/comic/${UserService.instance.userId}/$page',
-      queryParameters: {},
-      baseUrl: Api.BASE_URL_INTERFACE,
+      '/readingRecord/list/',
+      queryParameters: {
+        "source": "mh",
+        "page": page,
+      },
+      needLogin: true,
+      checkCode: true,
+      baseUrl: Api.BASE_URL,
     );
-    var data = json.decode(result);
-    for (var item in data) {
+    for (var item in (result["recordList"] ?? const [])) {
       list.add(UserComicHistoryModel.fromJson(item));
     }
     //远程与本地同步
@@ -251,12 +255,16 @@ class UserRequest {
   Future<List<UserNovelHistoryModel>> novelHistory({int page = 0}) async {
     var list = <UserNovelHistoryModel>[];
     var result = await HttpClient.instance.getJson(
-      '/api/getReInfo/novel/${UserService.instance.userId}/$page',
-      queryParameters: {},
-      baseUrl: Api.BASE_URL_INTERFACE,
+      '/readingRecord/list/',
+      queryParameters: {
+        "source": "xs",
+        "page": page,
+      },
+      needLogin: true,
+      checkCode: true,
+      baseUrl: Api.BASE_URL,
     );
-    var data = json.decode(result);
-    for (var item in data) {
+    for (var item in (result["recordList"] ?? const [])) {
       list.add(UserNovelHistoryModel.fromJson(item));
     }
     //远程与本地同步
@@ -272,23 +280,19 @@ class UserRequest {
     required DateTime time,
   }) async {
     var data = {
-      comicId.toString(): chapterId.toString(),
-      "comicId": comicId.toString(),
-      "chapterId": chapterId.toString(),
+      "bizId": comicId,
+      "chapterId": chapterId,
       "page": page,
-      "time": (time.millisecondsSinceEpoch ~/ 1000).toString()
     };
-    await HttpClient.instance.getJson(
-      "/api/record/getRe",
-      baseUrl: Api.BASE_URL_INTERFACE,
-      queryParameters: {
-        "st": "comic",
-        "uid": UserService.instance.userId,
-        "callback": "record_jsonpCallback",
-        "type": 3,
+    await HttpClient.instance.postJson(
+      "/readingRecord/add",
+      baseUrl: Api.BASE_URL,
+      data: {
+        "source": "mh",
         "json": "[${json.encode(data)}]",
       },
-      withDefaultParameter: true,
+      formUrlEncoded: true,
+      needLogin: true,
       checkCode: true,
     );
 
@@ -305,19 +309,19 @@ class UserRequest {
     required DateTime time,
   }) async {
     var data = {
-      novelId.toString(): chapterId.toString(),
-      "bizId": novelId.toString(),
-      "volumeId": volumeId.toString(),
-      "chapterId": chapterId.toString(),
+      "bizId": novelId,
+      "volumeId": volumeId,
+      "chapterId": chapterId,
       "page": page,
     };
     await HttpClient.instance.postJson(
       "/readingRecord/add",
       baseUrl: Api.BASE_URL,
-      queryParameters: {
-        "source": "x",
+      data: {
+        "source": "xs",
         "json": "[${json.encode(data)}]",
       },
+      formUrlEncoded: true,
       needLogin: true,
       checkCode: true,
     );

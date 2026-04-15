@@ -90,7 +90,7 @@ class UserService extends GetxService {
     storage.setValue(LocalStorageService.kUserAuthInfo, info.toString());
     logined.value = true;
     UserService.loginedStreamController.add(true);
-    //refreshProfile();
+    refreshProfile();
     syncRemoteHistory();
   }
 
@@ -220,12 +220,12 @@ class UserService extends GetxService {
       if (!logined.value) {
         return;
       }
-      // await request.uploadComicHistory(
-      //   comicId: comicId,
-      //   chapterId: chapterId,
-      //   page: page,
-      //   time: time,
-      // );
+      await request.uploadComicHistory(
+        comicId: comicId,
+        chapterId: chapterId,
+        page: page,
+        time: time,
+      );
     } catch (e) {
       Log.logPrint(e);
     }

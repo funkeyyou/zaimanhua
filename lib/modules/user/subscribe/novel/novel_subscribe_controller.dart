@@ -27,7 +27,7 @@ class NovelSubscribeController
     2: "已读",
     1: "未读",
   };
-  var type = 1.obs;
+  var type = 0.obs;
 
   @override
   Future<List<UserSubscribeNovelModel>> getData(int page, int pageSize) async {
