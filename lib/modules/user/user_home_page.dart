@@ -121,18 +121,18 @@ class UserHomePage extends GetView<UserHomeController> {
                           onTap: controller.toUserSubscribe,
                         ),
                       ),
-                      // Visibility(
-                      //   visible: UserService.instance.logined.value,
-                      //   child: ListTile(
-                      //     leading: const Icon(Remix.history_line),
-                      //     title: const Text("浏览记录"),
-                      //     trailing: const Icon(
-                      //       Icons.chevron_right,
-                      //       color: Colors.grey,
-                      //     ),
-                      //     onTap: controller.toUserHistory,
-                      //   ),
-                      // ),
+                      Visibility(
+                        visible: UserService.instance.logined.value,
+                        child: ListTile(
+                          leading: const Icon(Remix.history_line),
+                          title: const Text("浏览记录"),
+                          trailing: const Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                          ),
+                          onTap: controller.toUserHistory,
+                        ),
+                      ),
                       // Visibility(
                       //   visible: UserService.instance.logined.value,
                       //   child: ListTile(
@@ -151,15 +151,6 @@ class UserHomePage extends GetView<UserHomeController> {
                 _buildCard(
                   context,
                   children: [
-                    ListTile(
-                      leading: const Icon(Remix.file_history_line),
-                      title: const Text("本机记录"),
-                      trailing: const Icon(
-                        Icons.chevron_right,
-                        color: Colors.grey,
-                      ),
-                      onTap: controller.toLocalHistory,
-                    ),
                     ListTile(
                       leading: const Icon(Remix.star_line),
                       title: const Text("本机收藏"),

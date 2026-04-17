@@ -20,7 +20,7 @@ class NovelHistoryView extends StatelessWidget {
       child: PageListView(
         pageController: controller,
         firstRefresh: true,
-        loadMore: false,
+        loadMore: true,
         separatorBuilder: (context, i) => Divider(
           endIndent: 12,
           indent: 12,

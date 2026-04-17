@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/modules/user/local_history/comic/comic_history_view.dart';
-
+import 'package:flutter_dmzj/modules/user/history/comic/comic_history_view.dart';
+import 'package:flutter_dmzj/modules/user/history/novel/novel_history_view.dart';
 import 'package:flutter_dmzj/modules/user/local_history/local_history_controller.dart';
-import 'package:flutter_dmzj/modules/user/local_history/novel/novel_history_view.dart';
 import 'package:get/get.dart';
 
 class LocalHistoryPage extends StatelessWidget {
@@ -42,8 +41,8 @@ class LocalHistoryPage extends StatelessWidget {
       body: TabBarView(
         controller: controller.tabController,
         children: [
-          LocalComicHistoryView(),
-          LocalNovelHistoryView(),
+          ComicHistoryView(),
+          NovelHistoryView(),
         ],
       ),
     );

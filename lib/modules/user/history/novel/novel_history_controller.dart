@@ -7,9 +7,6 @@ class NovelHistoryController extends BasePageController<UserNovelHistoryModel> {
 
   @override
   Future<List<UserNovelHistoryModel>> getData(int page, int pageSize) async {
-    if (page > 1) {
-      return [];
-    }
-    return await request.novelHistory();
+    return await request.novelHistory(page: page);
   }
 }

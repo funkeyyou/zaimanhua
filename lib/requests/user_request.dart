@@ -230,7 +230,7 @@ class UserRequest {
 
   /// 漫画阅读记录
   /// - [page] 页数从0开始，接口并没有分页
-  Future<List<UserComicHistoryModel>> comicHistory({int page = 0}) async {
+  Future<List<UserComicHistoryModel>> comicHistory({int page = 1}) async {
     var list = <UserComicHistoryModel>[];
     var result = await HttpClient.instance.getJson(
       '/readingRecord/list/',
@@ -252,7 +252,7 @@ class UserRequest {
 
   /// 小说阅读记录
   /// - [page] 页数从0开始，接口并没有分页
-  Future<List<UserNovelHistoryModel>> novelHistory({int page = 0}) async {
+  Future<List<UserNovelHistoryModel>> novelHistory({int page = 1}) async {
     var list = <UserNovelHistoryModel>[];
     var result = await HttpClient.instance.getJson(
       '/readingRecord/list/',

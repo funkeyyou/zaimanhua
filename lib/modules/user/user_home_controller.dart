@@ -86,7 +86,10 @@ class UserHomeController extends GetxController {
 
   /// 本机历史
   void toLocalHistory() async {
-    AppNavigator.toLocalHistory();
+    if (!await UserService.instance.login()) {
+      return;
+    }
+    AppNavigator.toUserHistory();
   }
 
   void toSettings() async {

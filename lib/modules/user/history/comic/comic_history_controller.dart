@@ -7,9 +7,6 @@ class ComicHistoryController extends BasePageController<UserComicHistoryModel> {
 
   @override
   Future<List<UserComicHistoryModel>> getData(int page, int pageSize) async {
-    if (page > 1) {
-      return [];
-    }
-    return await request.comicHistory();
+    return await request.comicHistory(page: page);
   }
 }
