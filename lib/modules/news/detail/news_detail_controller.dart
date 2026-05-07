@@ -277,7 +277,7 @@ getImgLinks();
     }
   }
 
-  Future<bool> onTapUrl(url) async {
+  Future<bool> onTapUrl(String url) async {
     //iOS处理
     if (url == currentUrl) {
       return false;
@@ -327,7 +327,7 @@ getImgLinks();
             ),
             Divider(
               height: 1.0,
-              color: Colors.grey.withOpacity(.2),
+              color: Colors.grey.withValues(alpha: .2),
             ),
             Obx(
               () => ListTile(

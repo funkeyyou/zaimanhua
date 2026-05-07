@@ -24,18 +24,19 @@ class UserNovelHistoryModel {
   });
 
   factory UserNovelHistoryModel.fromJson(Map<String, dynamic> json) =>
-      // 接口不知道那些可能为空，所以全部变为可空
       UserNovelHistoryModel(
-        uid: asT<int?>(json['uid']) ?? 0,
-        type: asT<int?>(json['type']) ?? 0,
-        lnovelId: int.tryParse(json['lnovel_id'].toString()) ?? 0,
-        volumeId: asT<int?>(json['volume_id']) ?? 0,
-        chapterId: asT<int?>(json['chapter_id']) ?? 0,
-        record: asT<int?>(json['record']) ?? 0,
-        viewingTime: asT<int?>(json['viewing_time']) ?? 0,
-        totalNum: asT<int?>(json['total_num']) ?? 0,
+        uid: _asInt(json['uid']),
+        type: _asInt(json['type']),
+        lnovelId: _asInt(json['lnovel_id']) ?? _asInt(json['biz_id']) ?? 0,
+        volumeId: _asInt(json['volume_id']) ?? 0,
+        chapterId: _asInt(json['chapter_id']) ?? 0,
+        record: _asInt(json['record']) ?? 0,
+        viewingTime: _asInt(json['viewing_time']) ?? 0,
+        totalNum: _asInt(json['total_num']) ?? 0,
         cover: asT<String?>(json['cover']) ?? "",
-        novelName: asT<String?>(json['novel_name']) ?? "未知小说",
+        novelName: asT<String?>(json['novel_name']) ??
+            asT<String?>(json['title']) ??
+            "未知小说",
         volumeName: asT<String?>(json['volume_name']) ?? "-",
         chapterName: asT<String?>(json['chapter_name']) ?? "-",
       );
@@ -72,4 +73,11 @@ class UserNovelHistoryModel {
         'volume_name': volumeName,
         'chapter_name': chapterName,
       };
+}
+
+int? _asInt(dynamic value) {
+  if (value is int) {
+    return value;
+  }
+  return int.tryParse(value?.toString() ?? '');
 }

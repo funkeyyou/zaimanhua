@@ -20,6 +20,9 @@ class NovelRecommendModel {
         json['data'] is List ? <NovelRecommendItemModel>[] : null;
     if (data != null) {
       for (final dynamic item in json['data']!) {
+        if (data.length >= 6) {
+          break;
+        }
         if (item != null) {
           data.add(NovelRecommendItemModel.fromJson(
               asT<Map<String, dynamic>>(item)!));

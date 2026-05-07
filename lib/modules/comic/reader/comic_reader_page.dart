@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,11 @@ import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ComicReaderPage extends GetView<ComicReaderController> {
-  const ComicReaderPage({Key? key}) : super(key: key);
+  const ComicReaderPage({super.key});
+
+  Widget _readerBody(Widget child) {
+    return Platform.isWindows ? ExcludeSemantics(child: child) : child;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +42,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         data: AppStyle.darkTheme,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          body: Stack(
+          body: _readerBody(Stack(
             children: [
               Obx(
                 () => Offstage(
@@ -217,26 +223,26 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                                     icon: const Icon(Remix.skip_back_line),
                                   ),
                                 ),
-                                // Obx(
-                                //   () => Visibility(
-                                //     visible: controller.settings
-                                //         .comicReaderShowViewPoint.value,
-                                //     child: Expanded(
-                                //       child: IconButton(
-                                //         onPressed: controller.showComment,
-                                //         icon: Badge(
-                                //           label: Text(
-                                //             "${controller.viewPoints.length}",
-                                //             style: const TextStyle(
-                                //                 color: Colors.white),
-                                //           ),
-                                //           child: const Icon(
-                                //               Remix.chat_smile_2_line),
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ),
-                                //),
+                                Obx(
+                                  () => Visibility(
+                                    visible: controller.settings
+                                        .comicReaderShowViewPoint.value,
+                                    child: Expanded(
+                                      child: IconButton(
+                                        onPressed: controller.showComment,
+                                        icon: Badge(
+                                          label: Text(
+                                            "${controller.viewPoints.length}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                          child: const Icon(
+                                              Remix.chat_smile_2_line),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 Expanded(
                                   child: IconButton(
                                     onPressed: controller.showMenu,
@@ -265,7 +271,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                 ),
               ),
             ],
-          ),
+          )),
         ),
       ),
     );
@@ -321,9 +327,9 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         preloadPagesCount: 4,
         itemBuilder: (_, i) {
           var url = controller.detail.value.pageUrls[i];
-          // if (i == controller.detail.value.pageUrls.length - 1 && url == "TC") {
-          //   return buildViewPoints();
-          // }
+          if (i == controller.detail.value.pageUrls.length - 1 && url == "TC") {
+            return buildViewPoints();
+          }
           return PhotoView.customChild(
             wantKeepAlive: true,
             initialScale: 1.0,
@@ -385,10 +391,10 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         itemCount: controller.detail.value.pageUrls.length,
         itemPositionsListener: controller.itemPositionsListener,
         itemBuilder: (_, i) {
-          // if (i == controller.detail.value.pageUrls.length - 1 &&
-          //     controller.detail.value.pageUrls[i] == "TC") {
-          //   return buildViewPoints(shrinkWrap: true);
-          // }
+          if (i == controller.detail.value.pageUrls.length - 1 &&
+              controller.detail.value.pageUrls[i] == "TC") {
+            return buildViewPoints(shrinkWrap: true);
+          }
           var url = controller.detail.value.pageUrls[i];
           return Container(
             constraints: const BoxConstraints(
@@ -458,9 +464,13 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                     (e) => OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                       ),
                       onPressed: () {
-                        controller.likeViewPoint(e);
+                        // controller.likeViewPoint(e);
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -470,20 +480,19 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.white),
                           ),
-                          AppStyle.hGap12,
-                          const Icon(
-                            Remix.thumb_up_line,
-                            size: 16,
-                          ),
-                          AppStyle.hGap4,
-                          Obx(
-                            () => Text(
-                              "${e.num.value}",
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
+                          // const Icon(
+                          //   Remix.thumb_up_line,
+                          //   size: 16,
+                          // ),
+                          // AppStyle.hGap4,
+                          // Obx(
+                          //   () => Text(
+                          //     "${e.num.value}",
+                          //     style: const TextStyle(
+                          //       fontSize: 14,
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -542,6 +551,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         name = "未知";
         break;
       default:
+        break;
     }
     return Row(
       mainAxisSize: MainAxisSize.min,

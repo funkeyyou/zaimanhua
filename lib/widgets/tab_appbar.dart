@@ -7,8 +7,8 @@ class TabAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Tab> tabs;
   final TabController? controller;
   final Widget? action;
-  const TabAppBar({required this.tabs, this.controller, this.action, Key? key})
-      : super(key: key);
+  const TabAppBar(
+      {required this.tabs, this.controller, this.action, super.key});
 
   @override
   Widget build(BuildContext context) {

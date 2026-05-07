@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 
 class EmptyPage extends StatelessWidget {
-  const EmptyPage({Key? key}) : super(key: key);
+  const EmptyPage({super.key});
 
   @override
   Widget build(BuildContext context) {

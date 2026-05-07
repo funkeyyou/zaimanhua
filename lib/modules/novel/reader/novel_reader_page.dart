@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +21,14 @@ import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
 class NovelReaderPage extends GetView<NovelReaderController> {
-  const NovelReaderPage({Key? key}) : super(key: key);
+  const NovelReaderPage({super.key});
 
   Color get color =>
       AppColor.novelThemes[controller.settings.novelReaderTheme.value]!.last;
+
+  Widget _readerBody(Widget child) {
+    return Platform.isWindows ? ExcludeSemantics(child: child) : child;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +48,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColor
                 .novelThemes[controller.settings.novelReaderTheme.value]!.first,
-            body: Stack(
+            body: _readerBody(Stack(
               children: [
                 Obx(
                   () => Offstage(
@@ -211,7 +217,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                   ),
                 ),
               ],
-            ),
+            )),
           ),
         ),
       ),
@@ -536,7 +542,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                           style: TextStyle(
                             fontSize: 12,
                             height: 1.0,
-                            color: color.withOpacity(.6),
+                            color: color.withValues(alpha: .6),
                           ),
                         )
                       : Text(
@@ -544,7 +550,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                           style: TextStyle(
                             fontSize: 12,
                             height: 1.0,
-                            color: color.withOpacity(.6),
+                            color: color.withValues(alpha: .6),
                           ),
                         ),
                 ],
@@ -595,12 +601,12 @@ class NovelReaderPage extends GetView<NovelReaderController> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon, size: 12, color: color.withOpacity(.6)),
+        Icon(icon, size: 12, color: color.withValues(alpha: .6)),
         AppStyle.hGap4,
         Text(
           name,
           style: TextStyle(
-              fontSize: 12, height: 1.0, color: color.withOpacity(.6)),
+              fontSize: 12, height: 1.0, color: color.withValues(alpha: .6)),
         ),
         AppStyle.hGap8,
       ],
@@ -633,11 +639,11 @@ class NovelReaderPage extends GetView<NovelReaderController> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          //Icon(icon, size: 12, color: color.withOpacity(.6)),
+          //Icon(icon, size: 12, color: color.withValues(alpha: .6)),
           Text(
             "电量 $battery%",
             style: TextStyle(
-                fontSize: 12, height: 1.0, color: color.withOpacity(.6)),
+                fontSize: 12, height: 1.0, color: color.withValues(alpha: .6)),
           ),
           AppStyle.hGap8,
         ],

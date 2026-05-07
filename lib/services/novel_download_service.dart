@@ -29,7 +29,7 @@ class NovelDownloadService extends GetxService {
   String savePath = "";
 
   /// 连接信息监听
-  StreamSubscription<ConnectivityResult>? connectivitySubscription;
+  StreamSubscription<List<ConnectivityResult>>? connectivitySubscription;
 
   /// 当前连接类型
   ConnectivityResult? connectivityType;
@@ -56,11 +56,12 @@ class NovelDownloadService extends GetxService {
   void initConnectivity() async {
     try {
       var connectivity = Connectivity();
-      connectivitySubscription = connectivity.onConnectivityChanged
-          .listen((ConnectivityResult result) {
-        networkChanged(result);
+      connectivitySubscription =
+          connectivity.onConnectivityChanged.listen((results) {
+        networkChanged(_pickConnectivityType(results));
       });
-      connectivityType = await connectivity.checkConnectivity();
+      connectivityType =
+          _pickConnectivityType(await connectivity.checkConnectivity());
       initTasks();
     } catch (e) {
       Log.logPrint(e);
@@ -80,6 +81,15 @@ class NovelDownloadService extends GetxService {
       switchToWiFi();
     }
     connectivityType = type;
+  }
+
+  ConnectivityResult _pickConnectivityType(List<ConnectivityResult> results) {
+    for (final result in results) {
+      if (result != ConnectivityResult.none) {
+        return result;
+      }
+    }
+    return ConnectivityResult.none;
   }
 
   /// 切换至流量

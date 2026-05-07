@@ -13,9 +13,7 @@ import 'package:get/get.dart';
 
 class ComicRankView extends StatelessWidget {
   final ComicRankController controller;
-  ComicRankView({Key? key})
-      : controller = Get.put(ComicRankController()),
-        super(key: key);
+  ComicRankView({super.key}) : controller = Get.put(ComicRankController());
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +60,7 @@ class ComicRankView extends StatelessWidget {
               separatorBuilder: (context, i) => Divider(
                 endIndent: 12,
                 indent: 12,
-                color: Colors.grey.withOpacity(.2),
+                color: Colors.grey.withValues(alpha: .2),
                 height: 1,
               ),
               itemBuilder: (context, i) {
@@ -82,30 +80,69 @@ class ComicRankView extends StatelessWidget {
     required Function(int) onSelected,
   }) {
     return Expanded(
-      child: PopupMenuButton<int>(
-        onSelected: onSelected,
-        itemBuilder: (c) => types.keys
-            .map(
-              (k) => CheckedPopupMenuItem<int>(
-                value: k,
-                checked: k == value,
-                child: Text(types[k] ?? ""),
+      child: Builder(
+        builder: (buttonContext) => InkWell(
+          onTap: () async {
+            final button = buttonContext.findRenderObject() as RenderBox?;
+            final overlay = Overlay.of(buttonContext).context.findRenderObject()
+                as RenderBox?;
+            if (button == null || overlay == null) {
+              return;
+            }
+            final selected = await showMenu<int>(
+              context: buttonContext,
+              position: RelativeRect.fromRect(
+                Rect.fromPoints(
+                  button.localToGlobal(Offset.zero, ancestor: overlay),
+                  button.localToGlobal(
+                    button.size.bottomRight(Offset.zero),
+                    ancestor: overlay,
+                  ),
+                ),
+                Offset.zero & overlay.size,
               ),
-            )
-            .toList(),
-        child: SizedBox(
-          height: 36,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                types[value] ?? "",
-              ),
-              const Icon(
-                Icons.arrow_drop_down,
-                color: Colors.grey,
-              )
-            ],
+              items: types.entries
+                  .map(
+                    (entry) => PopupMenuItem<int>(
+                      value: entry.key,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 38,
+                            child: entry.key == value
+                                ? const Icon(Icons.check,
+                                    color: Colors.blue, size: 18)
+                                : null,
+                          ),
+                          Expanded(child: Text(entry.value)),
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
+            );
+            if (selected != null) {
+              onSelected(selected);
+            }
+          },
+          child: SizedBox(
+            height: 36,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Flexible(
+                  child: Text(
+                    types[value] ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.grey,
+                )
+              ],
+            ),
           ),
         ),
       ),

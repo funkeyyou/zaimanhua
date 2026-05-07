@@ -12,9 +12,7 @@ import 'package:get/get.dart';
 
 class NovelLatestView extends StatelessWidget {
   final NovelLatestController controller;
-  NovelLatestView({Key? key})
-      : controller = Get.put(NovelLatestController()),
-        super(key: key);
+  NovelLatestView({super.key}) : controller = Get.put(NovelLatestController());
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +24,7 @@ class NovelLatestView extends StatelessWidget {
         separatorBuilder: (context, i) => Divider(
           endIndent: 12,
           indent: 12,
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           height: 1,
         ),
         itemBuilder: (context, i) {

@@ -34,14 +34,11 @@ class ComicDetailRelatedPage extends StatelessWidget {
             child: ListView(
               padding: AppStyle.edgeInsetsA12.copyWith(top: 0),
               children: [
-                ...related.authorComics
-                    .map(
-                      (e) =>
-                          buildCard("${e.authorName}的其他作品", e.data, onTap: () {
-                        AppNavigator.toComicAuthorDetail(e.authorId);
-                      }),
-                    )
-                    .toList(),
+                ...related.authorComics.map(
+                  (e) => buildCard("${e.authorName}的其他作品", e.data, onTap: () {
+                    AppNavigator.toComicAuthorDetail(e.authorId);
+                  }),
+                ),
                 buildCard("同类题材作品", related.themeComics),
                 buildCard("轻小说", related.novels, isComic: false),
               ],

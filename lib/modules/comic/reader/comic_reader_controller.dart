@@ -64,7 +64,7 @@ class ComicReaderController extends BaseController {
       Rx<ComicChapterDetail>(ComicChapterDetail.empty());
 
   /// 连接信息监听
-  StreamSubscription<ConnectivityResult>? connectivitySubscription;
+  StreamSubscription<List<ConnectivityResult>>? connectivitySubscription;
 
   /// 电量信息监听
   StreamSubscription<BatteryState>? batterySubscription;
@@ -156,7 +156,8 @@ class ComicReaderController extends BaseController {
   void initConnectivity() async {
     var connectivity = Connectivity();
     connectivitySubscription =
-        connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+        connectivity.onConnectivityChanged.listen((results) {
+      final result = _pickConnectivityType(results);
       //提醒
       if (connectivityType.value != result &&
           result == ConnectivityResult.mobile) {
@@ -164,7 +165,17 @@ class ComicReaderController extends BaseController {
       }
       connectivityType.value = result;
     });
-    connectivityType.value = await connectivity.checkConnectivity();
+    connectivityType.value =
+        _pickConnectivityType(await connectivity.checkConnectivity());
+  }
+
+  ConnectivityResult _pickConnectivityType(List<ConnectivityResult> results) {
+    for (final result in results) {
+      if (result != ConnectivityResult.none) {
+        return result;
+      }
+    }
+    return ConnectivityResult.none;
   }
 
   @override
@@ -205,7 +216,7 @@ class ComicReaderController extends BaseController {
         //禁止观看VIP章节
         throw AppError("请使用动漫之家官方APP观看VIP章节");
       }
-      //loadViewPoints();
+      loadViewPoints();
 
       var result = await request.chapterDetail(
         comicId: comicId,
@@ -223,9 +234,9 @@ class ComicReaderController extends BaseController {
         initialIndex = 0;
       }
       currentIndex.value = initialIndex;
-      // if (settings.comicReaderShowViewPoint.value) {
-      //   result.pageUrls.add("TC");
-      // }
+      if (settings.comicReaderShowViewPoint.value) {
+        result.pageUrls.add("TC");
+      }
 
       detail.value = result;
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -301,7 +312,7 @@ class ComicReaderController extends BaseController {
             ),
             Divider(
               height: 1.0,
-              color: Colors.grey.withOpacity(.2),
+              color: Colors.grey.withValues(alpha: .2),
             ),
             Expanded(
               child: ScrollablePositionedList.separated(
@@ -311,7 +322,7 @@ class ComicReaderController extends BaseController {
                   indent: 12,
                   endIndent: 12,
                   height: 1.0,
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.grey.withValues(alpha: .2),
                 ),
                 itemBuilder: (_, i) {
                   var item = chapters[i];
@@ -428,7 +439,7 @@ class ComicReaderController extends BaseController {
             ),
             Divider(
               height: 1.0,
-              color: Colors.grey.withOpacity(.2),
+              color: Colors.grey.withValues(alpha: .2),
             ),
             Expanded(
               child: EasyRefresh(
@@ -447,7 +458,7 @@ class ComicReaderController extends BaseController {
                               children: viewPoints.map<Widget>((item) {
                                 return InkWell(
                                   onTap: () {
-                                    likeViewPoint(item);
+                                    // likeViewPoint(item);
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
@@ -476,7 +487,7 @@ class ComicReaderController extends BaseController {
                             indent: 12,
                             endIndent: 12,
                             height: 1.0,
-                            color: Colors.grey.withOpacity(.2),
+                            color: Colors.grey.withValues(alpha: .2),
                           ),
                           itemBuilder: (_, i) {
                             var item = viewPoints[i];
@@ -495,20 +506,20 @@ class ComicReaderController extends BaseController {
                                     ),
                                   ),
                                   AppStyle.hGap12,
-                                  TextButton.icon(
-                                    style: TextButton.styleFrom(
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    onPressed: () {
-                                      likeViewPoint(item);
-                                    },
-                                    icon: const Icon(
-                                      Remix.thumb_up_line,
-                                      size: 16,
-                                    ),
-                                    label: Obx(() => Text("${item.num.value}")),
-                                  ),
+                                  // TextButton.icon(
+                                  //   style: TextButton.styleFrom(
+                                  //     tapTargetSize:
+                                  //         MaterialTapTargetSize.shrinkWrap,
+                                  //   ),
+                                  //   onPressed: () {
+                                  //     likeViewPoint(item);
+                                  //   },
+                                  //   icon: const Icon(
+                                  //     Remix.thumb_up_line,
+                                  //     size: 16,
+                                  //   ),
+                                  //   label: Obx(() => Text("${item.num.value}")),
+                                  // ),
                                 ],
                               ),
                             );
@@ -673,17 +684,17 @@ class ComicReaderController extends BaseController {
                         title: const Text("显示状态信息"),
                       ),
                     ),
-                    // AppStyle.vGap12,
-                    // buildBGItem(
-                    //   child: SwitchListTile(
-                    //     value: settings.comicReaderShowViewPoint.value,
-                    //     onChanged: (e) {
-                    //       settings.setComicReaderShowViewPoint(e);
-                    //       setShowViewPoint(e);
-                    //     },
-                    //     title: const Text("显示吐槽"),
-                    //   ),
-                    // ),
+                    AppStyle.vGap12,
+                    buildBGItem(
+                      child: SwitchListTile(
+                        value: settings.comicReaderShowViewPoint.value,
+                        onChanged: (e) {
+                          settings.setComicReaderShowViewPoint(e);
+                          setShowViewPoint(e);
+                        },
+                        title: const Text("显示吐槽"),
+                      ),
+                    ),
                     // AppStyle.vGap12,
                     // buildBGItem(
                     //   child: SwitchListTile(

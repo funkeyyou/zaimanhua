@@ -12,9 +12,8 @@ import 'package:get/get.dart';
 
 class NovelRecommendView extends StatelessWidget {
   final NovelRecommendController controller;
-  NovelRecommendView({Key? key})
-      : controller = Get.put(NovelRecommendController()),
-        super(key: key);
+  NovelRecommendView({super.key})
+      : controller = Get.put(NovelRecommendController());
 
   @override
   Widget build(BuildContext context) {

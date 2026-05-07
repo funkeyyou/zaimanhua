@@ -1,5 +1,5 @@
 {
-    "version": "1.0.3-test",
+    "version": "1.0.4-test",
     "version_num": 10003,
     "version_desc": "1. 修复漫画下载失败",
     "prerelease":true,

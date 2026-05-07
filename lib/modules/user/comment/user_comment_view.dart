@@ -17,15 +17,14 @@ class UserCommentView extends StatelessWidget {
   UserCommentView({
     required this.type,
     required this.userId,
-    Key? key,
-  })  : controller = Get.put(
+    super.key,
+  }) : controller = Get.put(
           UserCommentController(
             type: type,
             userId: userId,
           ),
           tag: "${userId}_$type",
-        ),
-        super(key: key);
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,7 @@ class UserCommentView extends StatelessWidget {
         separatorBuilder: (context, i) => Divider(
           endIndent: 12,
           indent: 12,
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           height: 1,
         ),
         itemBuilder: (context, i) {
@@ -70,7 +69,7 @@ class UserCommentView extends StatelessWidget {
                       Container(
                         padding: AppStyle.edgeInsetsA8,
                         decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(.1),
+                          color: Colors.grey.withValues(alpha: .1),
                           borderRadius: AppStyle.radius4,
                         ),
                         child: Column(
@@ -82,7 +81,7 @@ class UserCommentView extends StatelessWidget {
                               visible: item.mastercomment != null,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(.1),
+                                  color: Colors.grey.withValues(alpha: .1),
                                   borderRadius: AppStyle.radius4,
                                 ),
                                 padding: AppStyle.edgeInsetsA4,

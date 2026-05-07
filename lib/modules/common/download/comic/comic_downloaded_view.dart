@@ -9,7 +9,7 @@ import 'package:flutter_dmzj/widgets/status/app_empty_widget.dart';
 import 'package:get/get.dart';
 
 class ComicDownloadedView extends StatelessWidget {
-  const ComicDownloadedView({Key? key}) : super(key: key);
+  const ComicDownloadedView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class ComicDownloadedView extends StatelessWidget {
               separatorBuilder: (_, i) => Divider(
                 endIndent: 12,
                 indent: 12,
-                color: Colors.grey.withOpacity(.2),
+                color: Colors.grey.withValues(alpha: .2),
                 height: 1,
               ),
               itemBuilder: (_, i) {

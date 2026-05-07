@@ -21,15 +21,16 @@ class UserComicHistoryModel {
   });
 
   factory UserComicHistoryModel.fromJson(Map<String, dynamic> json) =>
-      // 接口不知道那些可能为空，所以全部变为可空
       UserComicHistoryModel(
-        uid: asT<int?>(json['uid']) ?? 0,
-        type: asT<int?>(json['type']) ?? 0,
-        comicId: asT<int?>(json['comic_id']) ?? 0,
-        chapterId: asT<int?>(json['chapter_id']) ?? 0,
-        record: asT<int?>(json['record']) ?? 0,
-        viewingTime: asT<int?>(json['viewing_time']) ?? 0,
-        comicName: asT<String?>(json['comic_name']) ?? "未知漫画",
+        uid: _asInt(json['uid']),
+        type: _asInt(json['type']),
+        comicId: _asInt(json['comic_id']) ?? _asInt(json['biz_id']) ?? 0,
+        chapterId: _asInt(json['chapter_id']) ?? 0,
+        record: _asInt(json['record']) ?? 0,
+        viewingTime: _asInt(json['viewing_time']) ?? 0,
+        comicName: asT<String?>(json['comic_name']) ??
+            asT<String?>(json['title']) ??
+            "未知漫画",
         cover: asT<String?>(json['cover']) ?? "",
         chapterName: asT<String?>(json['chapter_name']) ?? "-",
       );
@@ -60,4 +61,11 @@ class UserComicHistoryModel {
         'cover': cover,
         'chapter_name': chapterName,
       };
+}
+
+int? _asInt(dynamic value) {
+  if (value is int) {
+    return value;
+  }
+  return int.tryParse(value?.toString() ?? '');
 }

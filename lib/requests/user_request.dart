@@ -4,7 +4,6 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_error.dart';
 import 'package:flutter_dmzj/models/user/comic_history_model.dart';
-import 'package:flutter_dmzj/models/user/bind_status_model.dart';
 import 'package:flutter_dmzj/models/user/login_result_model.dart';
 import 'package:flutter_dmzj/models/user/novel_history_model.dart';
 import 'package:flutter_dmzj/models/user/subscribe_comic_model.dart';
@@ -43,30 +42,14 @@ class UserRequest {
   /// 用户资料
   Future<UserProfileModel> userProfile() async {
     var result = await HttpClient.instance.getJson(
-      "/UCenter/comicsv2/${UserService.instance.userId}.json",
-      baseUrl: Api.BASE_URL,
-      queryParameters: {
-        "dmzj_token": UserService.instance.dmzjToken,
-      },
+      "/u_center/personal/info/get",
+      baseUrl: Api.BASE_URL_USER,
+      checkCode: true,
+      needLogin: true,
       withDefaultParameter: true,
     );
 
     return UserProfileModel.fromJson(result);
-  }
-
-  /// 获取绑定手机、设置密码状态
-  Future<UserBindStatusModel> isBindTelPwd() async {
-    var result = await HttpClient.instance.getJson(
-      "/account/isbindtelpwd",
-      baseUrl: Api.BASE_URL,
-      queryParameters: {
-        "dmzj_token": UserService.instance.dmzjToken,
-      },
-      withDefaultParameter: true,
-      checkCode: true,
-    );
-
-    return UserBindStatusModel.fromJson(result);
   }
 
   /// 我的漫画订阅
@@ -80,7 +63,7 @@ class UserRequest {
       '/comic/sub/list',
       queryParameters: {
         //uid=$uid&sub_type=$subType&letter=$letter&dmzj_token=$token&page=$page&type=$type
-        "status": subType,
+        ...(subType != 1 ? {"status": subType} : {}),
         "firstLetter": letter,
         "page": page,
         "size": 20
@@ -105,7 +88,7 @@ class UserRequest {
       '/novel/sub/list',
       queryParameters: {
         //uid=$uid&sub_type=$subType&letter=$letter&dmzj_token=$token&page=$page&type=$type
-        "status": subType,
+        ...(subType != 0 ? {"status": subType} : {}),
         "firstLetter": letter,
         "page": page,
         "size": 20
@@ -247,15 +230,19 @@ class UserRequest {
 
   /// 漫画阅读记录
   /// - [page] 页数从0开始，接口并没有分页
-  Future<List<UserComicHistoryModel>> comicHistory({int page = 0}) async {
+  Future<List<UserComicHistoryModel>> comicHistory({int page = 1}) async {
     var list = <UserComicHistoryModel>[];
     var result = await HttpClient.instance.getJson(
-      '/api/getReInfo/comic/${UserService.instance.userId}/$page',
-      queryParameters: {},
-      baseUrl: Api.BASE_URL_INTERFACE,
+      '/readingRecord/list/',
+      queryParameters: {
+        "source": "mh",
+        "page": page,
+      },
+      needLogin: true,
+      checkCode: true,
+      baseUrl: Api.BASE_URL,
     );
-    var data = json.decode(result);
-    for (var item in data) {
+    for (var item in (result["recordList"] ?? const [])) {
       list.add(UserComicHistoryModel.fromJson(item));
     }
     //远程与本地同步
@@ -265,15 +252,19 @@ class UserRequest {
 
   /// 小说阅读记录
   /// - [page] 页数从0开始，接口并没有分页
-  Future<List<UserNovelHistoryModel>> novelHistory({int page = 0}) async {
+  Future<List<UserNovelHistoryModel>> novelHistory({int page = 1}) async {
     var list = <UserNovelHistoryModel>[];
     var result = await HttpClient.instance.getJson(
-      '/api/getReInfo/novel/${UserService.instance.userId}/$page',
-      queryParameters: {},
-      baseUrl: Api.BASE_URL_INTERFACE,
+      '/readingRecord/list/',
+      queryParameters: {
+        "source": "xs",
+        "page": page,
+      },
+      needLogin: true,
+      checkCode: true,
+      baseUrl: Api.BASE_URL,
     );
-    var data = json.decode(result);
-    for (var item in data) {
+    for (var item in (result["recordList"] ?? const [])) {
       list.add(UserNovelHistoryModel.fromJson(item));
     }
     //远程与本地同步
@@ -289,23 +280,19 @@ class UserRequest {
     required DateTime time,
   }) async {
     var data = {
-      comicId.toString(): chapterId.toString(),
-      "comicId": comicId.toString(),
-      "chapterId": chapterId.toString(),
+      "bizId": comicId,
+      "chapterId": chapterId,
       "page": page,
-      "time": (time.millisecondsSinceEpoch ~/ 1000).toString()
     };
-    await HttpClient.instance.getJson(
-      "/api/record/getRe",
-      baseUrl: Api.BASE_URL_INTERFACE,
-      queryParameters: {
-        "st": "comic",
-        "uid": UserService.instance.userId,
-        "callback": "record_jsonpCallback",
-        "type": 3,
+    await HttpClient.instance.postJson(
+      "/readingRecord/add",
+      baseUrl: Api.BASE_URL,
+      data: {
+        "source": "mh",
         "json": "[${json.encode(data)}]",
       },
-      withDefaultParameter: true,
+      formUrlEncoded: true,
+      needLogin: true,
       checkCode: true,
     );
 
@@ -322,25 +309,20 @@ class UserRequest {
     required DateTime time,
   }) async {
     var data = {
-      novelId.toString(): chapterId.toString(),
-      "lnovel_id": novelId.toString(),
-      "volume_id": volumeId.toString(),
-      "chapterId": chapterId.toString(),
-      "total_num": total,
+      "bizId": novelId,
+      "volumeId": volumeId,
+      "chapterId": chapterId,
       "page": page,
-      "time": (time.millisecondsSinceEpoch ~/ 1000).toString()
     };
-    await HttpClient.instance.getJson(
-      "/api/record/getRe",
-      baseUrl: Api.BASE_URL_INTERFACE,
-      queryParameters: {
-        "st": "novel",
-        "uid": UserService.instance.userId,
-        "callback": "record_jsonpCallback",
-        "type": 3,
+    await HttpClient.instance.postJson(
+      "/readingRecord/add",
+      baseUrl: Api.BASE_URL,
+      data: {
+        "source": "xs",
         "json": "[${json.encode(data)}]",
       },
-      withDefaultParameter: true,
+      formUrlEncoded: true,
+      needLogin: true,
       checkCode: true,
     );
 

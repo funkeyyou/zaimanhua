@@ -7,6 +7,23 @@ T? asT<T>(dynamic value) {
   return null;
 }
 
+int _asInt(dynamic value, {int defaultValue = 0}) {
+  return switch (value) {
+    int intValue => intValue,
+    num numValue => numValue.toInt(),
+    String stringValue => int.tryParse(stringValue) ?? defaultValue,
+    _ => defaultValue,
+  };
+}
+
+String _asString(dynamic value, {String defaultValue = ''}) {
+  return switch (value) {
+    String stringValue => stringValue,
+    num numValue => numValue.toString(),
+    _ => defaultValue,
+  };
+}
+
 class LoginResultModel {
   LoginResultModel({
     required this.uid,
@@ -20,13 +37,13 @@ class LoginResultModel {
 
   factory LoginResultModel.fromJson(Map<String, dynamic> json) =>
       LoginResultModel(
-        uid: asT<int>(json['uid'])!,
-        nickname: asT<String>(json['nickname'])!,
-        token: asT<String>(json['token'])!,
-        photo: asT<String>(json['photo'])!,
-        bindPhone: asT<String>(json['bind_phone'])!,
-        email: asT<String>(json['email'])!,
-        setPasswd: asT<int>(json['setPasswd'])!,
+        uid: _asInt(json['uid']),
+        nickname: _asString(json['nickname']),
+        token: _asString(json['token']),
+        photo: _asString(json['photo']),
+        bindPhone: _asString(json['bind_phone']),
+        email: _asString(json['email']),
+        setPasswd: _asInt(json['setPasswd']),
       );
 
   int uid;

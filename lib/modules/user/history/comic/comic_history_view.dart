@@ -20,11 +20,11 @@ class ComicHistoryView extends StatelessWidget {
       child: PageListView(
         pageController: controller,
         firstRefresh: true,
-        loadMore: false,
+        loadMore: true,
         separatorBuilder: (context, i) => Divider(
           endIndent: 12,
           indent: 12,
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           height: 1,
         ),
         itemBuilder: (context, i) {

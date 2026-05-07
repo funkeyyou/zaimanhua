@@ -10,9 +10,8 @@ import 'package:get/get.dart';
 
 class ComicSpecialView extends StatelessWidget {
   final ComicSpecialController controller;
-  ComicSpecialView({Key? key})
-      : controller = Get.put(ComicSpecialController()),
-        super(key: key);
+  ComicSpecialView({super.key})
+      : controller = Get.put(ComicSpecialController());
 
   @override
   Widget build(BuildContext context) {

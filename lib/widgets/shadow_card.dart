@@ -12,8 +12,8 @@ class ShadowCard extends StatelessWidget {
     this.radius = 8.0,
     this.onTap,
     this.onLongPress,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class ShadowCard extends StatelessWidget {
             : [
                 BoxShadow(
                   blurRadius: 4,
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.grey.withValues(alpha: .2),
                 )
               ],
       ),

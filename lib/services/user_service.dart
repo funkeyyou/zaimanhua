@@ -39,6 +39,7 @@ class UserService extends GetxService {
   String get dmzjToken => userAuthInfo?.token ?? '';
   String get userId => userAuthInfo?.uid.toString() ?? '';
   String get nickname => userAuthInfo?.nickname ?? '';
+  String get photo => userProfile.value?.photo ?? userAuthInfo?.photo ?? '';
 
   bool get isVip => (userProfile.value?.userfeeinfo?.isVip ?? false);
 
@@ -69,12 +70,17 @@ class UserService extends GetxService {
     if (value.isEmpty) {
       return;
     }
-    LoginResultModel info = LoginResultModel.fromJson(json.decode(value));
+    try {
+      LoginResultModel info = LoginResultModel.fromJson(json.decode(value));
 
-    userAuthInfo = info;
-    logined.value = true;
-    if (logined.value) {
-      //syncRemoteHistory();
+      userAuthInfo = info;
+      logined.value = info.token.isNotEmpty;
+      if (logined.value) {
+        //syncRemoteHistory();
+      }
+    } catch (e) {
+      Log.logPrint(e);
+      storage.removeValue(LocalStorageService.kUserAuthInfo);
     }
   }
 
@@ -84,7 +90,7 @@ class UserService extends GetxService {
     storage.setValue(LocalStorageService.kUserAuthInfo, info.toString());
     logined.value = true;
     UserService.loginedStreamController.add(true);
-    //refreshProfile();
+    refreshProfile();
     syncRemoteHistory();
   }
 
@@ -111,8 +117,6 @@ class UserService extends GetxService {
         return;
       }
       userProfile.value = await request.userProfile();
-      //updateCookie();
-      updateBindStatus();
     } catch (e) {
       Log.logPrint(e);
     }
@@ -138,20 +142,6 @@ class UserService extends GetxService {
   void syncRemoteNovelHistory() async {
     try {
       await request.novelHistory();
-    } catch (e) {
-      Log.logPrint(e);
-    }
-  }
-
-  /// 更新绑定状态
-  void updateBindStatus() async {
-    try {
-      if (!logined.value) {
-        return;
-      }
-      var result = await request.isBindTelPwd();
-      bindTel.value = result.isBindTel == 1;
-      setPwd.value = result.isBindTel == 1;
     } catch (e) {
       Log.logPrint(e);
     }
@@ -230,12 +220,12 @@ class UserService extends GetxService {
       if (!logined.value) {
         return;
       }
-      // await request.uploadComicHistory(
-      //   comicId: comicId,
-      //   chapterId: chapterId,
-      //   page: page,
-      //   time: time,
-      // );
+      await request.uploadComicHistory(
+        comicId: comicId,
+        chapterId: chapterId,
+        page: page,
+        time: time,
+      );
     } catch (e) {
       Log.logPrint(e);
     }

@@ -9,9 +9,8 @@ import 'package:get/get.dart';
 
 class ComicCategoryView extends StatelessWidget {
   final ComicCategoryController controller;
-  ComicCategoryView({Key? key})
-      : controller = Get.put(ComicCategoryController()),
-        super(key: key);
+  ComicCategoryView({super.key})
+      : controller = Get.put(ComicCategoryController());
 
   @override
   Widget build(BuildContext context) {

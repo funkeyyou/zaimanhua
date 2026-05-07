@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
 class IndexPage extends GetView<IndexController> {
-  const IndexPage({Key? key}) : super(key: key);
+  const IndexPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +127,7 @@ class IndexPage extends GetView<IndexController> {
             decoration: BoxDecoration(
               border: Border(
                 right: BorderSide(
-                  color: Colors.grey.withOpacity(.1),
+                  color: Colors.grey.withValues(alpha: .1),
                 ),
               ),
             ),
@@ -156,7 +156,7 @@ class IndexPage extends GetView<IndexController> {
     /// 拦截子路由的返回
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
           if (Navigator.canPop(Get.context!)) {
             Get.back();

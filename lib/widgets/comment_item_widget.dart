@@ -16,7 +16,7 @@ import 'package:remixicon/remixicon.dart';
 // ignore: must_be_immutable
 class CommentItemWidget extends StatelessWidget {
   final CommentItem item;
-  CommentItemWidget(this.item, {Key? key}) : super(key: key);
+  CommentItemWidget(this.item, {super.key});
   var expand = false.obs;
   @override
   Widget build(BuildContext context) {
@@ -162,7 +162,7 @@ class CommentItemWidget extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(4)),
           padding: AppStyle.edgeInsetsA8,
           child: Center(
@@ -206,7 +206,7 @@ class CommentItemWidget extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(4)),
           padding: AppStyle.edgeInsetsA8,
           child: Column(

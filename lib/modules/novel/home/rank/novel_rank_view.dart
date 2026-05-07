@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/novel/rank_model.dart';
 import 'package:flutter_dmzj/modules/novel/home/rank/novel_rank_controller.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
@@ -13,9 +12,7 @@ import 'package:get/get.dart';
 
 class NovelRankView extends StatelessWidget {
   final NovelRankController controller;
-  NovelRankView({Key? key})
-      : controller = Get.put(NovelRankController()),
-        super(key: key);
+  NovelRankView({super.key}) : controller = Get.put(NovelRankController());
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +51,7 @@ class NovelRankView extends StatelessWidget {
               separatorBuilder: (context, i) => Divider(
                 endIndent: 12,
                 indent: 12,
-                color: Colors.grey.withOpacity(.2),
+                color: Colors.grey.withValues(alpha: .2),
                 height: 1,
               ),
               itemBuilder: (context, i) {
@@ -74,30 +71,69 @@ class NovelRankView extends StatelessWidget {
     required Function(int) onSelected,
   }) {
     return Expanded(
-      child: PopupMenuButton<int>(
-        onSelected: onSelected,
-        itemBuilder: (c) => types.keys
-            .map(
-              (k) => CheckedPopupMenuItem<int>(
-                value: k,
-                checked: k == value,
-                child: Text(types[k] ?? ""),
+      child: Builder(
+        builder: (buttonContext) => InkWell(
+          onTap: () async {
+            final button = buttonContext.findRenderObject() as RenderBox?;
+            final overlay = Overlay.of(buttonContext).context.findRenderObject()
+                as RenderBox?;
+            if (button == null || overlay == null) {
+              return;
+            }
+            final selected = await showMenu<int>(
+              context: buttonContext,
+              position: RelativeRect.fromRect(
+                Rect.fromPoints(
+                  button.localToGlobal(Offset.zero, ancestor: overlay),
+                  button.localToGlobal(
+                    button.size.bottomRight(Offset.zero),
+                    ancestor: overlay,
+                  ),
+                ),
+                Offset.zero & overlay.size,
               ),
-            )
-            .toList(),
-        child: SizedBox(
-          height: 36,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                types[value] ?? "",
-              ),
-              const Icon(
-                Icons.arrow_drop_down,
-                color: Colors.grey,
-              )
-            ],
+              items: types.entries
+                  .map(
+                    (entry) => PopupMenuItem<int>(
+                      value: entry.key,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 38,
+                            child: entry.key == value
+                                ? const Icon(Icons.check,
+                                    color: Colors.blue, size: 18)
+                                : null,
+                          ),
+                          Expanded(child: Text(entry.value)),
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
+            );
+            if (selected != null) {
+              onSelected(selected);
+            }
+          },
+          child: SizedBox(
+            height: 36,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Flexible(
+                  child: Text(
+                    types[value] ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.grey,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -131,32 +167,17 @@ class NovelRankView extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
-                  Text.rich(
-                    TextSpan(children: [
-                      const WidgetSpan(
-                          child: Icon(
-                        Icons.account_circle,
-                        color: Colors.grey,
-                        size: 18,
-                      )),
-                      const TextSpan(
-                        text: " ",
-                      ),
-                      TextSpan(
-                          text: item.authors,
-                          style:
-                              const TextStyle(color: Colors.grey, fontSize: 14))
-                    ]),
-                  ),
+                  Text(item.authors,
+                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
                   Text(item.types.join("/"),
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
+                  Text(item.status,
+                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   Text(item.lastUpdateChapterName,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
-                  Text("更新于${Utils.formatTimestamp(item.lastUpdateTime)}",
-                      style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),
             ),

@@ -17,7 +17,7 @@ class ComicRankController extends BasePageController<ComicRankListItemModel> {
     2: "月排行",
     3: "总排行",
   };
-  var byTime = 3.obs;
+  var byTime = 0.obs;
 
   Map<int, String> rankTypes = {
     0: "人气排行",

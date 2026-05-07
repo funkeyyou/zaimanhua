@@ -13,9 +13,8 @@ import 'package:get/get.dart';
 class NewsListView extends StatelessWidget {
   final NewsTagModel tag;
   final NewsListController controller;
-  NewsListView({Key? key, required this.tag})
-      : controller = Get.put(NewsListController(tag), tag: tag.id.toString()),
-        super(key: key);
+  NewsListView({super.key, required this.tag})
+      : controller = Get.put(NewsListController(tag), tag: tag.id.toString());
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class NewsListView extends StatelessWidget {
         separatorBuilder: (context, i) => Divider(
           endIndent: 12,
           indent: 12,
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           height: 1,
         ),
         header: tag.id == 0 ? buildBanner() : null,

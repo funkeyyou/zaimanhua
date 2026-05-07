@@ -18,7 +18,7 @@ class AppStyle {
       centerTitle: false,
       shape: Border(
         bottom: BorderSide(
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           width: 1,
         ),
       ),
@@ -42,7 +42,7 @@ class AppStyle {
     cardColor: const Color(0xff424242),
     colorScheme: AppColor.colorSchemeDark,
     scaffoldBackgroundColor: Colors.black,
-    tabBarTheme: const TabBarTheme(
+    tabBarTheme: const TabBarThemeData(
       indicatorColor: Colors.blue,
     ),
     appBarTheme: AppBarTheme(
@@ -52,7 +52,7 @@ class AppStyle {
       centerTitle: false,
       shape: Border(
         bottom: BorderSide(
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           width: 1,
         ),
       ),

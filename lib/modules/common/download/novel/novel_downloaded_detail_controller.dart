@@ -174,7 +174,7 @@ class NovelDownloadedDetailController extends GetxController {
 
   void selectItem(NovelDetailChapter item) {
     if (selectItems.contains(item)) {
-      selectItems.remove(item.chapterId);
+      selectItems.remove(item);
     } else {
       selectItems.add(item);
     }

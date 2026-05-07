@@ -18,13 +18,13 @@ class ComicViewPointModel {
     required this.page,
   });
 
-  factory ComicViewPointModel.fromJson(Map<String, dynamic> json) =>
+  factory ComicViewPointModel.fromJson(List<dynamic> json) =>
       ComicViewPointModel(
-        id: asT<int>(json['id'])!,
-        uid: asT<int>(json['uid'])!,
-        content: asT<String>(json['content'])!,
-        num: (asT<int?>(json['num']) ?? 0).obs,
-        page: asT<int>(json['page'])!,
+        id: asT<int>(json[0])!,
+        uid: asT<int>(json[6])!,
+        content: asT<String>(json[7])!,
+        num: (asT<int?>(json[1]) ?? 0).obs,
+        page: asT<int>(json[5])!,
       );
 
   int id;

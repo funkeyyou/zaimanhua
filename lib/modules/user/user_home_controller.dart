@@ -44,7 +44,7 @@ class UserHomeController extends GetxController {
       applicationIcon: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.grey.withOpacity(.2),
+            color: Colors.grey.withValues(alpha: .2),
           ),
           borderRadius: AppStyle.radius12,
         ),
@@ -86,7 +86,10 @@ class UserHomeController extends GetxController {
 
   /// 本机历史
   void toLocalHistory() async {
-    AppNavigator.toLocalHistory();
+    if (!await UserService.instance.login()) {
+      return;
+    }
+    AppNavigator.toUserHistory();
   }
 
   void toSettings() async {

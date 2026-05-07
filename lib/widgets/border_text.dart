@@ -12,8 +12,8 @@ class BorderText extends StatelessWidget {
     this.color = Colors.white,
     this.fontSize = 16,
     this.strokeWidth = 2.0,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +47,10 @@ class BorderText extends StatelessWidget {
   }
 
   Color getBorderColor(Color color) {
-    var brightness =
-        ((color.red * 299) + (color.green * 587) + (color.blue * 114)) / 1000;
+    final r = (color.r * 255.0).round().clamp(0, 255);
+    final g = (color.g * 255.0).round().clamp(0, 255);
+    final b = (color.b * 255.0).round().clamp(0, 255);
+    var brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
     return brightness > 70 ? Colors.black : Colors.white;
   }
 }

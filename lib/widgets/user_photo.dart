@@ -11,8 +11,8 @@ class UserPhoto extends StatelessWidget {
     this.url,
     this.showBoder = true,
     this.size = 48,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +23,10 @@ class UserPhoto extends StatelessWidget {
         decoration: BoxDecoration(
           border: showBoder
               ? Border.all(
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.grey.withValues(alpha: .2),
                 )
               : null,
-          color: Colors.grey.withOpacity(.2),
+          color: Colors.grey.withValues(alpha: .2),
           borderRadius: AppStyle.radius32,
         ),
         child: const Icon(
@@ -43,7 +43,7 @@ class UserPhoto extends StatelessWidget {
         borderRadius: BorderRadius.circular(56),
         border: showBoder
             ? Border.all(
-                color: Colors.grey.withOpacity(.2),
+                color: Colors.grey.withValues(alpha: .2),
               )
             : null,
       ),

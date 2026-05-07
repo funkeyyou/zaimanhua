@@ -17,7 +17,7 @@ class NovelRequest {
   Future<List<NovelRecommendModel>> recommend() async {
     var list = <NovelRecommendModel>[];
     var result =
-        await HttpClient.instance.getJson('/novel/recommend', checkCode: true);
+        await HttpClient.instance.getJson('/novel/recommend', checkCode: true, withDefaultParameter: true);
     for (var item in result["recommendList"]) {
       list.add(NovelRecommendModel.fromJson(item));
     }
@@ -113,9 +113,16 @@ class NovelRequest {
   }) async {
     var list = <NovelRankModel>[];
     var result = await HttpClient.instance.getJson(
-      '/novel/rank/$sort/$tagId/$page.json',
+      '/novel/rank/list',
+      queryParameters: {
+        "page": page,
+        "tagId": tagId,
+        "rankType": sort,
+      },
+      checkCode: true,
     );
-    for (var item in result) {
+    var resList = result['rankList'];
+    for (var item in resList) {
       list.add(NovelRankModel.fromJson(item));
     }
     return list;

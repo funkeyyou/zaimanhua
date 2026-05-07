@@ -10,47 +10,67 @@ T? asT<T>(dynamic value) {
 class NovelRankModel {
   NovelRankModel({
     required this.id,
-    required this.lastUpdateTime,
-    required this.name,
-    required this.types,
-    required this.cover,
+    required this.title,
     required this.authors,
+    required this.cover,
+    required this.hotHits,
+    required this.lastName,
+    required this.lastUpdateVolumeName,
+    required this.lastUpdateVolumeId,
     required this.lastUpdateChapterName,
-    required this.top,
-    required this.subscribeAmount,
+    required this.lastUpdateChapterId,
+    required this.status,
+    required this.typesText,
+    required this.subNums,
+    this.lastUpdateTime = 0,
   });
 
   factory NovelRankModel.fromJson(Map<String, dynamic> json) {
-    final List<String>? types = json['types'] is List ? <String>[] : null;
-    if (types != null) {
-      for (final dynamic item in json['types']!) {
-        if (item != null) {
-          types.add(asT<String>(item)!);
-        }
-      }
-    }
     return NovelRankModel(
-      id: asT<int>(json['id'])!,
-      lastUpdateTime: asT<int>(json['last_update_time'])!,
-      name: asT<String>(json['name'])!,
-      types: types!,
-      cover: asT<String>(json['cover'])!,
-      authors: asT<String>(json['authors'])!,
-      lastUpdateChapterName: asT<String>(json['last_update_chapter_name'])!,
-      top: asT<int>(json['top'])!,
-      subscribeAmount: asT<int>(json['subscribe_amount'])!,
+      id: asT<int>(json['id']) ?? 0,
+      title: asT<String>(json['title']) ?? '',
+      authors: asT<String>(json['authors']) ?? '',
+      cover: asT<String>(json['cover']) ?? '',
+      hotHits: asT<int>(json['hot_hits']) ?? 0,
+      lastName: asT<String>(json['last_name']) ?? '',
+      lastUpdateVolumeName: asT<String>(json['last_update_volume_name']) ?? '',
+      lastUpdateVolumeId: asT<int>(json['last_update_volume_id']) ?? 0,
+      lastUpdateChapterName:
+          asT<String>(json['last_update_chapter_name']) ?? '',
+      lastUpdateChapterId: asT<int>(json['last_update_chapter_id']) ?? 0,
+      status: asT<String>(json['status']) ?? '',
+      typesText: asT<String>(json['types']) ?? '',
+      subNums: asT<int>(json['sub_nums']) ?? 0,
+      // Some older endpoints may still return this field.
+      lastUpdateTime: asT<int>(json['last_update_time']) ?? 0,
     );
   }
 
   int id;
-  int lastUpdateTime;
-  String name;
-  List<String> types;
-  String cover;
+  String title;
   String authors;
+  String cover;
+  int hotHits;
+  String lastName;
+  String lastUpdateVolumeName;
+  int lastUpdateVolumeId;
   String lastUpdateChapterName;
-  int top;
-  int subscribeAmount;
+  int lastUpdateChapterId;
+  String status;
+  String typesText;
+  int subNums;
+  int lastUpdateTime;
+
+  // Compatibility getters for existing UI/business code.
+  String get name => title;
+
+  List<String> get types => typesText
+      .split('/')
+      .map((e) => e.trim())
+      .where((e) => e.isNotEmpty)
+      .toList();
+
+  int get subscribeAmount => subNums;
 
   @override
   String toString() {
@@ -59,13 +79,18 @@ class NovelRankModel {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
-        'last_update_time': lastUpdateTime,
-        'name': name,
-        'types': types,
-        'cover': cover,
+        'title': title,
         'authors': authors,
+        'cover': cover,
+        'hot_hits': hotHits,
+        'last_name': lastName,
+        'last_update_volume_name': lastUpdateVolumeName,
+        'last_update_volume_id': lastUpdateVolumeId,
         'last_update_chapter_name': lastUpdateChapterName,
-        'top': top,
-        'subscribe_amount': subscribeAmount,
+        'last_update_chapter_id': lastUpdateChapterId,
+        'status': status,
+        'types': typesText,
+        'sub_nums': subNums,
+        'last_update_time': lastUpdateTime,
       };
 }

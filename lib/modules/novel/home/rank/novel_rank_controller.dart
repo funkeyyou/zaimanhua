@@ -25,7 +25,8 @@ class NovelRankController extends BasePageController<NovelRankModel> {
 
   void loadFilter() async {
     try {
-      tags.value = await request.rankFilter();
+      final newTags = await request.rankFilter();
+      tags.value = {...tags, ...newTags}; // 合并后整体回写
     } catch (e) {
       SmartDialog.showToast(e.toString());
     }

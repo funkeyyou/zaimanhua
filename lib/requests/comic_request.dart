@@ -101,8 +101,6 @@ class ComicRequest {
     for (var item in result["cateList"]) {
       list.add(ComicCategoryItemModel.fromJson(item));
     }
-    // 百合赛高
-    list.add(ComicCategoryItemModel(tagId: 3243, title: "ゆり", cover: ""));
     return list;
   }
 
@@ -136,18 +134,17 @@ class ComicRequest {
     int status = 0,
   }) async {
     var list = <ComicCategoryComicModel>[];
-    var result = await HttpClient.instance.getJson(
-      '/comic/filter/list',
-      queryParameters: {
-        "theme": id,
-        "status": 0,
-        "sortType": sort,
-        "page": page,
-        "size": 20,
-      },
-      checkCode: true,
-      needLogin: true // 登录可以更多内容
-    );
+    var result = await HttpClient.instance.getJson('/comic/filter/list',
+        queryParameters: {
+          "theme": id,
+          "status": 0,
+          "sortType": sort,
+          "page": page,
+          "size": 20,
+        },
+        checkCode: true,
+        needLogin: true // 登录可以更多内容
+        );
     for (var item in result["comicList"]) {
       list.add(ComicCategoryComicModel.fromJson(item));
     }
@@ -161,17 +158,17 @@ class ComicRequest {
     required rankType,
     int page = 1,
   }) async {
-    var result = await HttpClient.instance.getJson(
-      '/comic/rank/list',
-      queryParameters: {
-        'tag_id': tagId,
-        'by_time': byTime,
-        'rank_type': rankType,
-        'page': page
-      },
-    );
+    var result = await HttpClient.instance.getJson('/comic/rank/list',
+        queryParameters: {
+          'tag_id': tagId,
+          'by_time': byTime,
+          'rank_type': rankType,
+          'page': page
+        },
+        needLogin: true // 登录可以更多内容
+        );
     var list = <ComicRankListItemModel>[];
-    for (var item in result["data"]) {
+    for (var item in result["data"] ?? []) {
       list.add(ComicRankListItemModel.fromJson(item));
     }
     return list;
@@ -179,20 +176,12 @@ class ComicRequest {
 
   /// 排行榜-分类
   Future<Map<int, String>> rankFilter() async {
-    var result = await HttpClient.instance.getJson(
-      '/comic/filter/category',
-      queryParameters: {"source": 1},
-      checkCode: true,
-    );
-    Map<int, String> map = {
-      0: "全部分类",
-      3243: "ゆり"
-    };
-    for (var item in result["cateList"]) {
-      map.addAll({
-        item["tagId"]: item["title"],
-      });
-    }
+    // var result = await HttpClient.instance.getJson(
+    //   '/comic/filter/category',
+    //   queryParameters: {"source": 1},
+    //   checkCode: true,
+    // );
+    Map<int, String> map = {0: "全部分类"};
     return map;
   }
 
@@ -397,10 +386,16 @@ class ComicRequest {
   Future<List<ComicViewPointModel>> viewPoints(
       {required int comicId, required int chapterId}) async {
     var list = <ComicViewPointModel>[];
-    var result = await HttpClient.instance.getJson(
-      '/viewPoint/0/$comicId/$chapterId.json',
-    );
-    for (var item in result) {
+    var result = await HttpClient.instance.getJson('/viewpoint/list',
+        needLogin: true,
+        checkCode: true,
+        queryParameters: {
+          "type": 0,
+          "comicId": comicId,
+          "chapterId": chapterId
+        });
+    var resList = result['list'] ?? [];
+    for (var item in resList) {
       list.add(ComicViewPointModel.fromJson(item));
     }
     return list;
@@ -409,7 +404,7 @@ class ComicRequest {
   /// 点赞观点、吐槽
   Future<bool> likeViewPoint({required int comicId, required int id}) async {
     await HttpClient.instance.postJson(
-      '/viewPoint/praise',
+      '/viewpoint/praise',
       checkCode: true,
       data: {
         "sub_type": comicId,
@@ -427,15 +422,14 @@ class ComicRequest {
       required String content,
       required int page}) async {
     await HttpClient.instance.postJson(
-      '/viewPoint/addv2',
+      '/viewpoint/add',
       checkCode: true,
+      needLogin: true,
       data: {
-        "sub_type": comicId,
-        "uid": UserService.instance.userId,
-        "dmzj_token": UserService.instance.dmzjToken,
+        "comicId": comicId,
         "page": page,
         "type": 0,
-        "third_type": chapterId,
+        "chapterId": chapterId,
         "content": content,
       },
     );

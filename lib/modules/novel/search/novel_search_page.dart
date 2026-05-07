@@ -60,7 +60,7 @@ class NovelSearchPage extends StatelessWidget {
             separatorBuilder: (context, i) => Divider(
               endIndent: 12,
               indent: 12,
-              color: Colors.grey.withOpacity(.2),
+              color: Colors.grey.withValues(alpha: .2),
               height: 1,
             ),
             itemBuilder: (context, i) {
@@ -68,43 +68,44 @@ class NovelSearchPage extends StatelessWidget {
               return buildItem(item);
             },
           ),
-          Positioned.fill(
-            child: Obx(
-              () => Offstage(
-                offstage: !controller.showHotWord.value,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const ListTile(
-                        title: Text("热门搜索"),
-                      ),
-                      Padding(
-                        padding: AppStyle.edgeInsetsH12.copyWith(bottom: 12),
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: controller.hotWords.keys
-                              .map(
-                                (e) => OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  onPressed: () {
-                                    AppNavigator.toNovelDetail(e);
-                                  },
-                                  child: Text(controller.hotWords[e] ?? ""),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // Positioned.fill(
+          //   child: Obx(
+          //     () => Offstage(
+          //       offstage: !controller.showHotWord.value,
+          //       child: SingleChildScrollView(
+          //         child: Column(
+          //           children: [
+          //             const ListTile(
+          //               title: Text("热门搜索"),
+          //             ),
+          //             Padding(
+          //               padding: AppStyle.edgeInsetsH12.copyWith(bottom: 12),
+          //               child: Wrap(
+          //                 spacing: 8,
+          //                 runSpacing: 8,
+          //                 children: controller.hotWords.keys
+          //                     .take(6)
+          //                     .map(
+          //                       (e) => OutlinedButton(
+          //                         style: OutlinedButton.styleFrom(
+          //                           tapTargetSize:
+          //                               MaterialTapTargetSize.shrinkWrap,
+          //                         ),
+          //                         onPressed: () {
+          //                           AppNavigator.toNovelDetail(e);
+          //                         },
+          //                         child: Text(controller.hotWords[e] ?? ""),
+          //                       ),
+          //                     )
+          //                     .toList(),
+          //               ),
+          //             )
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
