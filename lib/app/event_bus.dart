@@ -13,6 +13,9 @@ class EventBus {
 
   /// 更新了小说记录
   static const String kUpdatedNovelHistory = "UpdateNovelHistory";
+
+  /// 刷新评论列表
+  static const String kRefreshComment = "RefreshComment";
   static EventBus? _instance;
 
   static EventBus get instance {

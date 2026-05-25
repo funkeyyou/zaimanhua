@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dmzj/app/controller/base_controller.dart';
+import 'package:flutter_dmzj/app/event_bus.dart';
 import 'package:flutter_dmzj/models/comment/comment_item.dart';
 import 'package:flutter_dmzj/requests/comment_request.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
@@ -35,13 +36,14 @@ class AddCommentController extends BaseController {
           objId: objId,
           type: type,
           content: textEditingController.text,
-          toCommentId: replyItem!.id.toString(),
-          originCommentId: replyItem!.originId.toString(),
-          toUid: replyItem!.userId.toString(),
+          toCommentId: replyItem!.id.toInt(),
+          originCommentId: replyItem!.originId.toInt(),
+          toUid: replyItem!.userId.toInt(),
         );
       }
 
       SmartDialog.showToast("发表成功");
+      EventBus.instance.emit(EventBus.kRefreshComment, objId);
       AppNavigator.closePage();
     } catch (e) {
       SmartDialog.showToast(e.toString());

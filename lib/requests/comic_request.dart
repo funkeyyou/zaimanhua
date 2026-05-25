@@ -211,7 +211,12 @@ class ComicRequest {
   /// 作者详情
   Future<ComicAuthorModel> authorDetail({required int id}) async {
     var result = await HttpClient.instance.getJson(
-      '/UCenter/author/$id.json',
+      '/comic/list_by_author',
+      queryParameters: {
+        'tag_id': id,
+        'page': 1
+      },
+      needLogin: true,
     );
 
     return ComicAuthorModel.fromJson(result);
