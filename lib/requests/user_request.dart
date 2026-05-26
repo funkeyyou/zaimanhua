@@ -52,6 +52,21 @@ class UserRequest {
     return UserProfileModel.fromJson(result);
   }
 
+  /// 用户签到
+  /// 返回 true 表示签到成功，errno==1 时抛出含 errmsg 的异常
+  Future<bool> userSignIn() async {
+    var result = await HttpClient.instance.postJson(
+      "/task/sign_in",
+      baseUrl: Api.BASE_SIGN_IN_USER,
+      needLogin: true,
+    );
+
+    if (result is Map && result['errno'] == 1) {
+      throw result['errmsg']?.toString() ?? '今天已签到过~';
+    }
+    return true;
+  }
+
   /// 我的漫画订阅
   /// - [page] 页数从0开始
   /// - [subType] 全部=1，未读=2，已读=3，完结=4

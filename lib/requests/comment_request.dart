@@ -63,25 +63,45 @@ class CommentRequest {
       return CommentItem.createEmpty();
     }
     var item = comments[id];
+    final author = item['author'] is Map ? item['author'] as Map : null;
+
+    // 图片列表：优先使用 imgList 数组，回退到旧的 upload_images 逗号字符串
+    List<String> images = [];
+    final imgList = item['imgList'];
+    if (imgList is List && imgList.isNotEmpty) {
+      images = imgList.map((e) => e.toString()).toList();
+    } else {
+      images = (item['upload_images'] ?? '')
+          .toString()
+          .split(',')
+          .where((x) => x.isNotEmpty)
+          .toList();
+    }
+
     //返回的类型非常随机，有时候是int，有时候是string，所以使用int.tryParse
     return CommentItem(
       type: type,
-      id: int.tryParse(item["id"].toString()) ?? 0,
-      objId: int.tryParse(item["obj_id"].toString()) ?? 0,
-      content: unescape.convert(item["content"].toString()),
-      photo: item["photo"].toString(),
-      createTime: int.tryParse(item["create_time"].toString()) ?? 0,
-      images: item["upload_images"]
-          .toString()
-          .split(",")
-          .where((x) => x.isNotEmpty)
-          .toList(),
-      likeAmount: (int.tryParse(item["like_amount"].toString()) ?? 0).obs,
-      nickname: item["nickname"].toString(),
-      replyAmount: int.tryParse(item["reply_amount"].toString()) ?? 0,
-      gender: int.tryParse(item["sex"].toString()) ?? 0,
-      userId: int.tryParse(item["sender_uid"].toString()) ?? 0,
-      originId: int.tryParse(item["origin_comment_id"].toString()) ?? 0,
+      id: int.tryParse(item['id'].toString()) ?? 0,
+      objId: int.tryParse(item['obj_id'].toString()) ?? 0,
+      content: unescape.convert(item['content'].toString()),
+      photo: (author?['photo'] ?? item['photo'] ?? '').toString(),
+      createTime: int.tryParse(item['create_time'].toString()) ?? 0,
+      images: images,
+      likeAmount:
+          (int.tryParse(item['like_amount'].toString()) ?? 0).obs,
+      nickname: (author?['nickname'] ?? item['nickname'] ?? '').toString(),
+      replyAmount: int.tryParse(item['reply_amount'].toString()) ?? 0,
+      gender: int.tryParse(
+              (author?['sex'] ?? item['sex'] ?? 0).toString()) ??
+          0,
+      userId: int.tryParse(
+              (author?['uid'] ?? item['sender_uid'] ?? 0).toString()) ??
+          0,
+      originId:
+          int.tryParse(item['origin_comment_id'].toString()) ?? 0,
+      toCommentId:
+          int.tryParse(item['to_comment_id'].toString()) ?? 0,
+      isLike: (item['is_like'] == true).obs,
     );
   }
 
@@ -96,50 +116,76 @@ class CommentRequest {
     required int objId,
     required int type,
     required String content,
-    String toCommentId = "0",
-    String originCommentId = "0",
-    String toUid = "0",
+    int toCommentId = 0,
+    int originCommentId = 0,
+    int toUid = 0,
   }) async {
     var result = await HttpClient.instance.postJson(
-      "/v1/$type/new/add/app",
+      "/comment/create",
       baseUrl: Api.BASE_URL,
       data: {
         "obj_id": objId,
         "to_comment_id": toCommentId,
-        "origin_comment_id": originCommentId,
-        "to_uid": toUid,
-        "sender_terminal": 1,
+        "type": type,
         "content": content,
-        "dmzj_token": UserService.instance.dmzjToken,
-        "_debug": 0
+        "img": [],
       },
+      needLogin: true,
     );
-    if (result["code"] != 0) {
-      throw AppError(result["msg"].toString());
+    if (result["errno"] != 0) {
+      throw AppError(result["errmsg"].toString());
     }
     return true;
   }
 
   /// 评论点赞
-  Future<bool> likeComment({
+  Future<int?> likeComment({
     required int commentId,
     required int objId,
     required int type,
   }) async {
-    await HttpClient.instance.getJson(
-      "/v1/$type/like/$commentId",
+    var result = await HttpClient.instance.postJson(
+      "/comment/addLike",
       baseUrl: Api.BASE_URL,
-      queryParameters: {
-        "comment_id": commentId,
-        "obj_id": objId,
+      data: {
+        "commentId": commentId,
         "type": type,
       },
+      formUrlEncoded: true,
       needLogin: true,
-      withDefaultParameter: true,
-      checkCode: true,
     );
+    if (result is Map && result['errno'] != 0) {
+      throw AppError(result['errmsg'].toString());
+    }
+    if (result is Map && result['data'] is Map) {
+      return int.tryParse(result['data']['like_amount'].toString());
+    }
+    return null;
+  }
 
-    return true;
+  /// 取消评论点赞
+  Future<int?> deleteLikeComment({
+    required int commentId,
+    required int objId,
+    required int type,
+  }) async {
+    var result = await HttpClient.instance.postJson(
+      "/comment/deleteLike",
+      baseUrl: Api.BASE_URL,
+      data: {
+        "commentId": commentId,
+        "type": type,
+      },
+      formUrlEncoded: true,
+      needLogin: true,
+    );
+    if (result is Map && result['errno'] != 0) {
+      throw AppError(result['errmsg'].toString());
+    }
+    if (result is Map && result['data'] is Map) {
+      return int.tryParse(result['data']['like_amount'].toString());
+    }
+    return null;
   }
 
   /// 读取用户的评论

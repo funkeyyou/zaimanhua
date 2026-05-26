@@ -66,6 +66,34 @@ class UserHomePage extends GetView<UserHomeController> {
                                 ),
                               ),
                             ),
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.middle,
+                              child: Builder(builder: (context) {
+                                final level = UserService
+                                    .instance.userProfile.value?.userLevel;
+                                if (level == null) return const SizedBox.shrink();
+                                return Container(
+                                  margin: const EdgeInsets.only(left: 6),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 1),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.withValues(alpha: 0.15),
+                                    border: Border.all(
+                                        color: Colors.blue, width: 0.8),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    "Lv.$level",
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ),
                           ],
                         ),
                       ),

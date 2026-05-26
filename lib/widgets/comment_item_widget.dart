@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
+import 'package:flutter_dmzj/app/event_bus.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comment/comment_item.dart';
 import 'package:flutter_dmzj/requests/comment_request.dart';
@@ -265,13 +266,27 @@ class CommentItemWidget extends StatelessWidget {
   }
 
   void likeComment(CommentItem item) async {
+    final alreadyLiked = item.isLike?.value ?? false;
     try {
-      await CommentRequest().likeComment(
-        commentId: item.id,
-        objId: item.objId,
-        type: item.type,
-      );
-      item.likeAmount.value += 1;
+      int? likeAmount;
+      if (alreadyLiked) {
+        likeAmount = await CommentRequest().deleteLikeComment(
+          commentId: item.id,
+          objId: item.objId,
+          type: item.type,
+        );
+        item.isLike?.value = false;
+      } else {
+        likeAmount = await CommentRequest().likeComment(
+          commentId: item.id,
+          objId: item.objId,
+          type: item.type,
+        );
+        item.isLike?.value = true;
+      }
+      if (likeAmount != null) {
+        item.likeAmount.value = likeAmount;
+      }
     } catch (e) {
       SmartDialog.showToast(e.toString());
     }

@@ -18,6 +18,8 @@ class CommentItem {
     required this.gender,
     required this.type,
     required this.originId,
+    this.toCommentId = 0,
+    this.isLike,
     this.isEmpty = false,
   });
 
@@ -36,6 +38,8 @@ class CommentItem {
       gender: 0,
       type: 0,
       originId: 0,
+      toCommentId: 0,
+      isLike: false.obs,
       isEmpty: true,
     );
   }
@@ -55,4 +59,7 @@ class CommentItem {
   int gender;
   int type;
   int originId;
+  int toCommentId;
+  /// 是否已点赞（响应式，支持实时切换点赞状态）
+  Rx<bool>? isLike;
 }

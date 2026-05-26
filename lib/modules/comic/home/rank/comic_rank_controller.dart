@@ -49,6 +49,6 @@ class ComicRankController extends BasePageController<ComicRankListItemModel> {
       page: page,
     );
 
-    return ls;
+    return ls.where((e) => e.title.isNotEmpty).toList();
   }
 }

@@ -117,6 +117,15 @@ class UserService extends GetxService {
         return;
       }
       userProfile.value = await request.userProfile();
+      // 未签到时才调用签到接口
+      if (userProfile.value?.isSign == false) {
+        try {
+          await request.userSignIn();
+          SmartDialog.showToast("签到成功");
+        } catch (e) {
+          SmartDialog.showToast(e.toString());
+        }
+      }
     } catch (e) {
       Log.logPrint(e);
     }
