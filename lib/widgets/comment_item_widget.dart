@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/event_bus.dart';
 import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/comment/comment_item.dart';
 import 'package:flutter_dmzj/requests/comment_request.dart';
@@ -30,13 +29,8 @@ class CommentItemWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            InkWell(
-              onTap: () {
-                AppNavigator.toUserCenter(item.userId);
-              },
-              child: UserPhoto(
-                url: item.photo,
-              ),
+            UserPhoto(
+              url: item.photo,
             ),
             AppStyle.hGap12,
             Expanded(
@@ -304,9 +298,6 @@ class CommentItemWidget extends StatelessWidget {
             size: 32,
             showBoder: true,
           ),
-          onTap: () {
-            AppNavigator.toUserCenter(item.userId);
-          },
         ),
         ListTile(
           title: const Text("复制内容"),
