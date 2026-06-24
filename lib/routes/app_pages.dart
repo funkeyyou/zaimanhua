@@ -26,6 +26,7 @@ import 'package:flutter_dmzj/modules/novel/reader/novel_reader_controller.dart';
 import 'package:flutter_dmzj/modules/novel/reader/novel_reader_page.dart';
 import 'package:flutter_dmzj/modules/novel/search/novel_search_page.dart';
 import 'package:flutter_dmzj/modules/novel/select_chapter/novel_select_chapter_page.dart';
+import 'package:flutter_dmzj/modules/user/center/user_center_page.dart';
 import 'package:flutter_dmzj/modules/user/comment/user_comment_page.dart';
 import 'package:flutter_dmzj/modules/user/history/user_history_page.dart';
 import 'package:flutter_dmzj/modules/user/local_favorite/local_favorite_page.dart';
@@ -266,6 +267,13 @@ class AppPages {
         return GetPageRoute(
           settings: settings,
           page: () => UserCommentPage(
+            settings.arguments as int,
+          ),
+        );
+      case RoutePath.kUserCenter:
+        return GetPageRoute(
+          settings: settings,
+          page: () => UserCenterPage(
             settings.arguments as int,
           ),
         );

@@ -252,8 +252,7 @@ class AppNavigator {
   /// 打开用户中心
   /// * [userId] 用户ID
   static void toUserCenter(int userId) {
-    //TODO 跳转至用户中心
-    toUserComment(userId);
+    toContentPage(RoutePath.kUserCenter, arg: userId);
   }
 
   /// 打开本机收藏

@@ -9,6 +9,7 @@ import 'package:flutter_dmzj/models/user/novel_history_model.dart';
 import 'package:flutter_dmzj/models/user/subscribe_comic_model.dart';
 import 'package:flutter_dmzj/models/user/subscribe_news_model.dart';
 import 'package:flutter_dmzj/models/user/subscribe_novel_model.dart';
+import 'package:flutter_dmzj/models/user/user_center_model.dart';
 import 'package:flutter_dmzj/models/user/user_profile_model.dart';
 import 'package:flutter_dmzj/requests/common/api.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
@@ -50,6 +51,88 @@ class UserRequest {
     );
 
     return UserProfileModel.fromJson(result);
+  }
+
+  Future<UserCenterInfo> userCenterInfo({required int userId}) async {
+    var result = await HttpClient.instance.getJson(
+      "/other_center/index",
+      baseUrl: Api.BASE_URL_USER,
+      queryParameters: {
+        "hisUid": userId,
+      },
+      withDefaultParameter: false,
+      needLogin: true,
+    );
+    if (result is Map && result["errno"] != 0) {
+      throw AppError(result["errmsg"].toString());
+    }
+    return UserCenterInfo.fromJson(
+      Map<String, dynamic>.from(result["data"]["info"] as Map),
+    );
+  }
+
+  Future<List<UserCenterCommentItem>> userCenterComments({
+    required int userId,
+    int page = 1,
+    int pageSize = 10,
+    int source = AppConstant.kTypeComic,
+    int sortBy = 1,
+  }) async {
+    var result = await HttpClient.instance.getJson(
+      "/other_center/comment_list",
+      baseUrl: Api.BASE_URL_USER,
+      queryParameters: {
+        "hisUid": userId,
+        "page": page,
+        "size": pageSize,
+        "source": source,
+        "sortBy": sortBy,
+      },
+      withDefaultParameter: false,
+      needLogin: true,
+    );
+    if (result is Map && result["errno"] != 0) {
+      throw AppError(result["errmsg"].toString());
+    }
+    var list = <UserCenterCommentItem>[];
+    for (var item in (result["data"]["commentList"] ?? const [])) {
+      list.add(UserCenterCommentItem.fromJson(
+        Map<String, dynamic>.from(item as Map),
+      ));
+    }
+    return list;
+  }
+
+  Future<bool> addFocus({required int userId}) async {
+    var result = await HttpClient.instance.getJson(
+      "/u_center/focus/add",
+      baseUrl: Api.BASE_URL_USER,
+      queryParameters: {
+        "toUid": userId,
+      },
+      withDefaultParameter: false,
+      needLogin: true,
+    );
+    if (result is Map && result["errno"] != 0) {
+      throw AppError(result["errmsg"].toString());
+    }
+    return true;
+  }
+
+  Future<bool> removeFocus({required int userId}) async {
+    var result = await HttpClient.instance.getJson(
+      "/u_center/focus/del",
+      baseUrl: Api.BASE_URL_USER,
+      queryParameters: {
+        "toUid": userId,
+      },
+      withDefaultParameter: false,
+      needLogin: true,
+    );
+    if (result is Map && result["errno"] != 0) {
+      throw AppError(result["errmsg"].toString());
+    }
+    return true;
   }
 
   /// 用户签到

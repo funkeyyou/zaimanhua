@@ -3,7 +3,6 @@ import 'package:flutter_dmzj/models/comment/comment_item.dart';
 import 'package:flutter_dmzj/models/comment/user_comment_item.dart';
 import 'package:flutter_dmzj/requests/common/api.dart';
 import 'package:flutter_dmzj/requests/common/http_client.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
 
@@ -18,7 +17,7 @@ class CommentRequest {
   Future<List<CommentItem>> getComment({
     required int type,
     required int objId,
-    int sort = 1,
+    int sortBy = 1,
     int page = 1,
     int pageSize = 30,
   }) async {
@@ -29,7 +28,7 @@ class CommentRequest {
       queryParameters: {
         "type": type,
         "objId": objId,
-        "sort": sort,
+        "sortBy": sortBy,
         "page": page - 1,
         "size": pageSize,
       },
@@ -87,20 +86,16 @@ class CommentRequest {
       photo: (author?['photo'] ?? item['photo'] ?? '').toString(),
       createTime: int.tryParse(item['create_time'].toString()) ?? 0,
       images: images,
-      likeAmount:
-          (int.tryParse(item['like_amount'].toString()) ?? 0).obs,
+      likeAmount: (int.tryParse(item['like_amount'].toString()) ?? 0).obs,
       nickname: (author?['nickname'] ?? item['nickname'] ?? '').toString(),
       replyAmount: int.tryParse(item['reply_amount'].toString()) ?? 0,
-      gender: int.tryParse(
-              (author?['sex'] ?? item['sex'] ?? 0).toString()) ??
-          0,
+      gender:
+          int.tryParse((author?['sex'] ?? item['sex'] ?? 0).toString()) ?? 0,
       userId: int.tryParse(
               (author?['uid'] ?? item['sender_uid'] ?? 0).toString()) ??
           0,
-      originId:
-          int.tryParse(item['origin_comment_id'].toString()) ?? 0,
-      toCommentId:
-          int.tryParse(item['to_comment_id'].toString()) ?? 0,
+      originId: int.tryParse(item['origin_comment_id'].toString()) ?? 0,
+      toCommentId: int.tryParse(item['to_comment_id'].toString()) ?? 0,
       isLike: (item['is_like'] == true).obs,
     );
   }

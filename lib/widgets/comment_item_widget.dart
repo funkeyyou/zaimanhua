@@ -29,8 +29,13 @@ class CommentItemWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            UserPhoto(
-              url: item.photo,
+            InkWell(
+              onTap: () {
+                AppNavigator.toUserCenter(item.userId);
+              },
+              child: UserPhoto(
+                url: item.photo,
+              ),
             ),
             AppStyle.hGap12,
             Expanded(
@@ -298,6 +303,10 @@ class CommentItemWidget extends StatelessWidget {
             size: 32,
             showBoder: true,
           ),
+          onTap: () {
+            AppNavigator.closePage();
+            AppNavigator.toUserCenter(item.userId);
+          },
         ),
         ListTile(
           title: const Text("复制内容"),

@@ -44,7 +44,7 @@ class CommentListController extends BasePageController<CommentItem> {
         type: type,
         objId: objId,
         page: page,
-        sort: 2,
+        sortBy: 2,
       );
     } else {
       return await request.getComment(
