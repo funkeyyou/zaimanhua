@@ -16,6 +16,7 @@ import 'package:flutter_dmzj/models/db/comic_history.dart';
 import 'package:flutter_dmzj/models/db/novel_history.dart';
 import 'package:flutter_dmzj/services/comic_download_service.dart';
 import 'package:flutter_dmzj/services/novel_download_service.dart';
+import 'package:flutter_dmzj/services/novel_font_service.dart';
 import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -75,6 +76,8 @@ Future initServices() async {
   await Get.put(DBService()).init();
 
   //初始化设置服务
+  await Get.put(NovelFontService()).init();
+
   Get.put(AppSettingsService());
 
   //初始化漫画下载服务

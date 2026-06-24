@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/services/local_storage_service.dart';
+import 'package:flutter_dmzj/services/novel_font_service.dart';
 import 'package:get/get.dart';
 
 class AppSettingsService extends GetxController {
@@ -36,6 +37,22 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kNovelReaderDirection, 0);
     novelReaderFontSize.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderFontSize, 16);
+    novelReaderFontPath.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kNovelReaderFontPath, '');
+    novelReaderFontPaths.value = List<String>.from(
+      LocalStorageService.instance.getValue(
+        LocalStorageService.kNovelReaderFontPaths,
+        <String>[],
+      ),
+    );
+    if (novelReaderFontPath.value.isNotEmpty &&
+        !novelReaderFontPaths.contains(novelReaderFontPath.value)) {
+      novelReaderFontPaths.add(novelReaderFontPath.value);
+      _saveNovelReaderFontPaths();
+    }
+    for (final fontPath in novelReaderFontPaths) {
+      NovelFontService.instance.loadFont(fontPath);
+    }
     novelReaderLineSpacing.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderLineSpacing, 1.5);
     novelReaderTheme.value = LocalStorageService.instance
@@ -67,6 +84,8 @@ class AppSettingsService extends GetxController {
     //自动添加神隐漫画至收藏夹
     collectHideComic.value = LocalStorageService.instance
         .getValue(LocalStorageService.kCollectHideComic, false);
+    readerVolumeKeyTurnPage.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kReaderVolumeKeyTurnPage, false);
     super.onInit();
   }
 
@@ -184,6 +203,38 @@ class AppSettingsService extends GetxController {
     novelReaderFontSize.value = size;
     LocalStorageService.instance
         .setValue(LocalStorageService.kNovelReaderFontSize, size);
+  }
+
+  /// Novel reader font path. Empty means system default.
+  var novelReaderFontPath = ''.obs;
+  RxList<String> novelReaderFontPaths = RxList<String>();
+  String? get novelReaderFontFamily => novelReaderFontPath.value.isEmpty
+      ? null
+      : NovelFontService.instance.getFontFamily(novelReaderFontPath.value);
+  String get novelReaderFontName =>
+      NovelFontService.instance.getFontName(novelReaderFontPath.value);
+  Future<void> setNovelReaderFontPath(String path) async {
+    if (path.isNotEmpty) {
+      await NovelFontService.instance.loadFont(path);
+      if (!novelReaderFontPaths.contains(path)) {
+        novelReaderFontPaths.add(path);
+        await _saveNovelReaderFontPaths();
+      }
+    }
+    novelReaderFontPath.value = path;
+    await LocalStorageService.instance
+        .setValue(LocalStorageService.kNovelReaderFontPath, path);
+  }
+
+  Future<void> addNovelReaderFontPath(String path) async {
+    await setNovelReaderFontPath(path);
+  }
+
+  Future<void> _saveNovelReaderFontPaths() async {
+    await LocalStorageService.instance.setValue(
+      LocalStorageService.kNovelReaderFontPaths,
+      novelReaderFontPaths.toList(),
+    );
   }
 
   /// 小说行距
@@ -319,6 +370,14 @@ class AppSettingsService extends GetxController {
     collectHideComic.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kCollectHideComic, value);
+  }
+
+  /// Reader volume key page turning
+  RxBool readerVolumeKeyTurnPage = false.obs;
+  void setReaderVolumeKeyTurnPage(bool value) {
+    readerVolumeKeyTurnPage.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kReaderVolumeKeyTurnPage, value);
   }
 
   void setNoFirstRun() {

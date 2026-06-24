@@ -17,6 +17,8 @@ import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
 import 'package:flutter_dmzj/requests/novel_request.dart';
 import 'package:flutter_dmzj/services/db_service.dart';
 import 'package:flutter_dmzj/services/novel_download_service.dart';
+import 'package:flutter_dmzj/services/novel_font_service.dart';
+import 'package:flutter_dmzj/services/reader_volume_key_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -113,6 +115,11 @@ class NovelReaderController extends BaseController {
 
     scrollController.addListener(listenVertical);
     setFull();
+    ReaderVolumeKeyService.instance.start(
+      enabled: settings.readerVolumeKeyTurnPage.value,
+      onVolumeUp: forwardPageByInput,
+      onVolumeDown: nextPageByInput,
+    );
 
     loadContent();
     super.onInit();
@@ -184,6 +191,7 @@ class NovelReaderController extends BaseController {
     scrollController.removeListener(listenVertical);
     connectivitySubscription?.cancel();
     batterySubscription?.cancel();
+    ReaderVolumeKeyService.instance.stop();
     exitFull();
     uploadHistory();
     super.onClose();
@@ -596,6 +604,18 @@ class NovelReaderController extends BaseController {
                     AppStyle.vGap12,
                     buildBGItem(
                       child: ListTile(
+                        title: const Text("字体"),
+                        subtitle: Text(settings.novelReaderFontName),
+                        onTap: showFontDialog,
+                        trailing: const Icon(
+                          Icons.chevron_right,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    AppStyle.vGap12,
+                    buildBGItem(
+                      child: ListTile(
                         title: const Text("行距"),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -644,6 +664,54 @@ class NovelReaderController extends BaseController {
   void setDirection(int value) {
     settings.setNovelReaderDirection(value);
     direction.value = value;
+  }
+
+  void showFontDialog() {
+    Get.dialog(
+      Obx(
+        () => SimpleDialog(
+          title: const Text("选择字体"),
+          children: [
+            RadioListTile<String>(
+              title: const Text("系统默认"),
+              value: '',
+              groupValue: settings.novelReaderFontPath.value,
+              onChanged: (value) async {
+                Get.back();
+                await settings.setNovelReaderFontPath(value ?? '');
+              },
+            ),
+            ...settings.novelReaderFontPaths.map(
+              (path) => RadioListTile<String>(
+                title: Text(NovelFontService.instance.getFontName(path)),
+                value: path,
+                groupValue: settings.novelReaderFontPath.value,
+                onChanged: (value) async {
+                  Get.back();
+                  await settings.setNovelReaderFontPath(value ?? '');
+                },
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.add),
+              title: const Text("导入字体"),
+              onTap: () async {
+                Get.back();
+                try {
+                  final path =
+                      await NovelFontService.instance.pickAndInstallFont();
+                  if (path != null) {
+                    await settings.addNovelReaderFontPath(path);
+                  }
+                } catch (e) {
+                  SmartDialog.showToast(e.toString());
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget buildBGItem({required Widget child}) {
@@ -868,19 +936,33 @@ class NovelReaderController extends BaseController {
 
   void keyDown(LogicalKeyboardKey key) {
     if (key == LogicalKeyboardKey.arrowLeft ||
-        key == LogicalKeyboardKey.pageUp) {
-      if (leftHandMode) {
-        nextPage();
-      } else {
-        forwardPage();
-      }
+        key == LogicalKeyboardKey.pageUp ||
+        (!Platform.isAndroid &&
+            settings.readerVolumeKeyTurnPage.value &&
+            key == LogicalKeyboardKey.audioVolumeUp)) {
+      forwardPageByInput();
     } else if (key == LogicalKeyboardKey.arrowRight ||
-        key == LogicalKeyboardKey.pageDown) {
-      if (leftHandMode) {
-        forwardPage();
-      } else {
-        nextPage();
-      }
+        key == LogicalKeyboardKey.pageDown ||
+        (!Platform.isAndroid &&
+            settings.readerVolumeKeyTurnPage.value &&
+            key == LogicalKeyboardKey.audioVolumeDown)) {
+      nextPageByInput();
+    }
+  }
+
+  void forwardPageByInput() {
+    if (leftHandMode) {
+      nextPage();
+    } else {
+      forwardPage();
+    }
+  }
+
+  void nextPageByInput() {
+    if (leftHandMode) {
+      forwardPage();
+    } else {
+      nextPage();
     }
   }
 }

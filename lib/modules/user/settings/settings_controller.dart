@@ -2,6 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/services/local_storage_service.dart';
+import 'package:flutter_dmzj/services/novel_font_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -103,6 +104,57 @@ class SettingsController extends GetxController {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Future<void> pickNovelReaderFont() async {
+    try {
+      final path = await NovelFontService.instance.pickAndInstallFont();
+      if (path != null) {
+        await settings.addNovelReaderFontPath(path);
+      }
+    } catch (e) {
+      SmartDialog.showToast(e.toString());
+    }
+  }
+
+  void showNovelReaderFontDialog() {
+    Get.dialog(
+      Obx(
+        () => SimpleDialog(
+          title: const Text("选择字体"),
+          children: [
+            RadioListTile<String>(
+              title: const Text("系统默认"),
+              value: '',
+              groupValue: settings.novelReaderFontPath.value,
+              onChanged: (value) async {
+                Get.back();
+                await settings.setNovelReaderFontPath(value ?? '');
+              },
+            ),
+            ...settings.novelReaderFontPaths.map(
+              (path) => RadioListTile<String>(
+                title: Text(NovelFontService.instance.getFontName(path)),
+                value: path,
+                groupValue: settings.novelReaderFontPath.value,
+                onChanged: (value) async {
+                  Get.back();
+                  await settings.setNovelReaderFontPath(value ?? '');
+                },
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.add),
+              title: const Text("导入字体"),
+              onTap: () async {
+                Get.back();
+                await pickNovelReaderFont();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

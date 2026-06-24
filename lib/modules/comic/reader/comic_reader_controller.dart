@@ -18,6 +18,7 @@ import 'package:flutter_dmzj/models/comic/detail_info.dart';
 import 'package:flutter_dmzj/models/comic/view_point_model.dart';
 import 'package:flutter_dmzj/requests/comic_request.dart';
 import 'package:flutter_dmzj/services/db_service.dart';
+import 'package:flutter_dmzj/services/reader_volume_key_service.dart';
 import 'package:flutter_dmzj/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -120,6 +121,12 @@ class ComicReaderController extends BaseController {
       setFull();
     }
 
+    ReaderVolumeKeyService.instance.start(
+      enabled: settings.readerVolumeKeyTurnPage.value,
+      onVolumeUp: forwardPageByInput,
+      onVolumeDown: nextPageByInput,
+    );
+
     itemPositionsListener.itemPositions.addListener(updateItemPosition);
     loadDetail();
     super.onInit();
@@ -183,6 +190,7 @@ class ComicReaderController extends BaseController {
     focusNode.dispose();
     connectivitySubscription?.cancel();
     batterySubscription?.cancel();
+    ReaderVolumeKeyService.instance.stop();
     exitFull();
     itemPositionsListener.itemPositions.removeListener(updateItemPosition);
     uploadHistory();
@@ -856,19 +864,33 @@ class ComicReaderController extends BaseController {
 
   void keyDown(LogicalKeyboardKey key) {
     if (key == LogicalKeyboardKey.arrowLeft ||
-        key == LogicalKeyboardKey.pageUp) {
-      if (leftHandMode) {
-        nextPage();
-      } else {
-        forwardPage();
-      }
+        key == LogicalKeyboardKey.pageUp ||
+        (!Platform.isAndroid &&
+            settings.readerVolumeKeyTurnPage.value &&
+            key == LogicalKeyboardKey.audioVolumeUp)) {
+      forwardPageByInput();
     } else if (key == LogicalKeyboardKey.arrowRight ||
-        key == LogicalKeyboardKey.pageDown) {
-      if (leftHandMode) {
-        forwardPage();
-      } else {
-        nextPage();
-      }
+        key == LogicalKeyboardKey.pageDown ||
+        (!Platform.isAndroid &&
+            settings.readerVolumeKeyTurnPage.value &&
+            key == LogicalKeyboardKey.audioVolumeDown)) {
+      nextPageByInput();
+    }
+  }
+
+  void forwardPageByInput() {
+    if (leftHandMode) {
+      nextPage();
+    } else {
+      forwardPage();
+    }
+  }
+
+  void nextPageByInput() {
+    if (leftHandMode) {
+      forwardPage();
+    } else {
+      nextPage();
     }
   }
 }

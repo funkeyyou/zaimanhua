@@ -266,6 +266,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
         controller: controller.pageController,
         reverse: controller.direction.value == ReaderDirection.kRightToLeft,
         style: TextStyle(
+          fontFamily: controller.settings.novelReaderFontFamily,
           fontSize: controller.settings.novelReaderFontSize.value.toDouble(),
           height: controller.settings.novelReaderLineSpacing.value,
           color: AppColor
@@ -336,6 +337,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                 controller.content.value,
                 textAlign: TextAlign.justify,
                 style: TextStyle(
+                  fontFamily: controller.settings.novelReaderFontFamily,
                   fontSize:
                       controller.settings.novelReaderFontSize.value.toDouble(),
                   height: controller.settings.novelReaderLineSpacing.value,
