@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/comment/comment_item.dart';
-import 'package:flutter_dmzj/modules/common/comment/add_comment_controller.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/models/comment/comment_item.dart';
+import 'package:zai_x/modules/common/comment/add_comment_controller.dart';
 import 'package:get/get.dart';
 
 class AddCommentPage extends StatelessWidget {

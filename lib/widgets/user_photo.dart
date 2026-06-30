@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/widgets/net_image.dart';
 import 'package:remixicon/remixicon.dart';
 
 class UserPhoto extends StatelessWidget {

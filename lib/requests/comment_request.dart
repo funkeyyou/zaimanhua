@@ -1,8 +1,8 @@
-import 'package:flutter_dmzj/app/app_error.dart';
-import 'package:flutter_dmzj/models/comment/comment_item.dart';
-import 'package:flutter_dmzj/models/comment/user_comment_item.dart';
-import 'package:flutter_dmzj/requests/common/api.dart';
-import 'package:flutter_dmzj/requests/common/http_client.dart';
+import 'package:zai_x/app/app_error.dart';
+import 'package:zai_x/models/comment/comment_item.dart';
+import 'package:zai_x/models/comment/user_comment_item.dart';
+import 'package:zai_x/requests/common/api.dart';
+import 'package:zai_x/requests/common/http_client.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
 

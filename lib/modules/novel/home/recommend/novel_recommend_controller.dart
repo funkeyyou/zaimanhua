@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/novel/recommend_model.dart';
-import 'package:flutter_dmzj/modules/novel/home/novel_home_controller.dart';
-import 'package:flutter_dmzj/requests/novel_request.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/models/novel/recommend_model.dart';
+import 'package:zai_x/modules/novel/home/novel_home_controller.dart';
+import 'package:zai_x/requests/novel_request.dart';
+import 'package:zai_x/routes/app_navigator.dart';
 
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';

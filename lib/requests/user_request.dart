@@ -1,20 +1,20 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/app_error.dart';
-import 'package:flutter_dmzj/models/user/comic_history_model.dart';
-import 'package:flutter_dmzj/models/user/login_result_model.dart';
-import 'package:flutter_dmzj/models/user/novel_history_model.dart';
-import 'package:flutter_dmzj/models/user/subscribe_comic_model.dart';
-import 'package:flutter_dmzj/models/user/subscribe_news_model.dart';
-import 'package:flutter_dmzj/models/user/subscribe_novel_model.dart';
-import 'package:flutter_dmzj/models/user/user_center_model.dart';
-import 'package:flutter_dmzj/models/user/user_profile_model.dart';
-import 'package:flutter_dmzj/requests/common/api.dart';
-import 'package:flutter_dmzj/requests/common/http_client.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zai_x/app/app_constant.dart';
+import 'package:zai_x/app/app_error.dart';
+import 'package:zai_x/models/user/comic_history_model.dart';
+import 'package:zai_x/models/user/login_result_model.dart';
+import 'package:zai_x/models/user/novel_history_model.dart';
+import 'package:zai_x/models/user/subscribe_comic_model.dart';
+import 'package:zai_x/models/user/subscribe_news_model.dart';
+import 'package:zai_x/models/user/subscribe_novel_model.dart';
+import 'package:zai_x/models/user/user_center_model.dart';
+import 'package:zai_x/models/user/user_profile_model.dart';
+import 'package:zai_x/requests/common/api.dart';
+import 'package:zai_x/requests/common/http_client.dart';
+import 'package:zai_x/services/db_service.dart';
+import 'package:zai_x/services/user_service.dart';
 
 class UserRequest {
   /// 登录

@@ -1,6 +1,6 @@
-import 'package:flutter_dmzj/models/novel/detail_model.dart';
-import 'package:flutter_dmzj/models/novel/volume_detail_model.dart';
-import 'package:flutter_dmzj/models/proto/novel.pb.dart';
+import 'package:zai_x/models/novel/detail_model.dart';
+import 'package:zai_x/models/novel/volume_detail_model.dart';
+import 'package:zai_x/models/proto/novel.pb.dart';
 import 'package:get/get.dart';
 
 T? asT<T>(dynamic value) {

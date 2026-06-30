@@ -5,8 +5,8 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:crypton/crypton.dart';
-import 'package:flutter_dmzj/app/app_error.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zai_x/app/app_error.dart';
+import 'package:zai_x/services/user_service.dart';
 
 class Api {
   static const String DMZJ_DOMAIN_NAME = "dmzj.com";

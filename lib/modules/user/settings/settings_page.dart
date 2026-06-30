@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/modules/user/settings/settings_controller.dart';
+import 'package:zai_x/app/app_color.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/modules/user/settings/settings_controller.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 

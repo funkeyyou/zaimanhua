@@ -1,11 +1,11 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/routes/app_navigator.dart';
 
-import 'package:flutter_dmzj/services/comic_download_service.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/status/app_empty_widget.dart';
+import 'package:zai_x/services/comic_download_service.dart';
+import 'package:zai_x/widgets/net_image.dart';
+import 'package:zai_x/widgets/status/app_empty_widget.dart';
 import 'package:get/get.dart';
 
 class ComicDownloadedView extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter_dmzj/models/comic/detail_model.dart';
-import 'package:flutter_dmzj/models/comic/detail_v1_model.dart';
+import 'package:zai_x/models/comic/detail_model.dart';
+import 'package:zai_x/models/comic/detail_v1_model.dart';
 import 'package:get/get.dart';
 
 T? asT<T>(dynamic value) {

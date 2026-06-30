@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dmzj/app/log.dart';
+import 'package:zai_x/app/log.dart';
 
 class CustomInterceptor extends Interceptor {
   @override

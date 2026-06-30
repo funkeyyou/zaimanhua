@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/modules/common/comment/comment_list_controller.dart';
-import 'package:flutter_dmzj/widgets/comment_item_widget.dart';
-import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
-import 'package:flutter_dmzj/widgets/page_list_view.dart';
+import 'package:zai_x/modules/common/comment/comment_list_controller.dart';
+import 'package:zai_x/widgets/comment_item_widget.dart';
+import 'package:zai_x/widgets/keep_alive_wrapper.dart';
+import 'package:zai_x/widgets/page_list_view.dart';
 import 'package:get/get.dart';
 
 class CommentListView extends StatelessWidget {

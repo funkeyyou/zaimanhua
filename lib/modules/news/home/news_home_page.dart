@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/modules/news/home/news_home_controller.dart';
-import 'package:flutter_dmzj/modules/news/home/news_list_view.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
-import 'package:flutter_dmzj/widgets/tab_appbar.dart';
+import 'package:zai_x/modules/news/home/news_home_controller.dart';
+import 'package:zai_x/modules/news/home/news_list_view.dart';
+import 'package:zai_x/widgets/status/app_error_widget.dart';
+import 'package:zai_x/widgets/status/app_loadding_widget.dart';
+import 'package:zai_x/widgets/tab_appbar.dart';
 import 'package:get/get.dart';
 
 class NewsHomePage extends GetView<NewsHomeController> {

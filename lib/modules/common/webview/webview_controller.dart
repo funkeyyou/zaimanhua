@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zai_x/app/app_color.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/app/log.dart';
+import 'package:zai_x/services/user_service.dart';
 import 'package:get/get.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';

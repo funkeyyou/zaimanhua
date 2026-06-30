@@ -11,7 +11,7 @@ class ReaderVolumeKeyService {
   static final ReaderVolumeKeyService instance = ReaderVolumeKeyService._();
 
   static const MethodChannel _channel =
-      MethodChannel('flutter_dmzj/reader_volume_key');
+      MethodChannel('zai_x/reader_volume_key');
 
   VoidCallback? _onVolumeUp;
   VoidCallback? _onVolumeDown;

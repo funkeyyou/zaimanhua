@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:zai_x/routes/app_navigator.dart';
 
 class TestSubRoutePage extends StatelessWidget {
   const TestSubRoutePage({super.key});

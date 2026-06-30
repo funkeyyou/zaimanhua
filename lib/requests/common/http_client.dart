@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_dmzj/app/app_error.dart';
-import 'package:flutter_dmzj/requests/common/api.dart';
-import 'package:flutter_dmzj/requests/common/custom_interceptor.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zai_x/app/app_error.dart';
+import 'package:zai_x/requests/common/api.dart';
+import 'package:zai_x/requests/common/custom_interceptor.dart';
+import 'package:zai_x/services/user_service.dart';
 
 class HttpClient {
   static HttpClient? _httpUtil;

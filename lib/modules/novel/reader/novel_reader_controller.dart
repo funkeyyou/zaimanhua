@@ -5,22 +5,22 @@ import 'package:battery_plus/battery_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/db/download_status.dart';
-import 'package:flutter_dmzj/models/db/novel_download_info.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
-import 'package:flutter_dmzj/requests/novel_request.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
-import 'package:flutter_dmzj/services/novel_font_service.dart';
-import 'package:flutter_dmzj/services/reader_volume_key_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zai_x/app/app_color.dart';
+import 'package:zai_x/app/app_constant.dart';
+import 'package:zai_x/app/dialog_utils.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/models/db/download_status.dart';
+import 'package:zai_x/models/db/novel_download_info.dart';
+import 'package:zai_x/services/app_settings_service.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/app/log.dart';
+import 'package:zai_x/models/novel/novel_detail_model.dart';
+import 'package:zai_x/requests/novel_request.dart';
+import 'package:zai_x/services/db_service.dart';
+import 'package:zai_x/services/novel_download_service.dart';
+import 'package:zai_x/services/novel_font_service.dart';
+import 'package:zai_x/services/reader_volume_key_service.dart';
+import 'package:zai_x/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
@@ -130,7 +130,7 @@ class NovelReaderController extends BaseController {
   void initBattery() async {
     try {
       //没有电池的Mac似乎会闪退,暂时屏蔽Mac
-      //https://github.com/xiaoyaocz/flutter_dmzj/discussions/146
+      //https://github.com/xiaoyaocz/zai_x/discussions/146
       if (Platform.isMacOS) {
         showBattery.value = false;
         return;

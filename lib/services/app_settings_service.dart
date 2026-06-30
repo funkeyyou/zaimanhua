@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/services/local_storage_service.dart';
-import 'package:flutter_dmzj/services/novel_font_service.dart';
-import 'package:flutter_dmzj/services/reader_volume_key_service.dart';
+import 'package:zai_x/services/local_storage_service.dart';
+import 'package:zai_x/services/novel_font_service.dart';
+import 'package:zai_x/services/reader_volume_key_service.dart';
 import 'package:get/get.dart';
 
 class AppSettingsService extends GetxController {

@@ -1,4 +1,4 @@
-import 'package:flutter_dmzj/app/log.dart';
+import 'package:zai_x/app/log.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';

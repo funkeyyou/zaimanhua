@@ -1,7 +1,7 @@
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/db/local_favorite.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
+import 'package:zai_x/app/app_constant.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/models/db/local_favorite.dart';
+import 'package:zai_x/services/db_service.dart';
 import 'package:get/get.dart';
 
 class LocalFavoriteController extends BasePageController<LocalFavorite> {

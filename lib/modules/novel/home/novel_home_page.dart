@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/modules/novel/home/category/novel_category_view.dart';
-import 'package:flutter_dmzj/modules/novel/home/latest/novel_latest_view.dart';
-import 'package:flutter_dmzj/modules/novel/home/novel_home_controller.dart';
-import 'package:flutter_dmzj/modules/novel/home/recommend/novel_recommend_view.dart';
-import 'package:flutter_dmzj/modules/novel/home/rank/novel_rank_view.dart';
-import 'package:flutter_dmzj/widgets/tab_appbar.dart';
+import 'package:zai_x/modules/novel/home/category/novel_category_view.dart';
+import 'package:zai_x/modules/novel/home/latest/novel_latest_view.dart';
+import 'package:zai_x/modules/novel/home/novel_home_controller.dart';
+import 'package:zai_x/modules/novel/home/recommend/novel_recommend_view.dart';
+import 'package:zai_x/modules/novel/home/rank/novel_rank_view.dart';
+import 'package:zai_x/widgets/tab_appbar.dart';
 import 'package:get/get.dart';
 
 class NovelHomePage extends GetView<NovelHomeController> {

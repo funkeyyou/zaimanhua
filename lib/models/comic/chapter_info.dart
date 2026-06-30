@@ -1,7 +1,7 @@
-import 'package:flutter_dmzj/models/comic/chapter_detail_model.dart';
-import 'package:flutter_dmzj/models/comic/chapter_detail_web_model.dart';
-import 'package:flutter_dmzj/models/db/comic_download_info.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
+import 'package:zai_x/models/comic/chapter_detail_model.dart';
+import 'package:zai_x/models/comic/chapter_detail_web_model.dart';
+import 'package:zai_x/models/db/comic_download_info.dart';
+import 'package:zai_x/services/comic_download_service.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;

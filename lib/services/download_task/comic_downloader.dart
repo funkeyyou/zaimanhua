@@ -3,13 +3,13 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/db/comic_download_info.dart';
-import 'package:flutter_dmzj/models/db/download_status.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
+import 'package:zai_x/app/dialog_utils.dart';
+import 'package:zai_x/app/log.dart';
+import 'package:zai_x/models/db/comic_download_info.dart';
+import 'package:zai_x/models/db/download_status.dart';
+import 'package:zai_x/requests/comic_request.dart';
+import 'package:zai_x/services/app_settings_service.dart';
+import 'package:zai_x/services/comic_download_service.dart';
 import 'package:get/get.dart';
 
 // ignore: depend_on_referenced_packages

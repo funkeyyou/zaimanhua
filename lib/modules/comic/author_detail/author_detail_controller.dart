@@ -1,8 +1,8 @@
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/comic/author_model.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zai_x/app/app_constant.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/models/comic/author_model.dart';
+import 'package:zai_x/requests/comic_request.dart';
+import 'package:zai_x/services/user_service.dart';
 import 'package:get/get.dart';
 
 class ComicAuthorDetailController extends BaseController {

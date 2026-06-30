@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/comic/detail_info.dart';
-import 'package:flutter_dmzj/models/comment/comment_item.dart';
-import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
-import 'package:flutter_dmzj/routes/route_path.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
+import 'package:zai_x/app/log.dart';
+import 'package:zai_x/models/comic/detail_info.dart';
+import 'package:zai_x/models/comment/comment_item.dart';
+import 'package:zai_x/models/novel/novel_detail_model.dart';
+import 'package:zai_x/routes/route_path.dart';
+import 'package:zai_x/services/comic_download_service.dart';
+import 'package:zai_x/services/novel_download_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';

@@ -6,20 +6,20 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/app_error.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/comic/chapter_info.dart';
-import 'package:flutter_dmzj/models/comic/detail_info.dart';
-import 'package:flutter_dmzj/models/comic/view_point_model.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
-import 'package:flutter_dmzj/services/reader_volume_key_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zai_x/app/app_constant.dart';
+import 'package:zai_x/app/app_error.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/app/utils.dart';
+import 'package:zai_x/services/app_settings_service.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/app/log.dart';
+import 'package:zai_x/models/comic/chapter_info.dart';
+import 'package:zai_x/models/comic/detail_info.dart';
+import 'package:zai_x/models/comic/view_point_model.dart';
+import 'package:zai_x/requests/comic_request.dart';
+import 'package:zai_x/services/db_service.dart';
+import 'package:zai_x/services/reader_volume_key_service.dart';
+import 'package:zai_x/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -136,7 +136,7 @@ class ComicReaderController extends BaseController {
   void initBattery() async {
     try {
       //没有电池的Mac似乎会闪退,暂时屏蔽Mac
-      //https://github.com/xiaoyaocz/flutter_dmzj/discussions/146
+      //https://github.com/xiaoyaocz/zai_x/discussions/146
       if (Platform.isMacOS) {
         showBattery.value = false;
         return;

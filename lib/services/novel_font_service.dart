@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/log.dart';
+import 'package:zai_x/app/log.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
+import 'package:zai_x/app/app_constant.dart';
 
 class EmptyPage extends StatelessWidget {
   const EmptyPage({super.key});

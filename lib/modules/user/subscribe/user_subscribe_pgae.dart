@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/modules/user/subscribe/comic/comic_subscribe_view.dart';
-import 'package:flutter_dmzj/modules/user/subscribe/novel/novel_subscribe_view.dart';
-import 'package:flutter_dmzj/modules/user/subscribe/user_subscribe_controller.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/modules/user/subscribe/comic/comic_subscribe_view.dart';
+import 'package:zai_x/modules/user/subscribe/novel/novel_subscribe_view.dart';
+import 'package:zai_x/modules/user/subscribe/user_subscribe_controller.dart';
 import 'package:get/get.dart';
 
 class UserSubscribePage extends StatelessWidget {

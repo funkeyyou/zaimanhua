@@ -1,7 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/services/app_settings_service.dart';
 
 class NetImage extends StatefulWidget {
   final String picUrl;
