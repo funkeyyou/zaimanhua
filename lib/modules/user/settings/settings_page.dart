@@ -81,6 +81,14 @@ class SettingsPage extends StatelessWidget {
           //   subtitle: const Text("开启后可以搜索到更多漫画"),
           // ),
           SwitchListTile(
+            value: controller.settings.eInkMode.value,
+            onChanged: (e) {
+              controller.settings.setEInkMode(e);
+            },
+            title: const Text("E-Ink 模式"),
+            subtitle: const Text("关闭翻页动画和首页轮播，开启音量键翻页"),
+          ),
+          SwitchListTile(
             value: controller.settings.useSystemFontSize.value,
             onChanged: (e) {
               controller.settings.setUseSystemFontSize(e);

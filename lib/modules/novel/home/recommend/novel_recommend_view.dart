@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/models/novel/recommend_model.dart';
 import 'package:flutter_dmzj/modules/novel/home/recommend/novel_recommend_controller.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
 import 'package:flutter_dmzj/widgets/page_list_view.dart';
@@ -104,68 +105,70 @@ class NovelRecommendView extends StatelessWidget {
   Widget buildBanner(NovelRecommendModel item) {
     return Padding(
       padding: AppStyle.edgeInsetsB12,
-      child: ClipRRect(
-        borderRadius: AppStyle.radius4,
-        child: AspectRatio(
-          aspectRatio: 7.5 / 4,
-          child: Swiper(
-            itemWidth: 750,
-            itemHeight: 400,
-            autoplay: true,
-            itemCount: item.data.length,
-            itemBuilder: (_, i) => NetImage(
-              item.data[i].cover,
-              width: 750,
-              height: 400,
-            ),
-            onTap: (i) {
-              controller.openDetail(item.data[i]);
-            },
-            pagination: SwiperCustomPagination(
-              builder: (BuildContext context, SwiperPluginConfig config) {
-                return Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                      left: 8,
-                      right: 12,
-                      top: 4,
-                      bottom: 4,
-                    ),
-                    //color: Colors.black12,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Colors.black38,
-                          Colors.transparent,
+      child: Obx(
+        () => ClipRRect(
+          borderRadius: AppStyle.radius4,
+          child: AspectRatio(
+            aspectRatio: 7.5 / 4,
+            child: Swiper(
+              itemWidth: 750,
+              itemHeight: 400,
+              autoplay: !AppSettingsService.instance.eInkMode.value,
+              itemCount: item.data.length,
+              itemBuilder: (_, i) => NetImage(
+                item.data[i].cover,
+                width: 750,
+                height: 400,
+              ),
+              onTap: (i) {
+                controller.openDetail(item.data[i]);
+              },
+              pagination: SwiperCustomPagination(
+                builder: (BuildContext context, SwiperPluginConfig config) {
+                  return Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                        left: 8,
+                        right: 12,
+                        top: 4,
+                        bottom: 4,
+                      ),
+                      //color: Colors.black12,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Colors.black38,
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              item.data[config.activeIndex].title,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.white),
+                            ),
+                          ),
+                          AppStyle.hGap8,
+                          PageIndicator(
+                            controller: config.pageController!,
+                            count: config.itemCount,
+                            size: 10,
+                            layout: PageIndicatorLayout.SCALE,
+                          ),
                         ],
                       ),
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            item.data[config.activeIndex].title,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.white),
-                          ),
-                        ),
-                        AppStyle.hGap8,
-                        PageIndicator(
-                          controller: config.pageController!,
-                          count: config.itemCount,
-                          size: 10,
-                          layout: PageIndicatorLayout.SCALE,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),

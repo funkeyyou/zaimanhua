@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dmzj/app/app_color.dart';
 import 'package:flutter_dmzj/app/app_constant.dart';
+import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
 import 'package:flutter_dmzj/models/db/download_status.dart';
 import 'package:flutter_dmzj/models/db/novel_download_info.dart';
@@ -684,6 +685,12 @@ class NovelReaderController extends BaseController {
             ...settings.novelReaderFontPaths.map(
               (path) => RadioListTile<String>(
                 title: Text(NovelFontService.instance.getFontName(path)),
+                controlAffinity: ListTileControlAffinity.leading,
+                secondary: IconButton(
+                  tooltip: "删除字体",
+                  icon: const Icon(Icons.delete_outline),
+                  onPressed: () => deleteFont(path),
+                ),
                 value: path,
                 groupValue: settings.novelReaderFontPath.value,
                 onChanged: (value) async {
@@ -698,8 +705,9 @@ class NovelReaderController extends BaseController {
               onTap: () async {
                 Get.back();
                 try {
-                  final path =
-                      await NovelFontService.instance.pickAndInstallFont();
+                  final path = await NovelFontService.instance.pickAndInstallFont(
+                    existingFontPaths: settings.novelReaderFontPaths,
+                  );
                   if (path != null) {
                     await settings.addNovelReaderFontPath(path);
                   }
@@ -712,6 +720,24 @@ class NovelReaderController extends BaseController {
         ),
       ),
     );
+  }
+
+  Future<void> deleteFont(String path) async {
+    final fontName = NovelFontService.instance.getFontName(path);
+    final result = await DialogUtils.showAlertDialog(
+      "删除后需要重新导入才能再次使用。",
+      title: "删除字体「$fontName」？",
+      confirm: "删除",
+    );
+    if (!result) {
+      return;
+    }
+    try {
+      await settings.deleteNovelReaderFontPath(path);
+      SmartDialog.showToast("删除成功");
+    } catch (e) {
+      SmartDialog.showToast(e.toString());
+    }
   }
 
   Widget buildBGItem({required Widget child}) {
@@ -841,7 +867,7 @@ class NovelReaderController extends BaseController {
   /// 退出全屏
   void exitFull() {
     SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.edgeToEdge,
+      SystemUiMode.manual,
       overlays: SystemUiOverlay.values,
     );
   }

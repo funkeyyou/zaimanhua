@@ -4,6 +4,7 @@ import 'package:flutter_dmzj/app/utils.dart';
 import 'package:flutter_dmzj/models/news/news_tag_model.dart';
 import 'package:flutter_dmzj/modules/news/home/news_list_controller.dart';
 import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
 import 'package:flutter_dmzj/widgets/net_image.dart';
 import 'package:flutter_dmzj/widgets/page_list_view.dart';
@@ -132,7 +133,7 @@ class NewsListView extends StatelessWidget {
                 : Swiper(
                     itemWidth: 750,
                     itemHeight: 400,
-                    autoplay: true,
+                    autoplay: !AppSettingsService.instance.eInkMode.value,
                     itemCount: controller.banners.length,
                     onTap: (i) {
                       controller.openBanner(controller.banners[i]);

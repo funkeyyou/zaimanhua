@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/services/local_storage_service.dart';
 import 'package:flutter_dmzj/services/novel_font_service.dart';
+import 'package:flutter_dmzj/services/reader_volume_key_service.dart';
 import 'package:get/get.dart';
 
 class AppSettingsService extends GetxController {
@@ -48,8 +49,22 @@ class AppSettingsService extends GetxController {
     if (novelReaderFontPath.value.isNotEmpty &&
         !novelReaderFontPaths.contains(novelReaderFontPath.value)) {
       novelReaderFontPaths.add(novelReaderFontPath.value);
-      _saveNovelReaderFontPaths();
     }
+    final selectedFontKey = novelReaderFontPath.value.isEmpty
+        ? ''
+        : NovelFontService.instance.getFontKey(novelReaderFontPath.value);
+    novelReaderFontPaths.value = NovelFontService.instance
+        .filterAvailableFontPaths(novelReaderFontPaths);
+    if (novelReaderFontPath.value.isNotEmpty &&
+        !novelReaderFontPaths.contains(novelReaderFontPath.value)) {
+      novelReaderFontPath.value = novelReaderFontPaths.firstWhere(
+        (path) => NovelFontService.instance.getFontKey(path) == selectedFontKey,
+        orElse: () => '',
+      );
+      LocalStorageService.instance
+          .setValue(LocalStorageService.kNovelReaderFontPath, novelReaderFontPath.value);
+    }
+    _saveNovelReaderFontPaths();
     for (final fontPath in novelReaderFontPaths) {
       NovelFontService.instance.loadFont(fontPath);
     }
@@ -86,6 +101,11 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kCollectHideComic, false);
     readerVolumeKeyTurnPage.value = LocalStorageService.instance
         .getValue(LocalStorageService.kReaderVolumeKeyTurnPage, false);
+    eInkMode.value =
+        LocalStorageService.instance.getValue(LocalStorageService.kEInkMode, false);
+    if (eInkMode.value) {
+      applyEInkModeSettings();
+    }
     super.onInit();
   }
 
@@ -215,6 +235,14 @@ class AppSettingsService extends GetxController {
       NovelFontService.instance.getFontName(novelReaderFontPath.value);
   Future<void> setNovelReaderFontPath(String path) async {
     if (path.isNotEmpty) {
+      final fontName = NovelFontService.instance.getFontName(path);
+      if (!novelReaderFontPaths.contains(path) &&
+          NovelFontService.instance.hasSameFontName(
+            fontName,
+            novelReaderFontPaths,
+          )) {
+        throw Exception('已添加同名字体：$fontName');
+      }
       await NovelFontService.instance.loadFont(path);
       if (!novelReaderFontPaths.contains(path)) {
         novelReaderFontPaths.add(path);
@@ -228,6 +256,20 @@ class AppSettingsService extends GetxController {
 
   Future<void> addNovelReaderFontPath(String path) async {
     await setNovelReaderFontPath(path);
+  }
+
+  Future<void> deleteNovelReaderFontPath(String path) async {
+    if (path.isEmpty) {
+      return;
+    }
+    novelReaderFontPaths.remove(path);
+    if (novelReaderFontPath.value == path) {
+      novelReaderFontPath.value = '';
+      await LocalStorageService.instance
+          .setValue(LocalStorageService.kNovelReaderFontPath, '');
+    }
+    await _saveNovelReaderFontPaths();
+    await NovelFontService.instance.deleteFont(path);
   }
 
   Future<void> _saveNovelReaderFontPaths() async {
@@ -343,6 +385,9 @@ class AppSettingsService extends GetxController {
   /// 漫画阅读翻页动画
   RxBool comicReaderPageAnimation = true.obs;
   void setComicReaderPageAnimation(bool value) {
+    if (eInkMode.value && value) {
+      value = false;
+    }
     comicReaderPageAnimation.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kComicReaderPageAnimation, value);
@@ -351,6 +396,9 @@ class AppSettingsService extends GetxController {
   /// 小说阅读翻页动画
   RxBool novelReaderPageAnimation = true.obs;
   void setNovelReaderPageAnimation(bool value) {
+    if (eInkMode.value && value) {
+      value = false;
+    }
     novelReaderPageAnimation.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kNovelReaderPageAnimation, value);
@@ -375,9 +423,29 @@ class AppSettingsService extends GetxController {
   /// Reader volume key page turning
   RxBool readerVolumeKeyTurnPage = false.obs;
   void setReaderVolumeKeyTurnPage(bool value) {
+    if (eInkMode.value && !value) {
+      value = true;
+    }
     readerVolumeKeyTurnPage.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kReaderVolumeKeyTurnPage, value);
+    ReaderVolumeKeyService.instance.setEnabled(value);
+  }
+
+  /// E-ink display mode
+  RxBool eInkMode = false.obs;
+  void setEInkMode(bool value) {
+    eInkMode.value = value;
+    LocalStorageService.instance.setValue(LocalStorageService.kEInkMode, value);
+    if (value) {
+      applyEInkModeSettings();
+    }
+  }
+
+  void applyEInkModeSettings() {
+    setComicReaderPageAnimation(false);
+    setNovelReaderPageAnimation(false);
+    setReaderVolumeKeyTurnPage(true);
   }
 
   void setNoFirstRun() {

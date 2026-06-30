@@ -821,7 +821,7 @@ class ComicReaderController extends BaseController {
   /// 退出全屏
   void exitFull() {
     SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.edgeToEdge,
+      SystemUiMode.manual,
       overlays: SystemUiOverlay.values,
     );
   }

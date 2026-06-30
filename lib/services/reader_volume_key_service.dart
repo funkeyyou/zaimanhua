@@ -35,6 +35,13 @@ class ReaderVolumeKeyService {
     await _setEnabled(false);
   }
 
+  Future<void> setEnabled(bool enabled) async {
+    if (!_active) {
+      return;
+    }
+    await _setEnabled(enabled);
+  }
+
   Future<void> _setEnabled(bool enabled) async {
     if (!Platform.isAndroid) {
       return;

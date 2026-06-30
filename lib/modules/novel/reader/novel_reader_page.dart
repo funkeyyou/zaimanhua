@@ -132,7 +132,9 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                         : -(48 + AppStyle.statusBarHeight),
                     left: 0,
                     right: 0,
-                    duration: const Duration(milliseconds: 100),
+                    duration: controller.settings.eInkMode.value
+                        ? Duration.zero
+                        : const Duration(milliseconds: 100),
                     child: Container(
                       color: AppStyle.darkTheme.cardColor,
                       height: 48 + AppStyle.statusBarHeight,
@@ -165,7 +167,9 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                         : -(104 + AppStyle.bottomBarHeight),
                     left: 0,
                     right: 0,
-                    duration: const Duration(milliseconds: 100),
+                    duration: controller.settings.eInkMode.value
+                        ? Duration.zero
+                        : const Duration(milliseconds: 100),
                     child: Container(
                       color: AppStyle.darkTheme.cardColor,
                       height: 104 + AppStyle.bottomBarHeight,

@@ -165,7 +165,9 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                       : -(48 + AppStyle.statusBarHeight),
                   left: 0,
                   right: 0,
-                  duration: const Duration(milliseconds: 100),
+                  duration: controller.settings.eInkMode.value
+                      ? Duration.zero
+                      : const Duration(milliseconds: 100),
                   child: Container(
                     color: AppStyle.darkTheme.cardColor,
                     height: 48 + AppStyle.statusBarHeight,
@@ -200,7 +202,9 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                       : -(104 + AppStyle.bottomBarHeight),
                   left: 0,
                   right: 0,
-                  duration: const Duration(milliseconds: 100),
+                  duration: controller.settings.eInkMode.value
+                      ? Duration.zero
+                      : const Duration(milliseconds: 100),
                   child: Container(
                     color: AppStyle.darkTheme.cardColor,
                     height: 104 + AppStyle.bottomBarHeight,
@@ -324,7 +328,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
             ? const NeverScrollableScrollPhysics()
             : null,
         itemCount: controller.detail.value.pageUrls.length,
-        preloadPagesCount: 4,
+        preloadPagesCount: controller.settings.eInkMode.value ? 2 : 4,
         itemBuilder: (_, i) {
           var url = controller.detail.value.pageUrls[i];
           if (i == controller.detail.value.pageUrls.length - 1 && url == "TC") {

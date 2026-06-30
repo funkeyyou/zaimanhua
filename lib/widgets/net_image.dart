@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:flutter_dmzj/services/app_settings_service.dart';
 
 class NetImage extends StatefulWidget {
   final String picUrl;
@@ -112,7 +113,8 @@ class _NetImageState extends State<NetImage>
             );
           }
           if (e.extendedImageLoadState == LoadState.completed) {
-            if (e.wasSynchronouslyLoaded) {
+            if (e.wasSynchronouslyLoaded ||
+                AppSettingsService.instance.eInkMode.value) {
               return e.completedWidget;
             }
             animationController.forward();

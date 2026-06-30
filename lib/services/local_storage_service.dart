@@ -102,6 +102,9 @@ class LocalStorageService extends GetxService {
   /// Reader volume key page turning
   static const String kReaderVolumeKeyTurnPage = "ReaderVolumeKeyTurnPage";
 
+  /// E-ink display mode
+  static const String kEInkMode = "EInkMode";
+
   late Box settingsBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();

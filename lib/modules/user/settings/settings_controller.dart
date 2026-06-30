@@ -1,5 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dmzj/app/dialog_utils.dart';
 import 'package:flutter_dmzj/services/app_settings_service.dart';
 import 'package:flutter_dmzj/services/local_storage_service.dart';
 import 'package:flutter_dmzj/services/novel_font_service.dart';
@@ -110,7 +111,9 @@ class SettingsController extends GetxController {
 
   Future<void> pickNovelReaderFont() async {
     try {
-      final path = await NovelFontService.instance.pickAndInstallFont();
+      final path = await NovelFontService.instance.pickAndInstallFont(
+        existingFontPaths: settings.novelReaderFontPaths,
+      );
       if (path != null) {
         await settings.addNovelReaderFontPath(path);
       }
@@ -137,6 +140,12 @@ class SettingsController extends GetxController {
             ...settings.novelReaderFontPaths.map(
               (path) => RadioListTile<String>(
                 title: Text(NovelFontService.instance.getFontName(path)),
+                controlAffinity: ListTileControlAffinity.leading,
+                secondary: IconButton(
+                  tooltip: "删除字体",
+                  icon: const Icon(Icons.delete_outline),
+                  onPressed: () => deleteNovelReaderFont(path),
+                ),
                 value: path,
                 groupValue: settings.novelReaderFontPath.value,
                 onChanged: (value) async {
@@ -157,5 +166,23 @@ class SettingsController extends GetxController {
         ),
       ),
     );
+  }
+
+  Future<void> deleteNovelReaderFont(String path) async {
+    final fontName = NovelFontService.instance.getFontName(path);
+    final result = await DialogUtils.showAlertDialog(
+      "删除后需要重新导入才能再次使用。",
+      title: "删除字体「$fontName」？",
+      confirm: "删除",
+    );
+    if (!result) {
+      return;
+    }
+    try {
+      await settings.deleteNovelReaderFontPath(path);
+      SmartDialog.showToast("删除成功");
+    } catch (e) {
+      SmartDialog.showToast(e.toString());
+    }
   }
 }
