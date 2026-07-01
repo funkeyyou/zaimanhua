@@ -4,16 +4,16 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
+import 'package:zai_x/app/app_constant.dart';
 
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/modules/comic/reader/comic_reader_controller.dart';
-import 'package:flutter_dmzj/widgets/custom_header.dart';
-import 'package:flutter_dmzj/widgets/local_image.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/app/log.dart';
+import 'package:zai_x/modules/comic/reader/comic_reader_controller.dart';
+import 'package:zai_x/widgets/custom_header.dart';
+import 'package:zai_x/widgets/local_image.dart';
+import 'package:zai_x/widgets/net_image.dart';
+import 'package:zai_x/widgets/status/app_error_widget.dart';
+import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -165,7 +165,9 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                       : -(48 + AppStyle.statusBarHeight),
                   left: 0,
                   right: 0,
-                  duration: const Duration(milliseconds: 100),
+                  duration: controller.settings.eInkMode.value
+                      ? Duration.zero
+                      : const Duration(milliseconds: 100),
                   child: Container(
                     color: AppStyle.darkTheme.cardColor,
                     height: 48 + AppStyle.statusBarHeight,
@@ -200,7 +202,9 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                       : -(104 + AppStyle.bottomBarHeight),
                   left: 0,
                   right: 0,
-                  duration: const Duration(milliseconds: 100),
+                  duration: controller.settings.eInkMode.value
+                      ? Duration.zero
+                      : const Duration(milliseconds: 100),
                   child: Container(
                     color: AppStyle.darkTheme.cardColor,
                     height: 104 + AppStyle.bottomBarHeight,
@@ -324,7 +328,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
             ? const NeverScrollableScrollPhysics()
             : null,
         itemCount: controller.detail.value.pageUrls.length,
-        preloadPagesCount: 4,
+        preloadPagesCount: controller.settings.eInkMode.value ? 2 : 4,
         itemBuilder: (_, i) {
           var url = controller.detail.value.pageUrls[i];
           if (i == controller.detail.value.pageUrls.length - 1 && url == "TC") {

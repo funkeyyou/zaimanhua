@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/modules/news/detail/news_detail_controller.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/modules/news/detail/news_detail_controller.dart';
+import 'package:zai_x/widgets/net_image.dart';
+import 'package:zai_x/widgets/status/app_error_widget.dart';
+import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';

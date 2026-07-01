@@ -1,6 +1,6 @@
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/novel/rank_model.dart';
-import 'package:flutter_dmzj/requests/novel_request.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/models/novel/rank_model.dart';
+import 'package:zai_x/requests/novel_request.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 

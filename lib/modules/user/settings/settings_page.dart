@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/modules/user/settings/settings_controller.dart';
+import 'package:zai_x/app/app_color.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/modules/user/settings/settings_controller.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
@@ -81,6 +81,14 @@ class SettingsPage extends StatelessWidget {
           //   subtitle: const Text("开启后可以搜索到更多漫画"),
           // ),
           SwitchListTile(
+            value: controller.settings.eInkMode.value,
+            onChanged: (e) {
+              controller.settings.setEInkMode(e);
+            },
+            title: const Text("E-Ink 模式"),
+            subtitle: const Text("关闭翻页动画和首页轮播，开启音量键翻页"),
+          ),
+          SwitchListTile(
             value: controller.settings.useSystemFontSize.value,
             onChanged: (e) {
               controller.settings.setUseSystemFontSize(e);
@@ -95,6 +103,13 @@ class SettingsPage extends StatelessWidget {
             },
             title: const Text("自动收藏神隐漫画"),
             subtitle: const Text("浏览神隐漫画时自动添加到本机收藏"),
+          ),
+          SwitchListTile(
+            value: controller.settings.readerVolumeKeyTurnPage.value,
+            onChanged: (e) {
+              controller.settings.setReaderVolumeKeyTurnPage(e);
+            },
+            title: const Text("音量键翻页"),
           ),
         ],
       ),
@@ -292,6 +307,15 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           ListTile(
+            title: const Text("字体"),
+            subtitle: Text(controller.settings.novelReaderFontName),
+            onTap: controller.showNovelReaderFontDialog,
+            trailing: const Icon(
+              Icons.chevron_right,
+              color: Colors.grey,
+            ),
+          ),
+          ListTile(
             title: const Text("行距"),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
@@ -375,6 +399,7 @@ class SettingsPage extends StatelessWidget {
               //不需要跟随系统
               textScaler: const TextScaler.linear(1.0),
               style: TextStyle(
+                fontFamily: controller.settings.novelReaderFontFamily,
                 fontSize:
                     controller.settings.novelReaderFontSize.value.toDouble(),
                 height: controller.settings.novelReaderLineSpacing.value,

@@ -1,6 +1,6 @@
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/comic/update_item_model.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/models/comic/update_item_model.dart';
+import 'package:zai_x/requests/comic_request.dart';
 import 'package:get/get.dart';
 
 class ComicLatestController extends BasePageController<ComicUpdateItemModel> {

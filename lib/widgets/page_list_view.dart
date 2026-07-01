@@ -1,9 +1,9 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/widgets/status/app_empty_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/widgets/status/app_empty_widget.dart';
+import 'package:zai_x/widgets/status/app_error_widget.dart';
+import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 
 import 'package:get/get.dart';
 

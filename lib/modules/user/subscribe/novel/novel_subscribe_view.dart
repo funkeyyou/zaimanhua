@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/user/subscribe_novel_model.dart';
-import 'package:flutter_dmzj/modules/user/subscribe/novel/novel_subscribe_controller.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/models/user/subscribe_novel_model.dart';
+import 'package:zai_x/modules/user/subscribe/novel/novel_subscribe_controller.dart';
 
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/page_grid_view.dart';
-import 'package:flutter_dmzj/widgets/shadow_card.dart';
+import 'package:zai_x/routes/app_navigator.dart';
+import 'package:zai_x/widgets/keep_alive_wrapper.dart';
+import 'package:zai_x/widgets/net_image.dart';
+import 'package:zai_x/widgets/page_grid_view.dart';
+import 'package:zai_x/widgets/shadow_card.dart';
 import 'package:get/get.dart';
 
 class NovelSubscribeView extends StatelessWidget {

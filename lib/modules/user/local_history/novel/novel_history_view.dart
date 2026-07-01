@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/db/novel_history.dart';
-import 'package:flutter_dmzj/modules/user/local_history/novel/novel_history_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/widgets/keep_alive_wrapper.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/page_list_view.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/app/utils.dart';
+import 'package:zai_x/models/db/novel_history.dart';
+import 'package:zai_x/modules/user/local_history/novel/novel_history_controller.dart';
+import 'package:zai_x/routes/app_navigator.dart';
+import 'package:zai_x/widgets/keep_alive_wrapper.dart';
+import 'package:zai_x/widgets/net_image.dart';
+import 'package:zai_x/widgets/page_list_view.dart';
 import 'package:get/get.dart';
 
 class LocalNovelHistoryView extends StatelessWidget {

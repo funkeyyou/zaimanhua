@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/services/app_settings_service.dart';
+import 'package:zai_x/app/dialog_utils.dart';
+import 'package:zai_x/app/utils.dart';
+import 'package:zai_x/routes/app_navigator.dart';
+import 'package:zai_x/services/user_service.dart';
 
 import 'package:get/get.dart';
 

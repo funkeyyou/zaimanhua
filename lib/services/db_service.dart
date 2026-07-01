@@ -1,10 +1,10 @@
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/db/comic_history.dart';
-import 'package:flutter_dmzj/models/db/local_favorite.dart';
-import 'package:flutter_dmzj/models/db/novel_history.dart';
-import 'package:flutter_dmzj/models/user/comic_history_model.dart';
-import 'package:flutter_dmzj/models/user/novel_history_model.dart';
+import 'package:zai_x/app/app_constant.dart';
+import 'package:zai_x/app/log.dart';
+import 'package:zai_x/models/db/comic_history.dart';
+import 'package:zai_x/models/db/local_favorite.dart';
+import 'package:zai_x/models/db/novel_history.dart';
+import 'package:zai_x/models/user/comic_history_model.dart';
+import 'package:zai_x/models/user/novel_history_model.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';

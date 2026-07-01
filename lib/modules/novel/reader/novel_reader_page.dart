@@ -4,19 +4,19 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/modules/novel/reader/novel_horizontal_reader.dart';
+import 'package:zai_x/app/app_color.dart';
+import 'package:zai_x/app/app_constant.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/app/dialog_utils.dart';
+import 'package:zai_x/app/log.dart';
+import 'package:zai_x/modules/novel/reader/novel_horizontal_reader.dart';
 
-import 'package:flutter_dmzj/modules/novel/reader/novel_reader_controller.dart';
-import 'package:flutter_dmzj/widgets/custom_header.dart';
-import 'package:flutter_dmzj/widgets/local_image.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
+import 'package:zai_x/modules/novel/reader/novel_reader_controller.dart';
+import 'package:zai_x/widgets/custom_header.dart';
+import 'package:zai_x/widgets/local_image.dart';
+import 'package:zai_x/widgets/net_image.dart';
+import 'package:zai_x/widgets/status/app_error_widget.dart';
+import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 
@@ -132,7 +132,9 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                         : -(48 + AppStyle.statusBarHeight),
                     left: 0,
                     right: 0,
-                    duration: const Duration(milliseconds: 100),
+                    duration: controller.settings.eInkMode.value
+                        ? Duration.zero
+                        : const Duration(milliseconds: 100),
                     child: Container(
                       color: AppStyle.darkTheme.cardColor,
                       height: 48 + AppStyle.statusBarHeight,
@@ -165,7 +167,9 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                         : -(104 + AppStyle.bottomBarHeight),
                     left: 0,
                     right: 0,
-                    duration: const Duration(milliseconds: 100),
+                    duration: controller.settings.eInkMode.value
+                        ? Duration.zero
+                        : const Duration(milliseconds: 100),
                     child: Container(
                       color: AppStyle.darkTheme.cardColor,
                       height: 104 + AppStyle.bottomBarHeight,
@@ -266,6 +270,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
         controller: controller.pageController,
         reverse: controller.direction.value == ReaderDirection.kRightToLeft,
         style: TextStyle(
+          fontFamily: controller.settings.novelReaderFontFamily,
           fontSize: controller.settings.novelReaderFontSize.value.toDouble(),
           height: controller.settings.novelReaderLineSpacing.value,
           color: AppColor
@@ -336,6 +341,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                 controller.content.value,
                 textAlign: TextAlign.justify,
                 style: TextStyle(
+                  fontFamily: controller.settings.novelReaderFontFamily,
                   fontSize:
                       controller.settings.novelReaderFontSize.value.toDouble(),
                   height: controller.settings.novelReaderLineSpacing.value,

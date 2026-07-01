@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
-import 'package:flutter_dmzj/modules/common/download/novel/novel_downloaded_detail_controller.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/models/novel/novel_detail_model.dart';
+import 'package:zai_x/modules/common/download/novel/novel_downloaded_detail_controller.dart';
 
-import 'package:flutter_dmzj/services/novel_download_service.dart';
+import 'package:zai_x/services/novel_download_service.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 

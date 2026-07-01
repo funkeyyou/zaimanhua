@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/modules/common/download/novel/novel_downloaded_view.dart';
-import 'package:flutter_dmzj/modules/common/download/novel/novel_downloading_view.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
+import 'package:zai_x/modules/common/download/novel/novel_downloaded_view.dart';
+import 'package:zai_x/modules/common/download/novel/novel_downloading_view.dart';
+import 'package:zai_x/services/novel_download_service.dart';
 import 'package:get/get.dart';
 
 class NovelDownloadPage extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
+import 'package:zai_x/app/app_style.dart';
 import 'package:lottie/lottie.dart';
 
 class AppEmptyWidget extends StatelessWidget {

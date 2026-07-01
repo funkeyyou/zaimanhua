@@ -1,4 +1,4 @@
-import 'package:flutter_dmzj/app/log.dart';
+import 'package:zai_x/app/log.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -44,6 +44,12 @@ class LocalStorageService extends GetxService {
 
   /// 小说字体大小
   static const String kNovelReaderFontSize = "NovelReaderFontSize";
+
+  /// Novel reader custom font path
+  static const String kNovelReaderFontPath = "NovelReaderFontPath";
+
+  /// Novel reader imported font paths
+  static const String kNovelReaderFontPaths = "NovelReaderFontPaths";
 
   /// 小说行距
   static const String kNovelReaderLineSpacing = "NovelReaderLineSpacing";
@@ -92,6 +98,12 @@ class LocalStorageService extends GetxService {
 
   /// 自动添加神隐漫画至收藏夹
   static const String kCollectHideComic = "CollectHideComic";
+
+  /// Reader volume key page turning
+  static const String kReaderVolumeKeyTurnPage = "ReaderVolumeKeyTurnPage";
+
+  /// E-ink display mode
+  static const String kEInkMode = "EInkMode";
 
   late Box settingsBox;
   Future init() async {

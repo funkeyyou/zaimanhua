@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter_dmzj/app/event_bus.dart';
+import 'package:zai_x/app/event_bus.dart';
 
-import 'package:flutter_dmzj/models/db/novel_history.dart';
-import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
+import 'package:zai_x/models/db/novel_history.dart';
+import 'package:zai_x/models/novel/novel_detail_model.dart';
+import 'package:zai_x/routes/app_navigator.dart';
+import 'package:zai_x/services/novel_download_service.dart';
+import 'package:zai_x/services/db_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 

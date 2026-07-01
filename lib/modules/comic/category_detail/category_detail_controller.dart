@@ -1,7 +1,7 @@
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/comic/category_comic_model.dart';
-import 'package:flutter_dmzj/models/comic/category_filter_model.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/models/comic/category_comic_model.dart';
+import 'package:zai_x/models/comic/category_filter_model.dart';
+import 'package:zai_x/requests/comic_request.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 

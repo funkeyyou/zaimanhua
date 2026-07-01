@@ -1,16 +1,16 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dmzj/models/novel/category_filter_model.dart';
-import 'package:flutter_dmzj/models/novel/category_model.dart';
-import 'package:flutter_dmzj/models/novel/category_novel_model.dart';
-import 'package:flutter_dmzj/models/novel/detail_model.dart';
-import 'package:flutter_dmzj/models/novel/latest_model.dart';
-import 'package:flutter_dmzj/models/novel/rank_model.dart';
-import 'package:flutter_dmzj/models/novel/recommend_model.dart';
-import 'package:flutter_dmzj/models/novel/search_model.dart';
-import 'package:flutter_dmzj/models/novel/volume_detail_model.dart';
-import 'package:flutter_dmzj/requests/common/api.dart';
-import 'package:flutter_dmzj/requests/common/http_client.dart';
-import 'package:flutter_dmzj/services/local_storage_service.dart';
+import 'package:zai_x/models/novel/category_filter_model.dart';
+import 'package:zai_x/models/novel/category_model.dart';
+import 'package:zai_x/models/novel/category_novel_model.dart';
+import 'package:zai_x/models/novel/detail_model.dart';
+import 'package:zai_x/models/novel/latest_model.dart';
+import 'package:zai_x/models/novel/rank_model.dart';
+import 'package:zai_x/models/novel/recommend_model.dart';
+import 'package:zai_x/models/novel/search_model.dart';
+import 'package:zai_x/models/novel/volume_detail_model.dart';
+import 'package:zai_x/requests/common/api.dart';
+import 'package:zai_x/requests/common/http_client.dart';
+import 'package:zai_x/services/local_storage_service.dart';
 
 class NovelRequest {
   /// 轻小说-推荐

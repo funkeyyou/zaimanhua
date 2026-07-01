@@ -1,5 +1,5 @@
-import 'package:flutter_dmzj/models/comic/search_model.dart';
-import 'package:flutter_dmzj/models/comic/web_search_model.dart';
+import 'package:zai_x/models/comic/search_model.dart';
+import 'package:zai_x/models/comic/web_search_model.dart';
 
 class SearchComicItem {
   final int comicId;

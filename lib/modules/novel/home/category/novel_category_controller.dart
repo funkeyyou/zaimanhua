@@ -1,7 +1,7 @@
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/novel/category_model.dart';
-import 'package:flutter_dmzj/requests/novel_request.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/models/novel/category_model.dart';
+import 'package:zai_x/requests/novel_request.dart';
+import 'package:zai_x/routes/app_navigator.dart';
 
 class NovelCategoryController extends BasePageController<NovelCategoryModel> {
   final NovelRequest request = NovelRequest();

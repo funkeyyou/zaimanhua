@@ -1,14 +1,14 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/modules/user/user_home_controller.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
-import 'package:flutter_dmzj/widgets/user_photo.dart';
+import 'package:zai_x/app/app_color.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/app/dialog_utils.dart';
+import 'package:zai_x/modules/user/user_home_controller.dart';
+import 'package:zai_x/services/comic_download_service.dart';
+import 'package:zai_x/services/novel_download_service.dart';
+import 'package:zai_x/services/user_service.dart';
+import 'package:zai_x/widgets/user_photo.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -309,7 +309,7 @@ class UserHomePage extends GetView<UserHomeController> {
                       ),
                       onTap: () {
                         launchUrlString(
-                          "https://github.com/xiaoyaocz/flutter_dmzj",
+                          "https://github.com/xiaoyaocz/zai_x",
                           mode: LaunchMode.externalApplication,
                         );
                       },

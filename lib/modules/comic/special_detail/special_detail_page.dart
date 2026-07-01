@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/app_style.dart';
-import 'package:flutter_dmzj/models/comic/special_detail_model.dart';
-import 'package:flutter_dmzj/modules/comic/special_detail/special_detail_controller.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
-import 'package:flutter_dmzj/widgets/net_image.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
-import 'package:flutter_dmzj/widgets/status/app_loadding_widget.dart';
+import 'package:zai_x/app/app_constant.dart';
+import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/models/comic/special_detail_model.dart';
+import 'package:zai_x/modules/comic/special_detail/special_detail_controller.dart';
+import 'package:zai_x/routes/app_navigator.dart';
+import 'package:zai_x/services/user_service.dart';
+import 'package:zai_x/widgets/net_image.dart';
+import 'package:zai_x/widgets/status/app_error_widget.dart';
+import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 

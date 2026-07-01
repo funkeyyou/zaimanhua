@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dmzj/app/app_color.dart';
+import 'package:zai_x/app/app_color.dart';
 import 'package:get/get.dart';
 
 class AppStyle {

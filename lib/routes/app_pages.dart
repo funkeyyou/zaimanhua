@@ -1,41 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/modules/comic/author_detail/author_detail_page.dart';
-import 'package:flutter_dmzj/modules/comic/category_detail/category_detail_page.dart';
-import 'package:flutter_dmzj/modules/comic/detail/comic_detail_page.dart';
-import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
-import 'package:flutter_dmzj/modules/comic/reader/comic_reader_controller.dart';
-import 'package:flutter_dmzj/modules/comic/reader/comic_reader_page.dart';
-import 'package:flutter_dmzj/modules/comic/search/comic_search_page.dart';
-import 'package:flutter_dmzj/modules/comic/select_chapter/comic_select_chapter_page.dart';
-import 'package:flutter_dmzj/modules/comic/special_detail/special_detail_page.dart';
-import 'package:flutter_dmzj/modules/common/comment/add_comment_page.dart';
-import 'package:flutter_dmzj/modules/common/comment/comment_page.dart';
-import 'package:flutter_dmzj/modules/common/download/comic/comic_download_page.dart';
-import 'package:flutter_dmzj/modules/common/download/comic/comic_downloaded_detail_page.dart';
-import 'package:flutter_dmzj/modules/common/download/novel/novel_download_page.dart';
-import 'package:flutter_dmzj/modules/common/download/novel/novel_downloaded_detail_page.dart';
-import 'package:flutter_dmzj/modules/common/empty_page.dart';
-import 'package:flutter_dmzj/modules/common/test_subroute_page.dart';
-import 'package:flutter_dmzj/modules/common/webview/webview_page.dart';
-import 'package:flutter_dmzj/modules/index/index_controller.dart';
-import 'package:flutter_dmzj/modules/index/index_page.dart';
-import 'package:flutter_dmzj/modules/news/detail/news_detail_page.dart';
-import 'package:flutter_dmzj/modules/novel/category_detail/novel_category_detail_page.dart';
-import 'package:flutter_dmzj/modules/novel/detail/novel_detail_page.dart';
-import 'package:flutter_dmzj/modules/novel/reader/novel_reader_controller.dart';
-import 'package:flutter_dmzj/modules/novel/reader/novel_reader_page.dart';
-import 'package:flutter_dmzj/modules/novel/search/novel_search_page.dart';
-import 'package:flutter_dmzj/modules/novel/select_chapter/novel_select_chapter_page.dart';
-import 'package:flutter_dmzj/modules/user/comment/user_comment_page.dart';
-import 'package:flutter_dmzj/modules/user/history/user_history_page.dart';
-import 'package:flutter_dmzj/modules/user/local_favorite/local_favorite_page.dart';
-import 'package:flutter_dmzj/modules/user/local_history/local_history_page.dart';
-import 'package:flutter_dmzj/modules/user/settings/settings_page.dart';
-import 'package:flutter_dmzj/modules/user/subscribe/user_subscribe_pgae.dart';
-import 'package:flutter_dmzj/modules/user/user_home_controller.dart';
-import 'package:flutter_dmzj/routes/route_path.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
-import 'package:flutter_dmzj/services/novel_download_service.dart';
+import 'package:zai_x/modules/comic/author_detail/author_detail_page.dart';
+import 'package:zai_x/modules/comic/category_detail/category_detail_page.dart';
+import 'package:zai_x/modules/comic/detail/comic_detail_page.dart';
+import 'package:zai_x/modules/comic/home/comic_home_controller.dart';
+import 'package:zai_x/modules/comic/reader/comic_reader_controller.dart';
+import 'package:zai_x/modules/comic/reader/comic_reader_page.dart';
+import 'package:zai_x/modules/comic/search/comic_search_page.dart';
+import 'package:zai_x/modules/comic/select_chapter/comic_select_chapter_page.dart';
+import 'package:zai_x/modules/comic/special_detail/special_detail_page.dart';
+import 'package:zai_x/modules/common/comment/add_comment_page.dart';
+import 'package:zai_x/modules/common/comment/comment_page.dart';
+import 'package:zai_x/modules/common/download/comic/comic_download_page.dart';
+import 'package:zai_x/modules/common/download/comic/comic_downloaded_detail_page.dart';
+import 'package:zai_x/modules/common/download/novel/novel_download_page.dart';
+import 'package:zai_x/modules/common/download/novel/novel_downloaded_detail_page.dart';
+import 'package:zai_x/modules/common/empty_page.dart';
+import 'package:zai_x/modules/common/test_subroute_page.dart';
+import 'package:zai_x/modules/common/webview/webview_page.dart';
+import 'package:zai_x/modules/index/index_controller.dart';
+import 'package:zai_x/modules/index/index_page.dart';
+import 'package:zai_x/modules/news/detail/news_detail_page.dart';
+import 'package:zai_x/modules/novel/category_detail/novel_category_detail_page.dart';
+import 'package:zai_x/modules/novel/detail/novel_detail_page.dart';
+import 'package:zai_x/modules/novel/reader/novel_reader_controller.dart';
+import 'package:zai_x/modules/novel/reader/novel_reader_page.dart';
+import 'package:zai_x/modules/novel/search/novel_search_page.dart';
+import 'package:zai_x/modules/novel/select_chapter/novel_select_chapter_page.dart';
+import 'package:zai_x/modules/user/center/user_center_page.dart';
+import 'package:zai_x/modules/user/comment/user_comment_page.dart';
+import 'package:zai_x/modules/user/history/user_history_page.dart';
+import 'package:zai_x/modules/user/local_favorite/local_favorite_page.dart';
+import 'package:zai_x/modules/user/local_history/local_history_page.dart';
+import 'package:zai_x/modules/user/settings/settings_page.dart';
+import 'package:zai_x/modules/user/subscribe/user_subscribe_pgae.dart';
+import 'package:zai_x/modules/user/user_home_controller.dart';
+import 'package:zai_x/routes/route_path.dart';
+import 'package:zai_x/services/comic_download_service.dart';
+import 'package:zai_x/services/novel_download_service.dart';
 import 'package:get/get.dart';
 
 class AppPages {
@@ -266,6 +267,13 @@ class AppPages {
         return GetPageRoute(
           settings: settings,
           page: () => UserCommentPage(
+            settings.arguments as int,
+          ),
+        );
+      case RoutePath.kUserCenter:
+        return GetPageRoute(
+          settings: settings,
+          page: () => UserCenterPage(
             settings.arguments as int,
           ),
         );

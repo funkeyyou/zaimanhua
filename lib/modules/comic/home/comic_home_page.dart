@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/modules/comic/home/category/comic_category_view.dart';
-import 'package:flutter_dmzj/modules/comic/home/comic_home_controller.dart';
-import 'package:flutter_dmzj/modules/comic/home/latest/comic_latest_view.dart';
-import 'package:flutter_dmzj/modules/comic/home/rank/comic_rank_view.dart';
-import 'package:flutter_dmzj/modules/comic/home/recommend/comic_recommend_view.dart';
-//import 'package:flutter_dmzj/modules/comic/home/special/comic_special_view.dart';
-import 'package:flutter_dmzj/widgets/tab_appbar.dart';
+import 'package:zai_x/modules/comic/home/category/comic_category_view.dart';
+import 'package:zai_x/modules/comic/home/comic_home_controller.dart';
+import 'package:zai_x/modules/comic/home/latest/comic_latest_view.dart';
+import 'package:zai_x/modules/comic/home/rank/comic_rank_view.dart';
+import 'package:zai_x/modules/comic/home/recommend/comic_recommend_view.dart';
+//import 'package:zai_x/modules/comic/home/special/comic_special_view.dart';
+import 'package:zai_x/widgets/tab_appbar.dart';
 import 'package:get/get.dart';
 
 class ComicHomePage extends GetView<ComicHomeController> {

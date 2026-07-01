@@ -1,16 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/app/dialog_utils.dart';
-import 'package:flutter_dmzj/app/event_bus.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/modules/comic/home/comic_home_page.dart';
-import 'package:flutter_dmzj/modules/news/home/news_home_controller.dart';
-import 'package:flutter_dmzj/modules/news/home/news_home_page.dart';
-import 'package:flutter_dmzj/modules/novel/home/novel_home_controller.dart';
-import 'package:flutter_dmzj/modules/novel/home/novel_home_page.dart';
-import 'package:flutter_dmzj/modules/user/user_home_page.dart';
+import 'package:zai_x/services/app_settings_service.dart';
+import 'package:zai_x/app/dialog_utils.dart';
+import 'package:zai_x/app/event_bus.dart';
+import 'package:zai_x/app/utils.dart';
+import 'package:zai_x/modules/comic/home/comic_home_page.dart';
+import 'package:zai_x/modules/news/home/news_home_controller.dart';
+import 'package:zai_x/modules/news/home/news_home_page.dart';
+import 'package:zai_x/modules/novel/home/novel_home_controller.dart';
+import 'package:zai_x/modules/novel/home/novel_home_page.dart';
+import 'package:zai_x/modules/user/user_home_page.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:multi_split_view/multi_split_view.dart';

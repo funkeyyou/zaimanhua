@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/modules/common/webview/webview_controller.dart';
-import 'package:flutter_dmzj/widgets/status/app_error_widget.dart';
+import 'package:zai_x/app/utils.dart';
+import 'package:zai_x/modules/common/webview/webview_controller.dart';
+import 'package:zai_x/widgets/status/app_error_widget.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';

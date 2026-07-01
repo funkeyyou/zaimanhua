@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/event_bus.dart';
-import 'package:flutter_dmzj/models/comment/comment_item.dart';
-import 'package:flutter_dmzj/requests/comment_request.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/app/event_bus.dart';
+import 'package:zai_x/models/comment/comment_item.dart';
+import 'package:zai_x/requests/comment_request.dart';
 
 class CommentListController extends BasePageController<CommentItem> {
   final int type;
@@ -44,7 +44,7 @@ class CommentListController extends BasePageController<CommentItem> {
         type: type,
         objId: objId,
         page: page,
-        sort: 2,
+        sortBy: 2,
       );
     } else {
       return await request.getComment(

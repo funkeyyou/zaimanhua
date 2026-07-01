@@ -1,19 +1,19 @@
 import 'dart:async';
 
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/app/event_bus.dart';
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/app/utils.dart';
-import 'package:flutter_dmzj/models/comic/detail_info.dart';
-import 'package:flutter_dmzj/models/db/comic_history.dart';
-import 'package:flutter_dmzj/modules/comic/detail/comic_detail_related_page.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
-import 'package:flutter_dmzj/requests/user_request.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zai_x/app/app_constant.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/app/event_bus.dart';
+import 'package:zai_x/app/log.dart';
+import 'package:zai_x/app/utils.dart';
+import 'package:zai_x/models/comic/detail_info.dart';
+import 'package:zai_x/models/db/comic_history.dart';
+import 'package:zai_x/modules/comic/detail/comic_detail_related_page.dart';
+import 'package:zai_x/requests/comic_request.dart';
+import 'package:zai_x/requests/user_request.dart';
+import 'package:zai_x/routes/app_navigator.dart';
+import 'package:zai_x/services/app_settings_service.dart';
+import 'package:zai_x/services/db_service.dart';
+import 'package:zai_x/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 

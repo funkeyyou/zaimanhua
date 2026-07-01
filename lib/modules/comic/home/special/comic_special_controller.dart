@@ -1,7 +1,7 @@
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/comic/special_model.dart';
-import 'package:flutter_dmzj/requests/comic_request.dart';
-import 'package:flutter_dmzj/routes/app_navigator.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/models/comic/special_model.dart';
+import 'package:zai_x/requests/comic_request.dart';
+import 'package:zai_x/routes/app_navigator.dart';
 
 class ComicSpecialController extends BasePageController<ComicSpecialModel> {
   final ComicRequest request = ComicRequest();

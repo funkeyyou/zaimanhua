@@ -3,13 +3,13 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import 'package:flutter_dmzj/app/log.dart';
-import 'package:flutter_dmzj/models/db/novel_download_info.dart';
-import 'package:flutter_dmzj/models/db/download_status.dart';
-import 'package:flutter_dmzj/models/novel/novel_detail_model.dart';
+import 'package:zai_x/app/log.dart';
+import 'package:zai_x/models/db/novel_download_info.dart';
+import 'package:zai_x/models/db/download_status.dart';
+import 'package:zai_x/models/novel/novel_detail_model.dart';
 
-import 'package:flutter_dmzj/services/app_settings_service.dart';
-import 'package:flutter_dmzj/services/download_task/novel_downloader.dart';
+import 'package:zai_x/services/app_settings_service.dart';
+import 'package:zai_x/services/download_task/novel_downloader.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';

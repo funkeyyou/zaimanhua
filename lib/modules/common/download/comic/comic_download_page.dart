@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dmzj/modules/common/download/comic/comic_downloaded_view.dart';
-import 'package:flutter_dmzj/modules/common/download/comic/comic_downloading_view.dart';
-import 'package:flutter_dmzj/services/comic_download_service.dart';
+import 'package:zai_x/modules/common/download/comic/comic_downloaded_view.dart';
+import 'package:zai_x/modules/common/download/comic/comic_downloading_view.dart';
+import 'package:zai_x/services/comic_download_service.dart';
 import 'package:get/get.dart';
 
 class ComicDownloadPage extends StatelessWidget {

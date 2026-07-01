@@ -1,5 +1,5 @@
 display_name: ZAI-X
-package_name: dmzjx
+package_name: zai_x
 maintainer:
   name: xiaoyaocz
   email: xiaoyaocz@52uwp.com
@@ -10,8 +10,8 @@ essential: false
 icon: assets/images/logo.png
 
 keywords:
-  - 动漫之家
-  - DMZJ
+  - 再漫画
+  - ZAI-X
 
 generic_name: ZAI-X
 

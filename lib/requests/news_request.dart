@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:flutter_dmzj/app/app_error.dart';
-import 'package:flutter_dmzj/models/news/news_banner_model.dart';
-import 'package:flutter_dmzj/models/news/news_list_item_model.dart';
-import 'package:flutter_dmzj/models/news/news_stat_model.dart';
-import 'package:flutter_dmzj/models/news/news_tag_model.dart';
-import 'package:flutter_dmzj/requests/common/api.dart';
-import 'package:flutter_dmzj/requests/common/http_client.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zai_x/app/app_error.dart';
+import 'package:zai_x/models/news/news_banner_model.dart';
+import 'package:zai_x/models/news/news_list_item_model.dart';
+import 'package:zai_x/models/news/news_stat_model.dart';
+import 'package:zai_x/models/news/news_tag_model.dart';
+import 'package:zai_x/requests/common/api.dart';
+import 'package:zai_x/requests/common/http_client.dart';
+import 'package:zai_x/services/user_service.dart';
 
 class NewsRequest {
   /// 新闻分类

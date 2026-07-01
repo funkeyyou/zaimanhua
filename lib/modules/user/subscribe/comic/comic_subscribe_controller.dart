@@ -1,9 +1,9 @@
-import 'package:flutter_dmzj/app/app_constant.dart';
-import 'package:flutter_dmzj/app/controller/base_controller.dart';
-import 'package:flutter_dmzj/models/user/subscribe_comic_model.dart';
-import 'package:flutter_dmzj/requests/user_request.dart';
-import 'package:flutter_dmzj/services/db_service.dart';
-import 'package:flutter_dmzj/services/user_service.dart';
+import 'package:zai_x/app/app_constant.dart';
+import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:zai_x/models/user/subscribe_comic_model.dart';
+import 'package:zai_x/requests/user_request.dart';
+import 'package:zai_x/services/db_service.dart';
+import 'package:zai_x/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
