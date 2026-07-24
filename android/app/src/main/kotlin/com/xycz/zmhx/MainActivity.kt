@@ -6,7 +6,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
-    private val channelName = "flutter_dmzj/reader_volume_key"
+    private val channelName = "zai_x/reader_volume_key"
     private var readerVolumeKeyEnabled = false
     private var readerVolumeKeyChannel: MethodChannel? = null
 
