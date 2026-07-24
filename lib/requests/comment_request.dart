@@ -29,7 +29,7 @@ class CommentRequest {
         "type": type,
         "objId": objId,
         "sortBy": sortBy,
-        "page": page - 1,
+        "page": page,
         "size": pageSize,
       },
     );
