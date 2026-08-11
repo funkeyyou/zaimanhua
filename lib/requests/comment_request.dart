@@ -1,4 +1,3 @@
-import 'package:zai_x/app/app_error.dart';
 import 'package:zai_x/models/comment/comment_item.dart';
 import 'package:zai_x/models/comment/user_comment_item.dart';
 import 'package:zai_x/requests/common/api.dart';
@@ -33,9 +32,7 @@ class CommentRequest {
         "size": pageSize,
       },
     );
-    if (result["errno"] != 0) {
-      throw AppError(result["errmsg"].toString());
-    }
+    HttpClient.checkErrno(result);
     if (result["data"]["commentIdList"] == null) {
       return [];
     }
@@ -127,9 +124,7 @@ class CommentRequest {
       },
       needLogin: true,
     );
-    if (result["errno"] != 0) {
-      throw AppError(result["errmsg"].toString());
-    }
+    HttpClient.checkErrno(result);
     return true;
   }
 
@@ -149,8 +144,8 @@ class CommentRequest {
       formUrlEncoded: true,
       needLogin: true,
     );
-    if (result is Map && result['errno'] != 0) {
-      throw AppError(result['errmsg'].toString());
+    if (result is Map) {
+      HttpClient.checkErrno(result);
     }
     if (result is Map && result['data'] is Map) {
       return int.tryParse(result['data']['like_amount'].toString());
@@ -174,8 +169,8 @@ class CommentRequest {
       formUrlEncoded: true,
       needLogin: true,
     );
-    if (result is Map && result['errno'] != 0) {
-      throw AppError(result['errmsg'].toString());
+    if (result is Map) {
+      HttpClient.checkErrno(result);
     }
     if (result is Map && result['data'] is Map) {
       return int.tryParse(result['data']['like_amount'].toString());

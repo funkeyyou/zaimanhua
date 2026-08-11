@@ -13,7 +13,6 @@ import 'package:zai_x/app/utils.dart';
 import 'package:zai_x/requests/news_request.dart';
 import 'package:zai_x/routes/app_navigator.dart';
 import 'package:zai_x/services/app_settings_service.dart';
-import 'package:zai_x/services/db_service.dart';
 import 'package:zai_x/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -44,12 +43,6 @@ class NewsDetailController extends BaseController {
   /// 评论数
   var commentAmount = 0.obs;
 
-  /// 点赞数
-  var moodAmount = 0.obs;
-
-  /// 是否点过赞
-  var liked = false.obs;
-
   /// 是否已经收藏
   var collected = false.obs;
 
@@ -67,7 +60,6 @@ class NewsDetailController extends BaseController {
 
   @override
   void onInit() {
-    liked.value = DBService.instance.newsLikeBox.containsKey(newsId);
     if (Platform.isAndroid || Platform.isIOS) {
       initWebView();
     } else {
@@ -114,9 +106,9 @@ document.getElementsByClassName("min_box_tit")[0].style.color="#fff";
                 await webViewController?.runJavaScriptReturningResult('''
 function getImgLinks(){
 	var imgLinks = [];
-  \$('img').each(function() {
-    var src = \$(this).attr('data-original');
-    if (src && src.startsWith('https://images')) {
+  \$('.news_box img').each(function() {
+    var src = \$(this).attr('data-original') || \$(this).attr('src');
+    if (src && src.startsWith('https://images') && src.indexOf('news_bottom_pic') == -1) {
       imgLinks.push(src);
     }
   });
@@ -170,11 +162,14 @@ getImgLinks();
       time.value =
           htmlDocument.documentElement?.querySelector('.txt3')?.innerText ?? "";
 
-      var imgList = htmlDocument.documentElement?.querySelectorAll('img');
+      var imgList = news.querySelectorAll('img');
       var imagesList = <String>[];
-      for (html.Element img in imgList ?? []) {
-        var imgSrc = img.getAttribute("data-original");
-        if (imgSrc != null) {
+      for (html.Element img in imgList) {
+        var imgSrc =
+            img.getAttribute("data-original") ?? img.getAttribute("src");
+        if (imgSrc != null &&
+            imgSrc.isNotEmpty &&
+            !imgSrc.contains("news_bottom_pic")) {
           imagesList.add(imgSrc);
         }
       }
@@ -191,7 +186,6 @@ getImgLinks();
     try {
       var result = await request.stat(newsId);
       commentAmount.value = result.commentAmount;
-      moodAmount.value = result.moodAmount;
       newsTitle.value = result.title;
     } catch (e) {
       SmartDialog.showToast(e.toString());
@@ -227,24 +221,6 @@ getImgLinks();
       collected.value = !collected.value;
     } catch (e) {
       Log.logPrint(e);
-      SmartDialog.showToast(e.toString());
-    } finally {
-      SmartDialog.dismiss(status: SmartStatus.loading);
-    }
-  }
-
-  void like() async {
-    if (liked.value) {
-      SmartDialog.showToast("已经点过赞了");
-      return;
-    }
-    try {
-      SmartDialog.showLoading();
-      await request.like(newsId);
-      liked.value = true;
-      moodAmount.value += 1;
-      DBService.instance.newsLikeBox.put(newsId, true);
-    } catch (e) {
       SmartDialog.showToast(e.toString());
     } finally {
       SmartDialog.dismiss(status: SmartStatus.loading);

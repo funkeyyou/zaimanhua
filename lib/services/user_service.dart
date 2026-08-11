@@ -110,6 +110,15 @@ class UserService extends GetxService {
     return (result != null && result == true);
   }
 
+  /// 登录失效处理：清除登录状态并提示重新登录
+  Future<void> onLoginRequired() async {
+    if (logined.value) {
+      logout();
+    }
+    SmartDialog.showToast("登录已过期，请重新登录");
+    await login();
+  }
+
   /// 刷新个人资料
   Future refreshProfile() async {
     try {
