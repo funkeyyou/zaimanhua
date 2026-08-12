@@ -281,34 +281,6 @@ class DialogUtils {
               ),
             ),
             Positioned(
-              left: 8,
-              bottom: 24 + AppStyle.bottomBarHeight,
-              child: IconButton(
-                onPressed: index.value > 0
-                    ? () => pageController.previousPage(
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeOut,
-                        )
-                    : null,
-                icon: const Icon(Icons.chevron_left),
-                color: Colors.white,
-              ),
-            ),
-            Positioned(
-              right: 8,
-              bottom: 24 + AppStyle.bottomBarHeight,
-              child: IconButton(
-                onPressed: index.value < images.length - 1
-                    ? () => pageController.nextPage(
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeOut,
-                        )
-                    : null,
-                icon: const Icon(Icons.chevron_right),
-                color: Colors.white,
-              ),
-            ),
-            Positioned(
               right: 12 + AppStyle.bottomBarHeight,
               bottom: 12,
               child: TextButton.icon(

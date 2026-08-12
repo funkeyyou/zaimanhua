@@ -5,6 +5,7 @@ import 'package:zai_x/app/log.dart';
 import 'package:zai_x/models/comic/detail_info.dart';
 import 'package:zai_x/models/comment/comment_item.dart';
 import 'package:zai_x/models/novel/novel_detail_model.dart';
+import 'package:zai_x/routes/news_link_resolver.dart';
 import 'package:zai_x/routes/route_path.dart';
 import 'package:zai_x/services/comic_download_service.dart';
 import 'package:zai_x/services/novel_download_service.dart';
@@ -56,19 +57,20 @@ class AppNavigator {
     String title = "资讯详情",
     int newsId = 0,
   }) {
-    if (!url.startsWith("http:") && !url.startsWith("https:")) {
-      SmartDialog.showToast("无法打开此此链接：$url");
+    final resolvedUrl = NewsLinkResolver.resolve(url: url, newsId: newsId);
+    if (resolvedUrl == null) {
+      SmartDialog.showToast("无法打开此链接：$url");
       return;
     }
     //https://news.dmzj.com/article/77288.html
-    if (url.contains("article/")) {
+    if (resolvedUrl.contains("article/")) {
       toContentPage(RoutePath.kNewsDetail, arg: {
         "title": title,
-        "newsUrl": url,
+        "newsUrl": resolvedUrl,
         "newsId": newsId,
       });
     } else {
-      toWebView(url);
+      toWebView(resolvedUrl);
     }
   }
 
