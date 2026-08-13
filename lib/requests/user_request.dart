@@ -63,8 +63,8 @@ class UserRequest {
       withDefaultParameter: false,
       needLogin: true,
     );
-    if (result is Map && result["errno"] != 0) {
-      throw AppError(result["errmsg"].toString());
+    if (result is Map) {
+      HttpClient.checkErrno(result);
     }
     return UserCenterInfo.fromJson(
       Map<String, dynamic>.from(result["data"]["info"] as Map),
@@ -91,8 +91,8 @@ class UserRequest {
       withDefaultParameter: false,
       needLogin: true,
     );
-    if (result is Map && result["errno"] != 0) {
-      throw AppError(result["errmsg"].toString());
+    if (result is Map) {
+      HttpClient.checkErrno(result);
     }
     var list = <UserCenterCommentItem>[];
     for (var item in (result["data"]["commentList"] ?? const [])) {
@@ -113,8 +113,8 @@ class UserRequest {
       withDefaultParameter: false,
       needLogin: true,
     );
-    if (result is Map && result["errno"] != 0) {
-      throw AppError(result["errmsg"].toString());
+    if (result is Map) {
+      HttpClient.checkErrno(result);
     }
     return true;
   }
@@ -129,8 +129,8 @@ class UserRequest {
       withDefaultParameter: false,
       needLogin: true,
     );
-    if (result is Map && result["errno"] != 0) {
-      throw AppError(result["errmsg"].toString());
+    if (result is Map) {
+      HttpClient.checkErrno(result);
     }
     return true;
   }

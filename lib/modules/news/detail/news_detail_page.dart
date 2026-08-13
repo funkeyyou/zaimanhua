@@ -75,22 +75,6 @@ class NewsDetailPage extends StatelessWidget {
               Expanded(
                 child: Obx(
                   () => TextButton.icon(
-                    onPressed: controller.like,
-                    icon: Icon(
-                      controller.liked.value
-                          ? Remix.thumb_up_fill
-                          : Remix.thumb_up_line,
-                      size: 20,
-                    ),
-                    label: Text(controller.moodAmount > 0
-                        ? "${controller.moodAmount}"
-                        : "点赞"),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Obx(
-                  () => TextButton.icon(
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 14),
                     ),

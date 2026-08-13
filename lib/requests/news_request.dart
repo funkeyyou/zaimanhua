@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:zai_x/app/app_error.dart';
 import 'package:zai_x/models/news/news_banner_model.dart';
 import 'package:zai_x/models/news/news_list_item_model.dart';
 import 'package:zai_x/models/news/news_stat_model.dart';
@@ -40,9 +39,7 @@ class NewsRequest {
       '/news/list/$id/${id == 0 ? 2 : 3}/$page',
     );
 
-    if (result["errno"] != 0) {
-      throw AppError(result["errmsg"]);
-    }
+    HttpClient.checkErrno(result);
     var list = <NewsListItemModel>[];
     for (var item in result["data"]["newsList"]) {
       list.add(NewsListItemModel.fromJson(item));

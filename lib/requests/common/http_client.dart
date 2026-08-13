@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -25,6 +26,18 @@ class HttpClient {
       ),
     );
     dio.interceptors.add(CustomInterceptor());
+  }
+
+  /// 检查接口返回码
+  /// 登录失效(errno==99)时自动清除登录状态并弹出重新登录
+  static void checkErrno(Map data) {
+    var errno = int.tryParse(data['errno'].toString()) ?? 0;
+    if (errno == 99) {
+      unawaited(UserService.instance.onLoginRequired());
+    }
+    if (errno != 0) {
+      throw AppError(data['errmsg'].toString(), code: errno);
+    }
   }
 
   /// Get请求
@@ -68,14 +81,8 @@ class HttpClient {
       );
       if (checkCode && result.data is Map) {
         var data = result.data as Map;
-        if (data['errno'] == 0) {
-          return result.data['data'];
-        } else {
-          throw AppError(
-            result.data['errmsg'].toString(),
-            code: int.tryParse(result.data['errno'].toString()) ?? 0,
-          );
-        }
+        checkErrno(data);
+        return result.data['data'];
       }
       return result.data;
     } on DioException catch (e) {
@@ -240,14 +247,8 @@ class HttpClient {
       }
       if (checkCode) {
         var data = result.data as Map;
-        if (data['errno'] == 0) {
-          return result.data['data'];
-        } else {
-          throw AppError(
-            result.data['errmsg'].toString(),
-            code: int.tryParse(result.data['errno'].toString()) ?? 0,
-          );
-        }
+        checkErrno(data);
+        return result.data['data'];
       }
       return result.data;
     } on DioException catch (e) {

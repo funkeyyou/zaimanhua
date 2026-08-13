@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:zai_x/app/app_style.dart';
 
@@ -8,6 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:zai_x/app/utils.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+
+/// 桌面端也允许用鼠标拖动滚动（PageView 默认不支持鼠标拖拽）
+class _MouseScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.stylus,
+        PointerDeviceKind.invertedStylus,
+        PointerDeviceKind.trackpad,
+        PointerDeviceKind.mouse,
+      };
+}
 
 class DialogUtils {
   /// 提示弹窗
@@ -211,44 +224,49 @@ class DialogUtils {
 
   static void showImageViewer(int initIndex, List<String> images) {
     var index = initIndex.obs;
+    final pageController = PageController(initialPage: index.value);
     Get.dialog(
       Scaffold(
         backgroundColor: Colors.black87,
         body: Stack(
           children: [
-            PhotoViewGallery.builder(
-              itemCount: images.length,
-              builder: (_, i) {
-                if (images[i].startsWith("http")) {
-                  return PhotoViewGalleryPageOptions(
-                    filterQuality: FilterQuality.high,
-                    imageProvider: ExtendedNetworkImageProvider(
-                      images[i],
-                      cache: true,
-                    ),
-                    onTapUp: ((context, details, controllerValue) =>
-                        Get.back()),
-                  );
-                } else {
-                  return PhotoViewGalleryPageOptions(
-                    filterQuality: FilterQuality.high,
-                    imageProvider: ExtendedMemoryImageProvider(
-                      File(images[i]).readAsBytesSync(),
-                    ),
-                    onTapUp: ((context, details, controllerValue) =>
-                        Get.back()),
-                  );
-                }
-              },
-              loadingBuilder: (context, event) => const Center(
-                child: CircularProgressIndicator(),
+            ScrollConfiguration(
+              behavior: _MouseScrollBehavior(),
+              child: PhotoViewGallery.builder(
+                itemCount: images.length,
+                builder: (_, i) {
+                  if (images[i].startsWith("http")) {
+                    return PhotoViewGalleryPageOptions(
+                      filterQuality: FilterQuality.high,
+                      imageProvider: ExtendedNetworkImageProvider(
+                        images[i],
+                        cache: true,
+                        headers: const {
+                          'Referer': "http://www.zaimanhua.com/",
+                        },
+                      ),
+                      onTapUp: ((context, details, controllerValue) =>
+                          Get.back()),
+                    );
+                  } else {
+                    return PhotoViewGalleryPageOptions(
+                      filterQuality: FilterQuality.high,
+                      imageProvider: ExtendedMemoryImageProvider(
+                        File(images[i]).readAsBytesSync(),
+                      ),
+                      onTapUp: ((context, details, controllerValue) =>
+                          Get.back()),
+                    );
+                  }
+                },
+                loadingBuilder: (context, event) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                pageController: pageController,
+                onPageChanged: ((i) {
+                  index.value = i;
+                }),
               ),
-              pageController: PageController(
-                initialPage: index.value,
-              ),
-              onPageChanged: ((i) {
-                index.value = i;
-              }),
             ),
             Container(
               alignment: Alignment.bottomCenter,
