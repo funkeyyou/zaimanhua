@@ -12,6 +12,7 @@ import 'package:zai_x/app/log.dart';
 import 'package:zai_x/app/utils.dart';
 import 'package:zai_x/requests/news_request.dart';
 import 'package:zai_x/routes/app_navigator.dart';
+import 'package:zai_x/routes/news_image_navigation_resolver.dart';
 import 'package:zai_x/services/app_settings_service.dart';
 import 'package:zai_x/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -261,8 +262,13 @@ getImgLinks();
     var uri = Uri.parse(url);
     Log.d(url);
     if (uri.scheme == "dmzjimage") {
-      //打开图片
-      showImageView(uri.queryParameters['src'].toString());
+      final imageSource = NewsImageNavigationResolver.resolve(
+        navigationUrl: url,
+        articleImages: images,
+      );
+      if (imageSource != null) {
+        showImageView(imageSource);
+      }
       return true;
     } else if (uri.scheme == "dmzjandroid") {
       var id = int.tryParse(uri.queryParameters["id"].toString()) ?? 0;
