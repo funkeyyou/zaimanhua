@@ -59,6 +59,7 @@ dependencies:
   
   path: 1.9.1
   collection: 1.19.1
+  wakelock_plus: ^1.5.2
 dev_dependencies: 
   flutter_lints: ^6.0.0
   build_runner: ^2.3.3

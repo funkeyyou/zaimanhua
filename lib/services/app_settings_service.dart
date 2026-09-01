@@ -107,6 +107,8 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kCollectHideComic, false);
     readerVolumeKeyTurnPage.value = LocalStorageService.instance
         .getValue(LocalStorageService.kReaderVolumeKeyTurnPage, false);
+    readerKeepScreenOn.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kReaderKeepScreenOn, true);
     eInkMode.value =
         LocalStorageService.instance.getValue(LocalStorageService.kEInkMode, false);
     if (eInkMode.value) {
@@ -457,6 +459,14 @@ class AppSettingsService extends GetxController {
     comicReaderPageAnimation.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kComicReaderPageAnimation, value);
+  }
+
+  /// 阅读时保持屏幕常亮
+  RxBool readerKeepScreenOn = true.obs;
+  void setReaderKeepScreenOn(bool value) {
+    readerKeepScreenOn.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kReaderKeepScreenOn, value);
   }
 
   /// 漫画阅读器左右翻页触控区宽度（占屏宽百分比，单侧，5-40）

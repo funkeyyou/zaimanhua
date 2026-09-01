@@ -13,6 +13,7 @@ import 'package:zai_x/models/db/download_status.dart';
 import 'package:zai_x/models/db/novel_download_info.dart';
 import 'package:zai_x/services/app_settings_service.dart';
 import 'package:zai_x/app/controller/base_controller.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zai_x/app/log.dart';
 import 'package:zai_x/models/novel/novel_detail_model.dart';
 import 'package:zai_x/requests/novel_request.dart';
@@ -123,6 +124,9 @@ class NovelReaderController extends BaseController {
       onVolumeDown: nextPageByInput,
     );
 
+    if (settings.readerKeepScreenOn.value) {
+      WakelockPlus.enable().catchError((e) => Log.logPrint(e));
+    }
     loadContent();
     super.onInit();
   }
@@ -190,6 +194,7 @@ class NovelReaderController extends BaseController {
 
   @override
   void onClose() {
+    WakelockPlus.disable().catchError((e) => Log.logPrint(e));
     scrollController.removeListener(listenVertical);
     connectivitySubscription?.cancel();
     batterySubscription?.cancel();

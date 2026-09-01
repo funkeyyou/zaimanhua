@@ -119,6 +119,14 @@ class SettingsPage extends StatelessWidget {
             },
             title: Text("音量键翻页".i18n),
           ),
+          SwitchListTile(
+            value: controller.settings.readerKeepScreenOn.value,
+            onChanged: (e) {
+              controller.settings.setReaderKeepScreenOn(e);
+            },
+            title: Text("阅读时保持屏幕常亮".i18n),
+            subtitle: Text("看漫画/小说时屏幕不自动熄灭".i18n),
+          ),
         ],
       ),
     );

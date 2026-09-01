@@ -25,6 +25,7 @@ import 'package:get/get.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zai_x/app/i18n.dart';
 
 class ComicReaderController extends BaseController {
@@ -129,6 +130,9 @@ class ComicReaderController extends BaseController {
     );
 
     itemPositionsListener.itemPositions.addListener(updateItemPosition);
+    if (settings.readerKeepScreenOn.value) {
+      WakelockPlus.enable().catchError((e) => Log.logPrint(e));
+    }
     loadDetail();
     super.onInit();
   }
@@ -188,6 +192,7 @@ class ComicReaderController extends BaseController {
 
   @override
   void onClose() {
+    WakelockPlus.disable().catchError((e) => Log.logPrint(e));
     focusNode.dispose();
     connectivitySubscription?.cancel();
     batterySubscription?.cancel();
