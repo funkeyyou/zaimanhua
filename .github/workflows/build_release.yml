@@ -26,7 +26,18 @@ jobs:
           cache: true
       - name: Restore packages
         run: flutter pub get
-      # 沒有 zai_key.properties 時 gradle 會自動退回 debug 簽名，無需任何 secrets
+      # 設定了 ZAI_KEYSTORE_BASE64 等 secrets 時使用正式簽名；否則 gradle 自動退回 debug 簽名
+      - name: Restore keystore (optional)
+        if: ${{ secrets.ZAI_KEYSTORE_BASE64 != '' }}
+        shell: bash
+        run: |
+          echo "${{ secrets.ZAI_KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/zaimanhua-release.jks"
+          {
+            echo "storeFile=$RUNNER_TEMP/zaimanhua-release.jks"
+            echo "storePassword=${{ secrets.ZAI_STORE_PASSWORD }}"
+            echo "keyPassword=${{ secrets.ZAI_KEY_PASSWORD }}"
+            echo "keyAlias=${{ secrets.ZAI_KEY_ALIAS }}"
+          } > android/zai_key.properties
       - name: Build APK
         run: flutter build apk --release
       - name: Rename APK
