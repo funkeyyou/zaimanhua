@@ -144,7 +144,7 @@ class NovelSubscribeView extends StatelessWidget {
                       padding:
                           AppStyle.edgeInsetsH8.copyWith(top: 2, bottom: 2),
                       child: Text(
-                        item.status ?? "-",
+                        (item.status ?? "-").i18n,
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.white,

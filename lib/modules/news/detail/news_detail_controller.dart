@@ -62,7 +62,7 @@ class NewsDetailController extends BaseController {
 
   @override
   void onInit() {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (useWebView) {
       initWebView();
     } else {
       loadHtml();
@@ -71,6 +71,12 @@ class NewsDetailController extends BaseController {
     // checkCollected();
     super.onInit();
   }
+
+  /// 是否以 WebView 顯示資訊內文。
+  /// 行動平台預設走 WebView（版面貼近官網），但那是遠端原始網頁，
+  /// 無法套用簡繁轉換；顯示繁體時改用 App 內建 HTML 渲染，內文才會轉換。
+  late final bool useWebView =
+      (Platform.isAndroid || Platform.isIOS) && !AppI18n.useTraditional;
 
   var currentUrl = "";
   void initWebView() {
@@ -208,7 +214,11 @@ getImgLinks();
   }
 
   void refershContent() {
-    webViewController!.reload();
+    if (useWebView) {
+      webViewController!.reload();
+    } else {
+      loadHtml();
+    }
   }
 
   void collect() async {

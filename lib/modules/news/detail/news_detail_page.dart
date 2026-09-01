@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:zai_x/app/app_style.dart';
 import 'package:zai_x/modules/news/detail/news_detail_controller.dart';
@@ -41,7 +39,7 @@ class NewsDetailPage extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          (Platform.isAndroid || Platform.isIOS)
+          controller.useWebView
               ? Obx(
                   () => Offstage(
                     offstage: controller.pageLoadding.value,

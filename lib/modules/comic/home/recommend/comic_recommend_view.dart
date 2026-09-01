@@ -270,7 +270,7 @@ class ComicRecommendView extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  item.subTitle ?? item.status ?? '',
+                  (item.subTitle ?? item.status ?? '').i18n,
                   maxLines: 1,
                   style: const TextStyle(
                     height: 1.2,

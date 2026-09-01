@@ -236,7 +236,7 @@ class NovelDetailPage extends StatelessWidget {
                 !controller.expandDescription.value;
           },
           child: Text(
-            controller.detail.value.introduction,
+            controller.detail.value.introduction.i18n,
             style: const TextStyle(
               color: Colors.grey,
               fontSize: 14,

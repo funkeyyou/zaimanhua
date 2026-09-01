@@ -144,7 +144,7 @@ class NovelCategoryDetailPage extends StatelessWidget {
                   Padding(
                     padding: AppStyle.edgeInsetsH4,
                     child: Text(
-                      item.authors ?? "",
+                      (item.authors ?? "").i18n,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

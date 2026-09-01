@@ -173,7 +173,7 @@ class NewsListView extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     controller
-                                        .banners[config.activeIndex].title,
+                                        .banners[config.activeIndex].title.i18n,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                         fontSize: 14, color: Colors.white),
