@@ -269,6 +269,24 @@ class UserHomePage extends GetView<UserHomeController> {
                   context,
                   children: [
                     ListTile(
+                      leading: const Icon(Remix.calendar_check_line),
+                      title: Text("每日签到".i18n),
+                      subtitle: Text("登录后启动 App 也会自动签到".i18n),
+                      trailing: Obx(() {
+                        final signed =
+                            UserService.instance.userProfile.value?.isSign ==
+                                true;
+                        return Text(
+                          signed ? "已签到".i18n : "去签到".i18n,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: signed ? Colors.green : Colors.grey,
+                          ),
+                        );
+                      }),
+                      onTap: () => UserService.instance.manualSignIn(),
+                    ),
+                    ListTile(
                       leading: Icon(
                           Get.isDarkMode ? Remix.moon_line : Remix.sun_line),
                       title: Text("显示主题".i18n),

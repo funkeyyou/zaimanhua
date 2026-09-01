@@ -4,9 +4,31 @@ import 'package:zai_x/app/app_color.dart';
 import 'package:get/get.dart';
 
 class AppStyle {
-  static ThemeData lightTheme = ThemeData.light(
+  /// 中文在部分安卓 ROM（MIUI/HyperOS 等）会被 Flutter 映射到过细字重，
+  /// 全域显式指定字重：正文/标签 w500、标题 w600
+  static const TextTheme _weightOverlay = TextTheme(
+    displaySmall: TextStyle(fontWeight: FontWeight.w600),
+    headlineMedium: TextStyle(fontWeight: FontWeight.w600),
+    headlineSmall: TextStyle(fontWeight: FontWeight.w600),
+    titleLarge: TextStyle(fontWeight: FontWeight.w600),
+    titleMedium: TextStyle(fontWeight: FontWeight.w500),
+    titleSmall: TextStyle(fontWeight: FontWeight.w500),
+    bodyLarge: TextStyle(fontWeight: FontWeight.w500),
+    bodyMedium: TextStyle(fontWeight: FontWeight.w500),
+    bodySmall: TextStyle(fontWeight: FontWeight.w400),
+    labelLarge: TextStyle(fontWeight: FontWeight.w500),
+    labelMedium: TextStyle(fontWeight: FontWeight.w500),
+    labelSmall: TextStyle(fontWeight: FontWeight.w400),
+  );
+
+  static ThemeData _applyWeights(ThemeData base) => base.copyWith(
+        textTheme: base.textTheme.merge(_weightOverlay),
+        primaryTextTheme: base.primaryTextTheme.merge(_weightOverlay),
+      );
+
+  static ThemeData lightTheme = _applyWeights(ThemeData.light(
     useMaterial3: false,
-  ).copyWith(
+  )).copyWith(
     brightness: Brightness.light,
     colorScheme: AppColor.colorSchemeLight,
     scaffoldBackgroundColor: Colors.white,
@@ -27,6 +49,7 @@ class AppStyle {
       ),
       titleTextStyle: const TextStyle(
         fontSize: 16,
+        fontWeight: FontWeight.w600,
         color: AppColor.black333,
       ),
       systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
@@ -34,9 +57,9 @@ class AppStyle {
       ),
     ),
   );
-  static ThemeData darkTheme = ThemeData.dark(
+  static ThemeData darkTheme = _applyWeights(ThemeData.dark(
     useMaterial3: false,
-  ).copyWith(
+  )).copyWith(
     brightness: Brightness.dark,
     primaryColor: Colors.blue,
     cardColor: const Color(0xff424242),
@@ -58,6 +81,7 @@ class AppStyle {
       ),
       titleTextStyle: const TextStyle(
         fontSize: 16,
+        fontWeight: FontWeight.w600,
         color: Colors.white,
       ),
       iconTheme: const IconThemeData(

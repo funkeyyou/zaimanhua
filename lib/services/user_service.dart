@@ -120,6 +120,23 @@ class UserService extends GetxService {
     await login();
   }
 
+  /// 手动签到（「我的」页入口）
+  Future<void> manualSignIn() async {
+    if (!await login()) {
+      return;
+    }
+    try {
+      SmartDialog.showLoading();
+      await request.userSignIn();
+      SmartDialog.showToast("签到成功".i18n);
+    } catch (e) {
+      SmartDialog.showToast(e.toString().i18n);
+    } finally {
+      SmartDialog.dismiss(status: SmartStatus.loading);
+    }
+    refreshProfile();
+  }
+
   /// 刷新个人资料
   Future refreshProfile() async {
     try {
