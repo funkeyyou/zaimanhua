@@ -217,7 +217,7 @@ class ComicDetailPage extends StatelessWidget {
                               (e) => GestureDetector(
                                 onTap: () => controller.toAuthorDetail(e),
                                 child: Text(
-                                  e.tagName,
+                                  e.tagName.i18n,
                                   style: TextStyle(
                                     fontSize: 14,
                                     height: 1.2,
@@ -245,7 +245,7 @@ class ComicDetailPage extends StatelessWidget {
                               (e) => GestureDetector(
                                 onTap: () => controller.toCategoryDetail(e),
                                 child: Text(
-                                  e.tagName,
+                                  e.tagName.i18n,
                                   style: TextStyle(
                                     fontSize: 14,
                                     height: 1.2,
@@ -494,7 +494,7 @@ class ComicDetailPage extends StatelessWidget {
           AppStyle.hGap8,
           Expanded(
             child: Text(
-              title,
+              title.i18n,
               style: TextStyle(
                 fontSize: 14,
                 color: Get.isDarkMode ? Colors.white : AppColor.black333,

@@ -79,7 +79,7 @@ class NovelCategoryDetailPage extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                x.tagName,
+                                x.tagName.i18n,
                                 style: const TextStyle(
                                   fontSize: 14,
                                 ),

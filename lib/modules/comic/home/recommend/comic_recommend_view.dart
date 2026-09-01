@@ -122,7 +122,7 @@ class ComicRecommendView extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    title,
+                    title.i18n,
                     style: const TextStyle(
                         fontSize: 16, height: 1.0, fontWeight: FontWeight.bold),
                   ),
