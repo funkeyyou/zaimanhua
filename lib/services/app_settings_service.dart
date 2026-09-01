@@ -37,6 +37,8 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kComicReaderPageAnimation, true);
     comicReaderOldViewPoint.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderOldViewPoint, false);
+    comicReaderTapZone.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderTapZone, 10);
     //小说
     novelReaderDirection.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderDirection, 0);
@@ -455,6 +457,16 @@ class AppSettingsService extends GetxController {
     comicReaderPageAnimation.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kComicReaderPageAnimation, value);
+  }
+
+  /// 漫画阅读器左右翻页触控区宽度（占屏宽百分比，单侧，5-40）
+  RxInt comicReaderTapZone = 10.obs;
+  void setComicReaderTapZone(int value) {
+    if (value < 5) value = 5;
+    if (value > 40) value = 40;
+    comicReaderTapZone.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderTapZone, value);
   }
 
   /// 小说阅读翻页动画

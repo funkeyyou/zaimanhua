@@ -9,6 +9,7 @@ import 'package:zai_x/app/app_constant.dart';
 import 'package:zai_x/app/app_style.dart';
 import 'package:zai_x/app/log.dart';
 import 'package:zai_x/modules/comic/reader/comic_reader_controller.dart';
+import 'package:zai_x/services/app_settings_service.dart';
 import 'package:zai_x/widgets/custom_header.dart';
 import 'package:zai_x/widgets/local_image.dart';
 import 'package:zai_x/widgets/net_image.dart';
@@ -60,46 +61,49 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                 ),
               ),
               Positioned.fill(
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          controller.leftHandMode
-                              ? controller.nextPage()
-                              : controller.forwardPage();
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          color: Colors.transparent,
+                child: Obx(() {
+                  final zone = AppSettingsService.instance.comicReaderTapZone.value;
+                  return Row(
+                    children: [
+                      Expanded(
+                        flex: zone,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            controller.leftHandMode
+                                ? controller.nextPage()
+                                : controller.forwardPage();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            color: Colors.transparent,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 8,
-                      child: Container(),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          controller.leftHandMode
-                              ? controller.forwardPage()
-                              : controller.nextPage();
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          color: Colors.transparent,
+                      Expanded(
+                        flex: 100 - zone * 2,
+                        child: Container(),
+                      ),
+                      Expanded(
+                        flex: zone,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            controller.leftHandMode
+                                ? controller.forwardPage()
+                                : controller.nextPage();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            color: Colors.transparent,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  );
+                }),
               ),
               Obx(
                 () => Offstage(

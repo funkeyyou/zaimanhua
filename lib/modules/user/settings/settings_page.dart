@@ -176,6 +176,24 @@ class SettingsPage extends StatelessWidget {
             title: Text("操作反转".i18n),
             subtitle: Text("点击左侧下一页，右侧上一页".i18n),
           ),
+          ListTile(
+            title: Text("翻页触控区宽度".i18n),
+            subtitle: Text("左右两侧各占屏宽比例，点击中间区域呼出菜单".i18n),
+            trailing: Text(
+              "${controller.settings.comicReaderTapZone.value}%",
+              style: const TextStyle(fontSize: 14),
+            ),
+          ),
+          Slider(
+            value: controller.settings.comicReaderTapZone.value.toDouble(),
+            min: 5,
+            max: 40,
+            divisions: 35,
+            label: "${controller.settings.comicReaderTapZone.value}%",
+            onChanged: (e) {
+              controller.settings.setComicReaderTapZone(e.round());
+            },
+          ),
           SwitchListTile(
             value: controller.settings.comicReaderFullScreen.value,
             onChanged: (e) {
