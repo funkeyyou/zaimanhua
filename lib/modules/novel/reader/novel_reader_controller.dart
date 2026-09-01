@@ -810,8 +810,8 @@ class NovelReaderController extends BaseController {
                   var item = chapters[i];
                   return ListTile(
                     selected: i == chapterIndex.value,
-                    title: Text(item.chapterName),
-                    subtitle: Text(item.volumeName),
+                    title: Text(item.chapterName.i18n),
+                    subtitle: Text(item.volumeName.i18n),
                     onTap: () {
                       uploadHistory();
                       chapterIndex.value = i;

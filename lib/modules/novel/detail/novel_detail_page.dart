@@ -180,7 +180,7 @@ class NovelDetailPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    controller.detail.value.name,
+                    controller.detail.value.name.i18n,
                     style: Get.textTheme.titleMedium,
                   ),
                   AppStyle.vGap8,
@@ -278,7 +278,7 @@ class NovelDetailPage extends StatelessWidget {
                       var chapter = item.chapters[i];
                       return ListTile(
                         title: Text(
-                          chapter.chapterName,
+                          chapter.chapterName.i18n,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Get.textTheme.bodyMedium!.copyWith(

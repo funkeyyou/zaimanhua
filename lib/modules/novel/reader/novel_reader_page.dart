@@ -267,7 +267,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
         controller.nextChapter();
       },
       child: NovelHorizontalReader(
-        controller.content.value,
+        controller.content.value.i18n,
         controller: controller.pageController,
         reverse: controller.direction.value == ReaderDirection.kRightToLeft,
         style: TextStyle(
@@ -339,7 +339,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
             child: SingleChildScrollView(
               controller: controller.scrollController,
               child: Text(
-                controller.content.value,
+                controller.content.value.i18n,
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   fontFamily: controller.settings.novelReaderFontFamily,

@@ -9,6 +9,7 @@ import 'package:zai_x/widgets/keep_alive_wrapper.dart';
 import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_list_view.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelLatestView extends StatelessWidget {
   final NovelLatestController controller;
@@ -57,7 +58,7 @@ class NovelLatestView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    item.title,
+                    item.title.i18n,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -80,10 +81,10 @@ class NovelLatestView extends StatelessWidget {
                     ]),
                   ),
                   const SizedBox(height: 2),
-                  Text(item.types ?? "",
+                  Text((item.types ?? "").i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
-                  Text(item.lastName ?? "",
+                  Text((item.lastName ?? "").i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

@@ -134,7 +134,7 @@ class NovelSearchPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    item.title,
+                    item.title.i18n,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -157,10 +157,10 @@ class NovelSearchPage extends StatelessWidget {
                     ]),
                   ),
                   AppStyle.vGap4,
-                  Text(item.types ?? "",
+                  Text((item.types ?? "").i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   AppStyle.vGap4,
-                  Text(item.lastName ?? "",
+                  Text((item.lastName ?? "").i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

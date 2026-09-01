@@ -151,7 +151,7 @@ class NovelRecommendView extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              item.data[config.activeIndex].title,
+                              item.data[config.activeIndex].title.i18n,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                   fontSize: 14, color: Colors.white),
@@ -207,7 +207,7 @@ class NovelRecommendView extends StatelessWidget {
               ),
               AppStyle.vGap8,
               Text(
-                item.title,
+                item.title.i18n,
                 maxLines: 1,
                 style: const TextStyle(height: 1.2),
                 overflow: TextOverflow.ellipsis,

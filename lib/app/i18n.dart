@@ -52,13 +52,37 @@ class AppI18n {
 
   static String convert(String text) {
     if (!useTraditional || text.isEmpty) return text;
+    // UI 字面量快路径（整句 s2twp 品质）
     final hit = kZhHantPhraseMap[text];
     if (hit != null) return hit;
-    // 逐字备援：处理插值组合出的字串
+    // 通用转换：OpenCC 全量词表最长词优先，适用于服务器内容与插值字串
     final sb = StringBuffer();
-    for (final rune in text.runes) {
-      final ch = String.fromCharCode(rune);
-      sb.write(kZhHantCharMap[ch] ?? ch);
+    final n = text.length;
+    int i = 0;
+    while (i < n) {
+      final cu = text.codeUnitAt(i);
+      // 非 CJK 直接复制（HTML 标签、数字、英文等）
+      if (cu < 0x2E80) {
+        sb.writeCharCode(cu);
+        i++;
+        continue;
+      }
+      var matched = false;
+      var maxLen = n - i;
+      if (maxLen > kZhHantMaxKeyLen) maxLen = kZhHantMaxKeyLen;
+      for (var l = maxLen; l >= 1; l--) {
+        final v = kZhHantConvMap[text.substring(i, i + l)];
+        if (v != null) {
+          sb.write(v);
+          i += l;
+          matched = true;
+          break;
+        }
+      }
+      if (!matched) {
+        sb.writeCharCode(cu);
+        i++;
+      }
     }
     return sb.toString();
   }

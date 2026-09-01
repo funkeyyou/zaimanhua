@@ -9,6 +9,7 @@ import 'package:zai_x/widgets/keep_alive_wrapper.dart';
 import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_list_view.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelRankView extends StatelessWidget {
   final NovelRankController controller;
@@ -162,18 +163,18 @@ class NovelRankView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    item.name,
+                    item.name.i18n,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
-                  Text(item.authors,
+                  Text(item.authors.i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
                   Text(item.types.join("/"),
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
-                  Text(item.status,
+                  Text(item.status.i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   Text(item.lastUpdateChapterName,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),

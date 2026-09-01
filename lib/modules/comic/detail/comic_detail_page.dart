@@ -206,7 +206,7 @@ class ComicDetailPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        controller.detail.value.title,
+                        controller.detail.value.title.i18n,
                         style: Get.textTheme.titleMedium,
                       ),
                       AppStyle.vGap8,
@@ -300,7 +300,7 @@ class ComicDetailPage extends StatelessWidget {
                 !controller.expandDescription.value;
           },
           child: Text(
-            controller.detail.value.description,
+            controller.detail.value.description.i18n,
             style: const TextStyle(
               color: Colors.grey,
               fontSize: 14,
@@ -442,7 +442,7 @@ class ComicDetailPage extends StatelessWidget {
                                               item, item.chapters[i]);
                                         },
                                         child: Text(
-                                          item.chapters[i].chapterTitle,
+                                          item.chapters[i].chapterTitle.i18n,
                                           textAlign: TextAlign.center,
                                           overflow: TextOverflow.ellipsis,
                                         ),

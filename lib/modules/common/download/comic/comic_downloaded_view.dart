@@ -70,7 +70,7 @@ class ComicDownloadedView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    item.comicName,
+                    item.comicName.i18n,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

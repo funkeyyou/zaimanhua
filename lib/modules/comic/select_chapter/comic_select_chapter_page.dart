@@ -226,7 +226,7 @@ class ComicSelectChapterPage extends StatelessWidget {
                                 ? null
                                 : () => controller.selectItem(chapter),
                             child: Text(
-                              item.chapters[i].chapterTitle,
+                              item.chapters[i].chapterTitle.i18n,
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                             ),

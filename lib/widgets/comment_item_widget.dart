@@ -47,7 +47,7 @@ class CommentItemWidget extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        item.nickname,
+                        item.nickname.i18n,
                         maxLines: 1,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
@@ -70,7 +70,7 @@ class CommentItemWidget extends StatelessWidget {
                       )
                     : Container(),
                 Text(
-                  item.content,
+                  item.content.i18n,
                   style: Get.theme.textTheme.bodyMedium,
                 ),
                 item.images.isNotEmpty
@@ -219,14 +219,14 @@ class CommentItemWidget extends StatelessWidget {
                     alignment: ui.PlaceholderAlignment.middle,
                     child: InkWell(
                       child: Text(
-                        item.nickname,
+                        item.nickname.i18n,
                         style:
                             TextStyle(color: Get.theme.colorScheme.secondary),
                       ),
                     ),
                   ),
                   TextSpan(
-                    text: ": ${item.content}",
+                    text: ": ${item.content}".i18n,
                     style: Get.theme.textTheme.bodyMedium,
                   )
                 ]),
@@ -298,7 +298,7 @@ class CommentItemWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         ListTile(
-          title: Text(item.nickname),
+          title: Text(item.nickname.i18n),
           leading: UserPhoto(
             url: item.photo,
             size: 32,
@@ -313,7 +313,7 @@ class CommentItemWidget extends StatelessWidget {
           title: Text("复制内容".i18n),
           leading: const Icon(Icons.content_copy),
           onTap: () {
-            Utils.copyText(item.content);
+            Utils.copyText(item.content.i18n);
 
             AppNavigator.closePage();
           },

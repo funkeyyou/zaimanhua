@@ -59,7 +59,7 @@ class ComicLatestView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    item.title,
+                    item.title.i18n,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -82,10 +82,10 @@ class ComicLatestView extends StatelessWidget {
                     ]),
                   ),
                   const SizedBox(height: 2),
-                  Text(item.types ?? '',
+                  Text((item.types ?? '').i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
-                  Text(item.lastUpdateChapterName ?? '',
+                  Text((item.lastUpdateChapterName ?? '').i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
                   Text("更新于${Utils.formatTimestamp(item.lastUpdatetime ?? 0)}".i18n,

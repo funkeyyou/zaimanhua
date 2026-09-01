@@ -22,7 +22,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(info.comicName),
+        title: Text(info.comicName.i18n),
       ),
       body: ListView.builder(
         padding: AppStyle.edgeInsetsA12,
@@ -253,7 +253,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                                 controller.selectItem(chapter);
                               },
                               child: Text(
-                                item.chapters[i].chapterTitle,
+                                item.chapters[i].chapterTitle.i18n,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -272,7 +272,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                                 controller.readChapter(item, chapter);
                               },
                               child: Text(
-                                item.chapters[i].chapterTitle,
+                                item.chapters[i].chapterTitle.i18n,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                               ),

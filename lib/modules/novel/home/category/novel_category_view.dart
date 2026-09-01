@@ -6,6 +6,7 @@ import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_grid_view.dart';
 import 'package:zai_x/widgets/shadow_card.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelCategoryView extends StatelessWidget {
   final NovelCategoryController controller;
@@ -44,7 +45,7 @@ class NovelCategoryView extends StatelessWidget {
                   Padding(
                     padding: AppStyle.edgeInsetsA8,
                     child: Text(
-                      item.title,
+                      item.title.i18n,
                       textAlign: TextAlign.center,
                       style: const TextStyle(height: 1),
                     ),

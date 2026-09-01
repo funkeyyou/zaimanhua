@@ -207,7 +207,7 @@ class ComicRecommendView extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              item.data[config.activeIndex].title,
+                              item.data[config.activeIndex].title.i18n,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                   fontSize: 14, color: Colors.white),
@@ -263,7 +263,7 @@ class ComicRecommendView extends StatelessWidget {
               ),
               AppStyle.vGap8,
               Text(
-                item.title,
+                item.title.i18n,
                 maxLines: 1,
                 style: const TextStyle(height: 1.2),
                 overflow: TextOverflow.ellipsis,
@@ -314,7 +314,7 @@ class ComicRecommendView extends StatelessWidget {
                 Padding(
                   padding: AppStyle.edgeInsetsV8,
                   child: Text(
-                    item.title,
+                    item.title.i18n,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(height: 1.2, fontSize: 12),
@@ -359,7 +359,7 @@ class ComicRecommendView extends StatelessWidget {
               Padding(
                 padding: AppStyle.edgeInsetsV8,
                 child: Text(
-                  item.title,
+                  item.title.i18n,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(height: 1.2),

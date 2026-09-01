@@ -31,7 +31,7 @@ class NewsDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() => Text(controller.newsTitle.value)),
+        title: Obx(() => Text(controller.newsTitle.value.i18n)),
         actions: [
           IconButton(
             onPressed: controller.share,
@@ -133,17 +133,18 @@ class NewsDetailPage extends StatelessWidget {
         padding: AppStyle.edgeInsetsA12,
         children: [
           Text(
-            controller.title,
+            controller.title.i18n,
             style: Get.textTheme.titleLarge,
           ),
           AppStyle.vGap4,
           Text(
-            "${controller.author.value}    ${controller.src.value}    ${controller.time.value}",
+            "${controller.author.value}    ${controller.src.value}    ${controller.time.value}"
+                .i18n,
             style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
           AppStyle.vGap12,
           HtmlWidget(
-            controller.htmlContent.value,
+            controller.htmlContent.value.i18n,
             textStyle: TextStyle(
               fontSize: controller.settings.newsFontSize.value.toDouble(),
             ),

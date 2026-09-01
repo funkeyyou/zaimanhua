@@ -96,7 +96,7 @@ class UserCenterPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    item.entity.name,
+                    item.entity.name.i18n,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -112,7 +112,7 @@ class UserCenterPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item.content,
+                          item.content.i18n,
                           style: Get.theme.textTheme.bodyMedium,
                         ),
                         if (item.toCommentInfo != null &&

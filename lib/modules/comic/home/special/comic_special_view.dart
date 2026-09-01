@@ -7,6 +7,7 @@ import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_list_view.dart';
 import 'package:zai_x/widgets/shadow_card.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicSpecialView extends StatelessWidget {
   final ComicSpecialController controller;
@@ -43,7 +44,7 @@ class ComicSpecialView extends StatelessWidget {
                   padding: AppStyle.edgeInsetsA8,
                   child: Row(
                     children: [
-                      Expanded(child: Text(item.title)),
+                      Expanded(child: Text(item.title.i18n)),
                       Text(
                         Utils.formatTimestampToDate(item.createTime),
                         style: const TextStyle(

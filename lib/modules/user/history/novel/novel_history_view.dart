@@ -58,7 +58,7 @@ class NovelHistoryView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    item.novelName,
+                    item.novelName.i18n,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

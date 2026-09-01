@@ -7,6 +7,7 @@ import 'package:zai_x/widgets/page_grid_view.dart';
 import 'package:zai_x/widgets/shadow_card.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelCategoryDetailPage extends StatelessWidget {
   final int id;
@@ -51,7 +52,7 @@ class NovelCategoryDetailPage extends StatelessWidget {
                     Padding(
                       padding: AppStyle.edgeInsetsV12,
                       child: Text(
-                        item.title,
+                        item.title.i18n,
                         style: Get.textTheme.titleMedium,
                       ),
                     ),
@@ -131,7 +132,7 @@ class NovelCategoryDetailPage extends StatelessWidget {
                   Padding(
                     padding: AppStyle.edgeInsetsH4,
                     child: Text(
-                      item.title,
+                      item.title.i18n,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

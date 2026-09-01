@@ -5,6 +5,7 @@ import 'package:zai_x/widgets/status/app_error_widget.dart';
 import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:zai_x/widgets/tab_appbar.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NewsHomePage extends GetView<NewsHomeController> {
   const NewsHomePage({super.key});
@@ -29,7 +30,7 @@ class NewsHomePage extends GetView<NewsHomeController> {
         }
         return Scaffold(
           appBar: TabAppBar(
-            tabs: controller.categores.map((e) => Tab(text: e.name)).toList(),
+            tabs: controller.categores.map((e) => Tab(text: e.name.i18n)).toList(),
             controller: controller.tabController,
           ),
           body: TabBarView(

@@ -58,7 +58,7 @@ class NewsSubscribeView extends StatelessWidget {
                         children: <Widget>[
                           Expanded(
                             child: Text(
-                              item.title,
+                              item.title.i18n,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),

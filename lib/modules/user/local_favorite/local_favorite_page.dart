@@ -98,7 +98,7 @@ class LocalFavoritePage extends StatelessWidget {
               Padding(
                 padding: AppStyle.edgeInsetsA8,
                 child: Text(
-                  item.title,
+                  item.title.i18n,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(

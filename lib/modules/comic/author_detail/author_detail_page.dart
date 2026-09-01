@@ -112,12 +112,12 @@ class ComicAuthorDetailPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    item.name,
+                    item.name.i18n,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   AppStyle.vGap4,
-                  Text(item.status,
+                  Text(item.status.i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

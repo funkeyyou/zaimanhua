@@ -185,7 +185,7 @@ class NovelSubscribeView extends StatelessWidget {
               Padding(
                 padding: AppStyle.edgeInsetsH4,
                 child: Text(
-                  item.title,
+                  item.title.i18n,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(

@@ -87,7 +87,7 @@ class NovelDownloadingView extends StatelessWidget {
               "${task.info.value.volumeName} - ${task.info.value.chapterName}",
             ),
             Text(
-              task.info.value.novelName,
+              task.info.value.novelName.i18n,
               style: Get.textTheme.bodySmall,
             ),
             Row(

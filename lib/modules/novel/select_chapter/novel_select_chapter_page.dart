@@ -150,7 +150,7 @@ class NovelSelectChapterPage extends StatelessWidget {
                   value: volume.contains(chapter.chapterId),
                   controlAffinity: ListTileControlAffinity.leading,
                   title: Text(
-                    chapter.chapterName,
+                    chapter.chapterName.i18n,
                     style: Get.textTheme.titleSmall,
                   ),
                   enabled: !NovelDownloadService.instance.downloadIds.contains(

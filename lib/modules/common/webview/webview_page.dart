@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zai_x/app/i18n.dart';
 import 'package:zai_x/app/utils.dart';
 import 'package:zai_x/modules/common/webview/webview_controller.dart';
 import 'package:zai_x/widgets/status/app_error_widget.dart';
@@ -19,7 +20,7 @@ class WebViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() => Text(controller.title.value)),
+        title: Obx(() => Text(controller.title.value.i18n)),
       ),
       body: Stack(
         children: [

@@ -140,7 +140,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                             Container(
                               constraints: const BoxConstraints(maxWidth: 100),
                               child: Text(
-                                controller.detail.value.chapterTitle,
+                                controller.detail.value.chapterTitle.i18n,
                                 overflow: TextOverflow.ellipsis,
                                 style:
                                     const TextStyle(fontSize: 12, height: 1.0),
@@ -481,7 +481,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            e.content,
+                            e.content.i18n,
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.white),
                           ),

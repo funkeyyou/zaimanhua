@@ -146,15 +146,15 @@ class SpecialDetailPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    item.name,
+                    item.name.i18n,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   AppStyle.vGap4,
-                  Text(item.recommendBrief,
+                  Text(item.recommendBrief.i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   AppStyle.vGap4,
-                  Text(item.recommendReason,
+                  Text(item.recommendReason.i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),
@@ -213,7 +213,7 @@ class SpecialDetailPage extends StatelessWidget {
           ),
           AppStyle.vGap12,
           Text(
-            detail.description,
+            detail.description.i18n,
           ),
         ],
       ),

@@ -337,7 +337,7 @@ class ComicReaderController extends BaseController {
                   var item = chapters[i];
                   return ListTile(
                     selected: i == chapterIndex.value,
-                    title: Text(item.chapterTitle),
+                    title: Text(item.chapterTitle.i18n),
                     subtitle: item.updateTime != 0
                         ? Text(
                             "更新于${Utils.formatTimestampToDate(item.updateTime)}".i18n)
@@ -479,7 +479,7 @@ class ComicReaderController extends BaseController {
                                       borderRadius: AppStyle.radius8,
                                     ),
                                     child: Text(
-                                      item.content,
+                                      item.content.i18n,
                                       style:
                                           const TextStyle(color: Colors.white),
                                     ),
@@ -507,7 +507,7 @@ class ComicReaderController extends BaseController {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      item.content,
+                                      item.content.i18n,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 15,

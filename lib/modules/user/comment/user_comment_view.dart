@@ -9,6 +9,7 @@ import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_list_view.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class UserCommentView extends StatelessWidget {
   final int type;
@@ -63,7 +64,7 @@ class UserCommentView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        item.objName,
+                        item.objName.i18n,
                       ),
                       AppStyle.vGap8,
                       Container(
@@ -76,7 +77,7 @@ class UserCommentView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(item.content),
+                            Text(item.content.i18n),
                             Visibility(
                               visible: item.mastercomment != null,
                               child: Container(

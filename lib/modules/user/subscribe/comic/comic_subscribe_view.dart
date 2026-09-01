@@ -150,7 +150,7 @@ class ComicSubscribeView extends StatelessWidget {
                       padding:
                           AppStyle.edgeInsetsH8.copyWith(top: 2, bottom: 2),
                       child: Text(
-                        item.status,
+                        item.status.i18n,
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.white,
@@ -191,7 +191,7 @@ class ComicSubscribeView extends StatelessWidget {
               Padding(
                 padding: AppStyle.edgeInsetsH4,
                 child: Text(
-                  item.title,
+                  item.title.i18n,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(

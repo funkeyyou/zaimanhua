@@ -133,7 +133,7 @@ class ComicSearchPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    item.title,
+                    item.title.i18n,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -156,10 +156,10 @@ class ComicSearchPage extends StatelessWidget {
                     ]),
                   ),
                   AppStyle.vGap4,
-                  Text(item.tags,
+                  Text(item.tags.i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   AppStyle.vGap4,
-                  Text(item.lastChapterName,
+                  Text(item.lastChapterName.i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

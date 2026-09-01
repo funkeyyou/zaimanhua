@@ -21,7 +21,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(info.novelName),
+        title: Text(info.novelName.i18n),
       ),
       body: ListView.builder(
         padding: AppStyle.edgeInsetsA12,
@@ -180,7 +180,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                 () => controller.editMode.value
                     ? CheckboxListTile(
                         title: Text(
-                          chapter.chapterName,
+                          chapter.chapterName.i18n,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Get.textTheme.bodyMedium!.copyWith(
@@ -200,7 +200,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                       )
                     : ListTile(
                         title: Text(
-                          chapter.chapterName,
+                          chapter.chapterName.i18n,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Get.textTheme.bodyMedium!.copyWith(

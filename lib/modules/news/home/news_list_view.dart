@@ -10,6 +10,7 @@ import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_list_view.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NewsListView extends StatelessWidget {
   final NewsTagModel tag;
@@ -61,7 +62,7 @@ class NewsListView extends StatelessWidget {
                         children: <Widget>[
                           Expanded(
                             child: Text(
-                              item.title,
+                              item.title.i18n,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
