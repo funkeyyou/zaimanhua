@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      HAS_KEYSTORE: ${{ secrets.ZAI_KEYSTORE_BASE64 != '' }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup Java
@@ -28,7 +30,7 @@ jobs:
         run: flutter pub get
       # 設定了 ZAI_KEYSTORE_BASE64 等 secrets 時使用正式簽名；否則 gradle 自動退回 debug 簽名
       - name: Restore keystore (optional)
-        if: ${{ secrets.ZAI_KEYSTORE_BASE64 != '' }}
+        if: ${{ env.HAS_KEYSTORE == 'true' }}
         shell: bash
         run: |
           echo "${{ secrets.ZAI_KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/zaimanhua-release.jks"
