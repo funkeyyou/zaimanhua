@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ vars.ENABLE_DAILY_SIGNIN == '1' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Sign in
         shell: pwsh
         env:
