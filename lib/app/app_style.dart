@@ -4,6 +4,10 @@ import 'package:zai_x/app/app_color.dart';
 import 'package:get/get.dart';
 
 class AppStyle {
+  /// 内建思源黑体 Medium：部分安卓 ROM 无视字重请求导致中文过细，
+  /// 内建字体彻底绕过系统映射（简繁字形完整）
+  static const String appFontFamily = 'SourceHanSansSC';
+
   /// 中文在部分安卓 ROM（MIUI/HyperOS 等）会被 Flutter 映射到过细字重，
   /// 全域显式指定字重：正文/标签 w500、标题 w600
   static const TextTheme _weightOverlay = TextTheme(
@@ -22,8 +26,12 @@ class AppStyle {
   );
 
   static ThemeData _applyWeights(ThemeData base) => base.copyWith(
-        textTheme: base.textTheme.merge(_weightOverlay),
-        primaryTextTheme: base.primaryTextTheme.merge(_weightOverlay),
+        textTheme: base.textTheme
+            .merge(_weightOverlay)
+            .apply(fontFamily: appFontFamily),
+        primaryTextTheme: base.primaryTextTheme
+            .merge(_weightOverlay)
+            .apply(fontFamily: appFontFamily),
       );
 
   static ThemeData lightTheme = _applyWeights(ThemeData.light(
@@ -48,6 +56,7 @@ class AppStyle {
         color: AppColor.black333,
       ),
       titleTextStyle: const TextStyle(
+        fontFamily: appFontFamily,
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: AppColor.black333,
@@ -80,6 +89,7 @@ class AppStyle {
         ),
       ),
       titleTextStyle: const TextStyle(
+        fontFamily: appFontFamily,
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: Colors.white,
