@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-/// 动漫之家评论接口太TM混乱了
-/// 使用此类统一Model
+/// 動漫之家評論介面太TM混亂了
+/// 使用此類統一Model
 
 class CommentItem {
   CommentItem({
@@ -27,7 +27,7 @@ class CommentItem {
     return CommentItem(
       id: 0,
       objId: 0,
-      content: "该评论不存在，可能已被删除",
+      content: "該評論不存在，可能已被刪除",
       photo: "",
       createTime: 0,
       images: [],
@@ -60,6 +60,6 @@ class CommentItem {
   int type;
   int originId;
   int toCommentId;
-  /// 是否已点赞（响应式，支持实时切换点赞状态）
+  /// 是否已點贊（響應式，支援實時切換點贊狀態）
   Rx<bool>? isLike;
 }

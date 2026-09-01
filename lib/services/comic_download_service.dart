@@ -18,8 +18,8 @@ import 'package:collection/collection.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
 
-/// 漫画下载管理
-// TODO 整理代码
+/// 漫畫下載管理
+// TODO 整理程式碼
 class ComicDownloadService extends GetxService {
   static ComicDownloadService get instance => Get.find<ComicDownloadService>();
 
@@ -28,13 +28,13 @@ class ComicDownloadService extends GetxService {
   late Box<ComicDownloadInfo> box;
   String savePath = "";
 
-  /// 连接信息监听
+  /// 連線資訊監聽
   StreamSubscription<List<ConnectivityResult>>? connectivitySubscription;
 
-  /// 当前连接类型
+  /// 當前連線型別
   ConnectivityResult? connectivityType;
 
-  /// 当前正在下载的数量
+  /// 當前正在下載的數量
   var currentNum = 0;
 
   Future init() async {
@@ -44,7 +44,7 @@ class ComicDownloadService extends GetxService {
       path: dir.path,
     );
     savePath = await getSavePath();
-    //监听网络状态
+    //監聽網路狀態
     initConnectivity();
     //更新ID
     updateAllIds();
@@ -52,7 +52,7 @@ class ComicDownloadService extends GetxService {
     updateDownlaoded();
   }
 
-  /// 初始化连接状态
+  /// 初始化連線狀態
   void initConnectivity() async {
     try {
       var connectivity = Connectivity();
@@ -69,13 +69,13 @@ class ComicDownloadService extends GetxService {
     }
   }
 
-  /// 网络变更
+  /// 網路變更
   void networkChanged(ConnectivityResult type) {
     if (connectivityType != type && type == ConnectivityResult.mobile) {
-      //切换至流量
+      //切換至流量
       switchCellular();
     } else if (connectivityType != type && type == ConnectivityResult.none) {
-      //网络断开
+      //網路斷開
       switchNoNetwork();
     } else {
       switchToWiFi();
@@ -92,14 +92,14 @@ class ComicDownloadService extends GetxService {
     return ConnectivityResult.none;
   }
 
-  /// 切换至流量
+  /// 切換至流量
   void switchCellular() {
     if (settings.downloadAllowCellular.value) {
-      //允许使用流量,当成WiFi处理
+      //允許使用流量,當成WiFi處理
       switchToWiFi();
       return;
     }
-    //把任务状态改为pauseCellular
+    //把任務狀態改為pauseCellular
     for (var item in taskQueues) {
       if (item.status == DownloadStatus.wait ||
           item.status == DownloadStatus.loadding ||
@@ -112,9 +112,9 @@ class ComicDownloadService extends GetxService {
     updateQueue();
   }
 
-  /// 无网络
+  /// 無網路
   void switchNoNetwork() {
-    //把任务状态改为pauseCellular
+    //把任務狀態改為pauseCellular
     for (var item in taskQueues) {
       if (item.status == DownloadStatus.wait ||
           item.status == DownloadStatus.loadding ||
@@ -137,38 +137,38 @@ class ComicDownloadService extends GetxService {
     updateQueue();
   }
 
-  /// 任务列表
+  /// 任務列表
   RxList<ComicDownloader> taskQueues = RxList<ComicDownloader>();
 
-  /// 已下载完成的
+  /// 已下載完成的
   RxList<ComicDownloadedItem> downloaded = RxList<ComicDownloadedItem>();
 
-  /// 已下载、下载中的ID
+  /// 已下載、下載中的ID
   RxSet<String> downloadIds = RxSet<String>();
 
-  /// 开始下载任务
+  /// 開始下載任務
   void initTasks() async {
     var tasks = getDownloadingTask();
     for (var item in tasks) {
-      //任务已被取消
+      //任務已被取消
       if (item.status == DownloadStatus.cancel) {
         box.delete(item.taskId);
         continue;
       }
-      //无网络
+      //無網路
       if (connectivityType == ConnectivityResult.none) {
         if (item.status != DownloadStatus.pause) {
           item.status = DownloadStatus.waitNetwork;
         }
       } else if (connectivityType == ConnectivityResult.mobile) {
-        //不允许使用数据下载
+        //不允許使用資料下載
         if (!settings.downloadAllowCellular.value) {
           if (item.status != DownloadStatus.pause) {
             item.status = DownloadStatus.pauseCellular;
           }
         }
       } else {
-        //只要不是手动暂停的，全部改为等待，添加到下载队列
+        //只要不是手動暫停的，全部改為等待，新增到下載佇列
         if (item.status != DownloadStatus.pause) {
           item.status = DownloadStatus.wait;
         }
@@ -181,12 +181,12 @@ class ComicDownloadService extends GetxService {
     updateQueue();
   }
 
-  /// 更新队列
+  /// 更新佇列
   void updateQueue() {
-    //如果下载中任务数小于设定值，添加一个任务
-    //如果任务取消或完成，移除队列
+    //如果下載中任務數小於設定值，新增一個任務
+    //如果任務取消或完成，移除佇列
     for (var task in List<ComicDownloader>.from(taskQueues)) {
-      //下载完成或取消，移除队列
+      //下載完成或取消，移除佇列
       if (task.status == DownloadStatus.complete ||
           task.status == DownloadStatus.cancel) {
         taskQueues.remove(task);
@@ -225,7 +225,7 @@ class ComicDownloadService extends GetxService {
     downloadIds.addAll(box.keys.map((e) => e.toString()));
   }
 
-  ///读取未完成的任务
+  ///讀取未完成的任務
   List<ComicDownloadInfo> getDownloadingTask() {
     return box.values
         .toList()
@@ -233,7 +233,7 @@ class ComicDownloadService extends GetxService {
         .toList();
   }
 
-  /// 更新下载完成
+  /// 更新下載完成
   void updateDownlaoded() {
     var downlaodedList = box.values
         .toList()
@@ -285,9 +285,9 @@ class ComicDownloadService extends GetxService {
     downloaded.value = comicList;
   }
 
-  /// 继续
+  /// 繼續
   void resumeAll() {
-    //更新状态至等待
+    //更新狀態至等待
     for (var task in taskQueues) {
       if (task.status == DownloadStatus.pause) {
         task.stopTask();
@@ -297,7 +297,7 @@ class ComicDownloadService extends GetxService {
     updateQueue();
   }
 
-  /// 暂停
+  /// 暫停
   void pauseAll() {
     for (var task in taskQueues) {
       if (task.status != DownloadStatus.pause &&
@@ -310,15 +310,15 @@ class ComicDownloadService extends GetxService {
     updateQueue();
   }
 
-  /// 取消任务
+  /// 取消任務
   void cancelTask(ComicDownloader task) {
     // 移除列表
-    // 移除数据库
-    // 取消任务
-    // 删除文件
+    // 移除資料庫
+    // 取消任務
+    // 刪除檔案
   }
 
-  /// 添加一个任务
+  /// 新增一個任務
   void addTask({
     required int comicId,
     required int chapterId,
@@ -365,7 +365,7 @@ class ComicDownloadService extends GetxService {
     updateQueue();
   }
 
-  /// 读取保存目录
+  /// 讀取儲存目錄
   Future<String> getSavePath() async {
     var dir = await getApplicationSupportDirectory();
 
@@ -376,7 +376,7 @@ class ComicDownloadService extends GetxService {
     return comicDir.path;
   }
 
-  ///删除
+  ///刪除
   void delete(ComicDownloadInfo info) async {
     try {
       var dir = Directory(p.join(savePath, info.taskId));
@@ -390,7 +390,7 @@ class ComicDownloadService extends GetxService {
     updateAllIds();
   }
 
-  ///删除
+  ///刪除
   void deleteChapter(int comicId, int chapterId) async {
     var info = box.get("${comicId}_$chapterId");
     if (info != null) {

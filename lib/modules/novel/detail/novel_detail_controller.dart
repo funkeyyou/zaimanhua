@@ -26,13 +26,13 @@ class NovelDetailControler extends BaseController {
 
   var expandDescription = false.obs;
 
-  /// 是否已订阅
+  /// 是否已訂閱
   var subscribeStatus = false.obs;
 
-  /// 阅读记录
+  /// 閱讀記錄
   Rx<NovelHistory?> history = Rx<NovelHistory?>(null);
 
-  /// 更新小说记录
+  /// 更新小說記錄
   StreamSubscription<dynamic>? updateNovelSubscription;
 
   @override
@@ -45,7 +45,7 @@ class NovelDetailControler extends BaseController {
         }
       },
     );
-    // 从本地读取订阅状态
+    // 從本地讀取訂閱狀態
     subscribeStatus.value =
         UserService.instance.subscribedNovelIds.contains(novelId);
     getHistory();
@@ -61,7 +61,7 @@ class NovelDetailControler extends BaseController {
     loadSubscribeStatus();
   }
 
-  /// 更新订阅的阅读状态
+  /// 更新訂閱的閱讀狀態
   void updateSubscribeRead() {
     try {
       userRequest.subscribeRead(id: novelId, type: AppConstant.kTypeNovel);
@@ -84,7 +84,7 @@ class NovelDetailControler extends BaseController {
     }
   }
 
-  /// 加载信息
+  /// 載入資訊
   void loadDetail() async {
     try {
       pageLoadding.value = true;
@@ -107,11 +107,11 @@ class NovelDetailControler extends BaseController {
       detail.value.volume.value =
           result.map((e) => NovelDetailVolume.fromJson(e)).toList();
     } catch (e) {
-      SmartDialog.showToast("无法读取小说章节:$e");
+      SmartDialog.showToast("無法讀取小說章節:$e");
     }
   }
 
-  /// 检查订阅状态
+  /// 檢查訂閱狀態
   void loadSubscribeStatus() async {
     try {
       var result = await userRequest.checkSubscribeStatus(
@@ -129,7 +129,7 @@ class NovelDetailControler extends BaseController {
     }
   }
 
-  /// 查看评论
+  /// 檢視評論
   void comment() {
     AppNavigator.toComment(objId: novelId, type: AppConstant.kTypeNovel);
   }
@@ -142,7 +142,7 @@ class NovelDetailControler extends BaseController {
     );
   }
 
-  /// 订阅
+  /// 訂閱
   void subscribe() async {
     var result = await (subscribeStatus.value
         ? UserService.instance
@@ -153,22 +153,22 @@ class NovelDetailControler extends BaseController {
     }
   }
 
-  /// 下载
+  /// 下載
   void download() {
     AppNavigator.toNovelDownloadSelect(novelId);
   }
 
-  /// 开始/继续阅读
+  /// 開始/繼續閱讀
   void read() {
     if (detail.value.volume.isEmpty) {
-      SmartDialog.showToast("没有可阅读的章节");
+      SmartDialog.showToast("沒有可閱讀的章節");
       return;
     }
     if (detail.value.volume.first.chapters.isEmpty) {
-      SmartDialog.showToast("没有可阅读的章节");
+      SmartDialog.showToast("沒有可閱讀的章節");
       return;
     }
-    //查找记录
+    //查詢記錄
     if (history.value != null && history.value!.chapterId != 0) {
       NovelDetailChapter? chapter;
       for (var volumeItem in detail.value.volume) {
@@ -194,7 +194,7 @@ class NovelDetailControler extends BaseController {
           chapters: chapters,
         );
       } else {
-        SmartDialog.showToast("未找到历史记录对应章节，将从头开始阅读");
+        SmartDialog.showToast("未找到歷史記錄對應章節，將從頭開始閱讀");
         readStart();
       }
     } else {
@@ -203,7 +203,7 @@ class NovelDetailControler extends BaseController {
   }
 
   void readStart() {
-    //从头开始
+    //從頭開始
     List<NovelDetailChapter> chapters = [];
     for (var volume in detail.value.volume) {
       chapters.addAll(volume.chapters);

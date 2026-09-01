@@ -25,7 +25,7 @@ class SpecialDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Obx(
-          () => Text(controller.detail.value?.title ?? "专题"),
+          () => Text(controller.detail.value?.title ?? "專題"),
         ),
       ),
       body: Obx(
@@ -84,7 +84,7 @@ class SpecialDetailPage extends StatelessWidget {
                     Remix.heart_line,
                     size: 20,
                   ),
-                  label: const Text("订阅全部"),
+                  label: const Text("訂閱全部"),
                 ),
               ),
               Expanded(
@@ -99,7 +99,7 @@ class SpecialDetailPage extends StatelessWidget {
                       size: 20,
                     ),
                     label: Text(
-                        "评论(${controller.detail.value?.commentAmount ?? 0})"),
+                        "評論(${controller.detail.value?.commentAmount ?? 0})"),
                   ),
                 ),
               ),

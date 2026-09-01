@@ -26,7 +26,7 @@ class NovelDetailPage extends StatelessWidget {
         title: Obx(
           () => Text(
             controller.detail.value.name.isEmpty
-                ? "小说详情"
+                ? "小說詳情"
                 : controller.detail.value.name,
           ),
         ),
@@ -119,7 +119,7 @@ class NovelDetailPage extends StatelessWidget {
                           : Remix.heart_line,
                       size: 20,
                     ),
-                    label: Text(controller.subscribeStatus.value ? "取消" : "订阅"),
+                    label: Text(controller.subscribeStatus.value ? "取消" : "訂閱"),
                   ),
                 ),
               ),
@@ -133,7 +133,7 @@ class NovelDetailPage extends StatelessWidget {
                     Remix.chat_2_line,
                     size: 20,
                   ),
-                  label: const Text("评论"),
+                  label: const Text("評論"),
                 ),
               ),
               Expanded(
@@ -146,7 +146,7 @@ class NovelDetailPage extends StatelessWidget {
                     Remix.download_line,
                     size: 20,
                   ),
-                  label: const Text("下载"),
+                  label: const Text("下載"),
                 ),
               ),
             ],
@@ -161,7 +161,7 @@ class NovelDetailPage extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //信息
+        //資訊
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -211,11 +211,11 @@ class NovelDetailPage extends StatelessWidget {
                     iconData: Remix.hashtag,
                   ),
                   _buildInfo(
-                    title: "人气 ${controller.detail.value.hotHits}",
+                    title: "人氣 ${controller.detail.value.hotHits}",
                     iconData: Remix.fire_line,
                   ),
                   _buildInfo(
-                    title: "订阅 ${controller.detail.value.subscribeNum}",
+                    title: "訂閱 ${controller.detail.value.subscribeNum}",
                     iconData: Remix.heart_line,
                   ),
                   _buildInfo(

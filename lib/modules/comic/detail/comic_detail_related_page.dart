@@ -18,7 +18,7 @@ class ComicDetailRelatedPage extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            title: const Text("作品相关"),
+            title: const Text("作品相關"),
             trailing: IconButton(
               onPressed: () {
                 AppNavigator.closePage();
@@ -39,8 +39,8 @@ class ComicDetailRelatedPage extends StatelessWidget {
                     AppNavigator.toComicAuthorDetail(e.authorId);
                   }),
                 ),
-                buildCard("同类题材作品", related.themeComics),
-                buildCard("轻小说", related.novels, isComic: false),
+                buildCard("同類題材作品", related.themeComics),
+                buildCard("輕小說", related.novels, isComic: false),
               ],
             ),
           ),

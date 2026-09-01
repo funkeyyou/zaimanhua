@@ -21,26 +21,26 @@ class NovelRecommendController extends BasePageController<NovelRecommendModel> {
   }
 
   void openDetail(NovelRecommendItemModel item) {
-    //漫画=1
+    //漫畫=1
     if (item.type == null || item.type == 2) {
       AppNavigator.toNovelDetail(
         item.objId ?? item.id ?? 0,
       );
     } else if (item.type == 1) {
-      //专题=5
+      //專題=5
       AppNavigator.toComicDetail(
         item.objId ?? 0,
       );
     } else if (item.type == 5) {
-      //专题=5
+      //專題=5
       AppNavigator.toSpecialDetail(
         item.objId ?? 0,
       );
     } else if (item.type == 6) {
-      //网页=6
+      //網頁=6
       AppNavigator.toWebView(item.url ?? "");
     } else if (item.type == 7) {
-      //新闻=7
+      //新聞=7
       AppNavigator.toNewsDetail(
         url: item.url ?? "",
         newsId: item.objId ?? 0,
@@ -50,12 +50,12 @@ class NovelRecommendController extends BasePageController<NovelRecommendModel> {
       //作者=8
       AppNavigator.toComicAuthorDetail(item.objId ?? 0);
     } else if (item.type == 13) {
-      //社区=13
-      //直接跳转至网页
+      //社群=13
+      //直接跳轉至網頁
       launchUrlString(
           "http://m.forum.idmzj.com/thread/detail?tid=${item.objId}");
     } else {
-      SmartDialog.showToast("未知类型，无法跳转");
+      SmartDialog.showToast("未知型別，無法跳轉");
     }
   }
 

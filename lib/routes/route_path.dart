@@ -1,11 +1,11 @@
 class RoutePath {
-  /// 首页
+  /// 首頁
   static const kIndex = "/index";
 
   /// 空白
   static const kEmpty = "/empty";
 
-  /// 登录
+  /// 登入
   static const kUserLogin = "/user/login";
 
   static const kTestSubRoute = "/test/sub_route";
@@ -13,81 +13,81 @@ class RoutePath {
   /// WebView
   static const kWebView = "/other/webview";
 
-  /// 新闻详情
+  /// 新聞詳情
   static const kNewsDetail = "/news/detail";
 
-  /// 评论
+  /// 評論
   static const kComment = "/comment";
 
-  /// 漫画详情
+  /// 漫畫詳情
   static const kComicDetail = "/comic/detail";
 
-  /// 漫画阅读
+  /// 漫畫閱讀
   static const kComicReader = "/comic/reader";
 
-  /// 漫画分类详情
+  /// 漫畫分類詳情
   static const kComicCategoryDetail = "/comic/category/detail";
 
-  /// 专题详情
+  /// 專題詳情
   static const kSpecialDetail = "/comic/special/detail";
 
-  /// 漫画作者详情
+  /// 漫畫作者詳情
   static const kComicAuthorDetail = "/comic/author/detail";
 
-  /// 漫画搜索
+  /// 漫畫搜尋
   static const kComicSearch = "/comic/search";
 
-  /// 轻小说搜索
+  /// 輕小說搜尋
   static const kNovelSearch = "/novel/search";
 
-  /// 轻小说分类详情
+  /// 輕小說分類詳情
   static const kNovelCategoryDetail = "/novel/category/detail";
 
-  /// 用户订阅
+  /// 使用者訂閱
   static const kUserSubscribe = "/user/subscribe";
 
-  /// 用户观看记录
+  /// 使用者觀看記錄
   static const kUserHistory = "/user/history";
 
-  /// 本机观看记录
+  /// 本機觀看記錄
   static const kLocalHistory = "/user/local/history";
 
-  /// 设置
+  /// 設定
   static const kSettings = "/user/settings";
 
-  /// 小说详情
+  /// 小說詳情
   static const kNovelDetail = "/novel/detail";
 
-  /// 小说阅读
+  /// 小說閱讀
   static const kNovelReader = "/novel/reader";
 
-  /// 漫画下载，选择章节
+  /// 漫畫下載，選擇章節
   static const kComicDownloadSelect = "/comic/download/chapter";
 
-  /// 小说下载，选择章节
+  /// 小說下載，選擇章節
   static const kNovelDownloadSelect = "/novel/download/chapter";
 
-  /// 漫画下载管理
+  /// 漫畫下載管理
   static const kComicDownload = "/download/comic";
 
-  /// 漫画下载详情
+  /// 漫畫下載詳情
   static const kComicDownloadDetail = "/download/comic/detail";
 
-  /// 小说下载管理
+  /// 小說下載管理
   static const kNovelDownload = "/download/novel";
 
-  /// 小说下载详情
+  /// 小說下載詳情
   static const kNovelDownloadDetail = "/download/novel/chapter";
 
-  /// 添加/回复评论
+  /// 新增/回覆評論
   static const kCommentAdd = "/comment/add";
 
-  /// 用户的评论
+  /// 使用者的評論
   static const kUserComment = "/user/comment";
 
-  /// 用户中心
+  /// 使用者中心
   static const kUserCenter = "/user/center";
 
-  /// 本机收藏
+  /// 本機收藏
   static const kLocalFavorite = "/user/local/favorite";
 }

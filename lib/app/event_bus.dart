@@ -2,19 +2,19 @@ import 'dart:async';
 
 import 'package:zai_x/app/log.dart';
 
-/// 全局事件
+/// 全域性事件
 class EventBus {
-  /// 点击了底部导航
+  /// 點選了底部導航
   static const String kBottomNavigationBarClicked =
       "BottomNavigationBarClicked";
 
-  /// 更新了漫画记录
+  /// 更新了漫畫記錄
   static const String kUpdatedComicHistory = "UpdateComicHistory";
 
-  /// 更新了小说记录
+  /// 更新了小說記錄
   static const String kUpdatedNovelHistory = "UpdateNovelHistory";
 
-  /// 刷新评论列表
+  /// 重新整理評論列表
   static const String kRefreshComment = "RefreshComment";
   static EventBus? _instance;
 
@@ -25,7 +25,7 @@ class EventBus {
 
   final Map<String, StreamController> _streams = {};
 
-  /// 触发事件
+  /// 觸發事件
   void emit<T>(String name, T data) {
     if (!_streams.containsKey(name)) {
       _streams.addAll({name: StreamController.broadcast()});
@@ -35,7 +35,7 @@ class EventBus {
     _streams[name]!.add(data);
   }
 
-  /// 监听事件
+  /// 監聽事件
   StreamSubscription<dynamic> listen(String name, Function(dynamic)? onData) {
     if (!_streams.containsKey(name)) {
       _streams.addAll({name: StreamController.broadcast()});

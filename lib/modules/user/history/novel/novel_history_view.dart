@@ -63,10 +63,10 @@ class NovelHistoryView extends StatelessWidget {
                   ),
                   AppStyle.vGap4,
                   Text(
-                      "看到${item.volumeName} ${item.chapterName} ${item.record}页",
+                      "看到${item.volumeName} ${item.chapterName} ${item.record}頁",
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   AppStyle.vGap4,
-                  Text("观看于${Utils.formatTimestamp(item.viewingTime ?? 0)}",
+                  Text("觀看於${Utils.formatTimestamp(item.viewingTime ?? 0)}",
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

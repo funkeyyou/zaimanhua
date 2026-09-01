@@ -28,8 +28,8 @@ class HttpClient {
     dio.interceptors.add(CustomInterceptor());
   }
 
-  /// 检查接口返回码
-  /// 登录失效(errno==99)时自动清除登录状态并弹出重新登录
+  /// 檢查介面返回碼
+  /// 登入失效(errno==99)時自動清除登入狀態並彈出重新登入
   static void checkErrno(Map data) {
     var errno = int.tryParse(data['errno'].toString()) ?? 0;
     if (errno == 99) {
@@ -40,13 +40,13 @@ class HttpClient {
     }
   }
 
-  /// Get请求
-  /// * [path] 请求链接
-  /// * [queryParameters] 请求参数
-  /// * [cancel] 任务取消Token
-  /// * [needLogin] 是否需要登录
-  /// * [withDefaultParameter] 是否需要带上一些默认参数
-  /// * [responseType] 返回的类型
+  /// Get請求
+  /// * [path] 請求連結
+  /// * [queryParameters] 請求引數
+  /// * [cancel] 任務取消Token
+  /// * [needLogin] 是否需要登入
+  /// * [withDefaultParameter] 是否需要帶上一些預設引數
+  /// * [responseType] 返回的型別
   Future<dynamic> get(
     String path, {
     Map<String, dynamic>? queryParameters,
@@ -90,18 +90,18 @@ class HttpClient {
         rethrow;
       }
       if (e.type == DioExceptionType.badResponse) {
-        return throw AppError("请求失败：${e.response?.statusCode ?? -1}");
+        return throw AppError("請求失敗：${e.response?.statusCode ?? -1}");
       }
-      throw AppError("请求失败,请检查网络");
+      throw AppError("請求失敗,請檢查網路");
     }
   }
 
-  /// Get 请求,返回JSON
-  /// * [path] 请求链接
-  /// * [queryParameters] 请求参数
-  /// * [cancel] 任务取消Token
-  /// * [needLogin] 是否需要登录
-  /// * [withDefaultParameter] 是否需要带上一些默认参数
+  /// Get 請求,返回JSON
+  /// * [path] 請求連結
+  /// * [queryParameters] 請求引數
+  /// * [cancel] 任務取消Token
+  /// * [needLogin] 是否需要登入
+  /// * [withDefaultParameter] 是否需要帶上一些預設引數
   Future<dynamic> getJson(
     String path, {
     Map<String, dynamic>? queryParameters,
@@ -129,12 +129,12 @@ class HttpClient {
     return result;
   }
 
-  /// Get 请求,返回Text
-  /// * [path] 请求链接
-  /// * [queryParameters] 请求参数
-  /// * [cancel] 任务取消Token
-  /// * [needLogin] 是否需要登录
-  /// * [withDefaultParameter] 是否需要带上一些默认参数
+  /// Get 請求,返回Text
+  /// * [path] 請求連結
+  /// * [queryParameters] 請求引數
+  /// * [cancel] 任務取消Token
+  /// * [needLogin] 是否需要登入
+  /// * [withDefaultParameter] 是否需要帶上一些預設引數
   Future<dynamic> getText(
     String path, {
     Map<String, dynamic>? queryParameters,
@@ -154,12 +154,12 @@ class HttpClient {
     );
   }
 
-  /// Get 请求,返回解密后Bytes
-  /// * [path] 请求链接
-  /// * [queryParameters] 请求参数
-  /// * [cancel] 任务取消Token
-  /// * [needLogin] 是否需要登录
-  /// * [withDefaultParameter] 是否需要带上一些默认参数
+  /// Get 請求,返回解密後Bytes
+  /// * [path] 請求連結
+  /// * [queryParameters] 請求引數
+  /// * [cancel] 任務取消Token
+  /// * [needLogin] 是否需要登入
+  /// * [withDefaultParameter] 是否需要帶上一些預設引數
   Future<Uint8List> getEncryptV4(
     String path, {
     Map<String, dynamic>? queryParameters,
@@ -181,12 +181,12 @@ class HttpClient {
     return resultBytes;
   }
 
-  /// Get 请求,返回byte
-  /// * [path] 请求链接
-  /// * [queryParameters] 请求参数
-  /// * [cancel] 任务取消Token
-  /// * [needLogin] 是否需要登录
-  /// * [withDefaultParameter] 是否需要带上一些默认参数
+  /// Get 請求,返回byte
+  /// * [path] 請求連結
+  /// * [queryParameters] 請求引數
+  /// * [cancel] 任務取消Token
+  /// * [needLogin] 是否需要登入
+  /// * [withDefaultParameter] 是否需要帶上一些預設引數
   Future<dynamic> getBytes(
     String path, {
     Map<String, dynamic>? queryParameters,
@@ -206,11 +206,11 @@ class HttpClient {
     );
   }
 
-  /// Post请求，返回Map
-  /// * [path] 请求链接
-  /// * [data] 发送数据
-  /// * [queryParameters] 请求参数
-  /// * [cancel] 任务取消Token
+  /// Post請求，返回Map
+  /// * [path] 請求連結
+  /// * [data] 傳送資料
+  /// * [queryParameters] 請求引數
+  /// * [cancel] 任務取消Token
   Future<dynamic> postJson(
     String path, {
     Map<String, dynamic>? queryParameters,
@@ -253,9 +253,9 @@ class HttpClient {
       return result.data;
     } on DioException catch (e) {
       if (e.type == DioExceptionType.badResponse) {
-        return throw AppError("请求失败:状态码：${e.response?.statusCode ?? -1}");
+        return throw AppError("請求失敗:狀態碼：${e.response?.statusCode ?? -1}");
       }
-      throw AppError("请求失败,请检查网络");
+      throw AppError("請求失敗,請檢查網路");
     }
   }
 }

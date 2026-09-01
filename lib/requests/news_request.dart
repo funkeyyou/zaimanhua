@@ -9,7 +9,7 @@ import 'package:zai_x/requests/common/http_client.dart';
 import 'package:zai_x/services/user_service.dart';
 
 class NewsRequest {
-  /// 新闻分类
+  /// 新聞分類
   Future<List<NewsTagModel>> category() async {
     var list = <NewsTagModel>[];
     var result = await HttpClient.instance.getJson(
@@ -21,7 +21,7 @@ class NewsRequest {
     return list;
   }
 
-  /// 新闻Banner
+  /// 新聞Banner
   Future<List<NewsBannerModel>> banner() async {
     var list = <NewsBannerModel>[];
     var result = await HttpClient.instance.getJson('/news/recommend');
@@ -31,9 +31,9 @@ class NewsRequest {
     return list;
   }
 
-  /// 读取新闻列表
-  /// - [id] 新闻分类ID
-  /// - [page] 页数，从1开始
+  /// 讀取新聞列表
+  /// - [id] 新聞分類ID
+  /// - [page] 頁數，從1開始
   Future<List<NewsListItemModel>> getNewsList(int id, int page) async {
     var result = await HttpClient.instance.getJson(
       '/news/list/$id/${id == 0 ? 2 : 3}/$page',
@@ -47,8 +47,8 @@ class NewsRequest {
     return list;
   }
 
-  /// 新闻数据
-  /// - [newsId] 新闻ID
+  /// 新聞資料
+  /// - [newsId] 新聞ID
   Future<NewsStatModel> stat(int newsId) async {
     var result = await HttpClient.instance.getJson(
       '/v3/article/total/$newsId.json',
@@ -58,8 +58,8 @@ class NewsRequest {
     return NewsStatModel.fromJson(result);
   }
 
-  /// 新闻点赞
-  /// - [newsId] 新闻ID
+  /// 新聞點贊
+  /// - [newsId] 新聞ID
   Future<bool> like(int newsId) async {
     await HttpClient.instance.getJson(
       '/article/mood/$newsId',
@@ -69,8 +69,8 @@ class NewsRequest {
     return true;
   }
 
-  /// 新闻检查收藏
-  /// - [newsId] 新闻ID
+  /// 新聞檢查收藏
+  /// - [newsId] 新聞ID
   Future<bool> checkCollect(int newsId) async {
     var uid = UserService.instance.userId;
     var par = {"uid": int.parse(uid), "sub_id": newsId};
@@ -89,8 +89,8 @@ class NewsRequest {
     return json.decode(result)["result"] == 809;
   }
 
-  /// 新闻收藏
-  /// - [newsId] 新闻ID
+  /// 新聞收藏
+  /// - [newsId] 新聞ID
   Future<bool> collect(int newsId) async {
     var uid = UserService.instance.userId;
     var par = {"uid": int.parse(uid), "sub_id": newsId};
@@ -110,7 +110,7 @@ class NewsRequest {
   }
 
   /// 移除收藏
-  /// - [newsId] 新闻ID
+  /// - [newsId] 新聞ID
   Future<bool> delCollect(int newsId) async {
     var uid = UserService.instance.userId;
     var par = {"uid": int.parse(uid), "sub_id": newsId};

@@ -25,7 +25,7 @@ class Utils {
   static DateFormat dateTimeFormat = DateFormat("MM-dd HH:mm");
   static DateFormat dateTimeFormatWithYear = DateFormat("yyyy-MM-dd HH:mm");
 
-  /// 版本号解析
+  /// 版本號解析
   static int parseVersion(String version) {
     var sp = version.split('.');
     var num = "";
@@ -35,7 +35,7 @@ class Utils {
     return int.parse(num);
   }
 
-  /// 时间戳格式化-秒
+  /// 時間戳格式化-秒
   static String formatTimestamp(int ts) {
     if (ts == 0) {
       return "----";
@@ -51,7 +51,7 @@ class Utils {
     return dateFormat.format(dt);
   }
 
-  /// 时间戳格式化-毫秒
+  /// 時間戳格式化-毫秒
   static String formatTimestampMS(int ts) {
     var dt = DateTime.fromMillisecondsSinceEpoch(ts);
 
@@ -74,7 +74,7 @@ class Utils {
     return dateTimeFormatWithYear.format(dt);
   }
 
-  /// 检查相册权限
+  /// 檢查相簿許可權
   static Future<bool> checkPhotoPermission() async {
     try {
       var status = await Permission.photos.status;
@@ -85,7 +85,7 @@ class Utils {
       if (status.isGranted) {
         return true;
       } else {
-        SmartDialog.showToast("请授予相册权限");
+        SmartDialog.showToast("請授予相簿許可權");
         return false;
       }
     } catch (e) {
@@ -93,7 +93,7 @@ class Utils {
     }
   }
 
-  /// 保存图片
+  /// 儲存圖片
   static void saveImage(String url) async {
     if (Platform.isIOS && !await Utils.checkPhotoPermission()) {
       return;
@@ -108,7 +108,7 @@ class Utils {
       }
 
       if (data == null) {
-        SmartDialog.showToast("图片保存失败");
+        SmartDialog.showToast("圖片儲存失敗");
         return;
       }
       if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
@@ -123,14 +123,14 @@ class Utils {
           isReturnPathOfIOS: true,
         );
         Log.d(result.toString());
-        SmartDialog.showToast("保存成功");
+        SmartDialog.showToast("儲存成功");
       }
     } catch (e) {
-      SmartDialog.showToast("保存失败");
+      SmartDialog.showToast("儲存失敗");
     }
   }
 
-  /// 保存图片-桌面平台
+  /// 儲存圖片-桌面平臺
   static void saveImageDetktop(String fileName, Uint8List list) async {
     final FileSaveLocation? location =
         await getSaveLocation(suggestedName: fileName);
@@ -161,7 +161,7 @@ class Utils {
         children: [
           ListTile(
             leading: const Icon(Icons.copy),
-            title: const Text("复制链接"),
+            title: const Text("複製連結"),
             onTap: () {
               Get.back();
               Utils.copyText(url);
@@ -171,7 +171,7 @@ class Utils {
             visible: content.isNotEmpty,
             child: ListTile(
               leading: const Icon(Icons.copy),
-              title: const Text("复制标题与链接"),
+              title: const Text("複製標題與連結"),
               onTap: () {
                 Get.back();
                 Utils.copyText("$content\n$url");
@@ -180,7 +180,7 @@ class Utils {
           ),
           ListTile(
             leading: const Icon(Icons.public),
-            title: const Text("浏览器打开"),
+            title: const Text("瀏覽器開啟"),
             onTap: () {
               Get.back();
               launchUrlString(url, mode: LaunchMode.externalApplication);
@@ -188,7 +188,7 @@ class Utils {
           ),
           ListTile(
             leading: const Icon(Icons.share),
-            title: const Text("系统分享"),
+            title: const Text("系統分享"),
             onTap: () {
               Get.back();
               SharePlus.instance.share(
@@ -201,7 +201,7 @@ class Utils {
     );
   }
 
-  /// 检查更新
+  /// 檢查更新
   static void checkUpdate({bool showMsg = false}) async {
     try {
       int currentVer = Utils.parseVersion(packageInfo.version);
@@ -211,7 +211,7 @@ class Utils {
         Get.dialog(
           AlertDialog(
             title: Text(
-              "发现新版本 ${versionInfo.version}",
+              "發現新版本 ${versionInfo.version}",
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 18),
             ),
@@ -254,22 +254,22 @@ class Utils {
         );
       } else {
         if (showMsg) {
-          SmartDialog.showToast("当前已经是最新版本了");
+          SmartDialog.showToast("當前已經是最新版本了");
         }
       }
     } catch (e) {
       Log.logPrint(e);
       if (showMsg) {
-        SmartDialog.showToast("检查更新失败");
+        SmartDialog.showToast("檢查更新失敗");
       }
     }
   }
 
-  /// 复制文本
+  /// 複製文字
   static void copyText(String text) async {
     try {
       await Clipboard.setData(ClipboardData(text: text));
-      SmartDialog.showToast("已复制到剪切板");
+      SmartDialog.showToast("已複製到剪下板");
     } catch (e) {
       SmartDialog.showToast(e.toString());
     }

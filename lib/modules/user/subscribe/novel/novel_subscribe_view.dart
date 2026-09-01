@@ -77,7 +77,7 @@ class NovelSubscribeView extends StatelessWidget {
                       TextButton.icon(
                         onPressed: controller.cancelSub,
                         icon: const Icon(Icons.favorite_border),
-                        label: const Text("取消订阅"),
+                        label: const Text("取消訂閱"),
                       ),
                       TextButton.icon(
                         onPressed: controller.cancelEdit,

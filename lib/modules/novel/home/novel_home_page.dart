@@ -15,9 +15,9 @@ class NovelHomePage extends GetView<NovelHomeController> {
     return Scaffold(
       appBar: TabAppBar(
         tabs: const [
-          Tab(text: "推荐"),
+          Tab(text: "推薦"),
           Tab(text: "更新"),
-          Tab(text: "分类"),
+          Tab(text: "分類"),
           Tab(text: "排行"),
         ],
         controller: controller.tabController,

@@ -8,7 +8,7 @@ class TestSubRoutePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("测试路由"),
+        title: const Text("測試路由"),
         leading: IconButton(
           onPressed: () {
             AppNavigator.closePage();

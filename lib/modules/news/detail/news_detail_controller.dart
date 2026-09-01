@@ -28,7 +28,7 @@ class NewsDetailController extends BaseController {
   final NewsRequest request = NewsRequest();
   AppSettingsService get settings => AppSettingsService.instance;
   NewsDetailController(
-      {required this.newsUrl, this.title = "资讯详情", required this.id}) {
+      {required this.newsUrl, this.title = "資訊詳情", required this.id}) {
     newsTitle.value = title;
     if (id == 0) {
       newsId = int.tryParse(
@@ -41,15 +41,15 @@ class NewsDetailController extends BaseController {
   WebViewController? webViewController =
       (Platform.isAndroid || Platform.isIOS) ? WebViewController() : null;
 
-  /// 评论数
+  /// 評論數
   var commentAmount = 0.obs;
 
-  /// 是否已经收藏
+  /// 是否已經收藏
   var collected = false.obs;
 
   var newsId = 0;
 
-  var newsTitle = "资讯详情".obs;
+  var newsTitle = "資訊詳情".obs;
 
   var htmlContent = "".obs;
   var author = "".obs;
@@ -84,7 +84,7 @@ class NewsDetailController extends BaseController {
         onPageFinished: (String url) async {
           try {
             await setFontSize();
-            //防止亮瞎24K钛合金狗眼
+            //防止亮瞎24K鈦合金狗眼
             if (Get.isDarkMode) {
               await webViewController!.runJavaScript("""
 document.body.style.background="#000000";
@@ -93,15 +93,15 @@ document.getElementsByClassName("news_box")[0].style.color="#f1f2f6";
 document.getElementsByClassName("min_box_tit")[0].style.color="#fff";
 """);
             }
-            //加载前5张图片
-            //当Web没有滚动条时，图片不会加载，这里手动给他加载出来
+            //載入前5張圖片
+            //當Web沒有捲軸時，圖片不會載入，這裡手動給他載入出來
             await webViewController!.runJavaScript("""
 \$('.news_box img:lt(5)').each(function () {
    \$(this).lazyload({
      effect: "fadeIn"
    });
 });""");
-            //读取全部的图片
+            //讀取全部的圖片
 
             var imagesResult =
                 await webViewController?.runJavaScriptReturningResult('''
@@ -190,7 +190,7 @@ getImgLinks();
       newsTitle.value = result.title;
     } catch (e) {
       SmartDialog.showToast(e.toString());
-      SmartDialog.showToast("读取新闻数据失败：$e");
+      SmartDialog.showToast("讀取新聞資料失敗：$e");
     }
   }
 
@@ -202,7 +202,7 @@ getImgLinks();
       collected.value = await request.checkCollect(newsId);
     } catch (e) {
       Log.logPrint(e);
-      SmartDialog.showToast("检查用户收藏状态失败：$e");
+      SmartDialog.showToast("檢查使用者收藏狀態失敗：$e");
     }
   }
 
@@ -255,7 +255,7 @@ getImgLinks();
   }
 
   Future<bool> onTapUrl(String url) async {
-    //iOS处理
+    //iOS處理
     if (url == currentUrl) {
       return false;
     }
@@ -287,7 +287,7 @@ getImgLinks();
 
       return true;
     } else {
-      SmartDialog.showToast("无法打开链接:$url");
+      SmartDialog.showToast("無法開啟連結:$url");
       return true;
     }
   }
@@ -300,7 +300,7 @@ getImgLinks();
           mainAxisSize: MainAxisSize.min,
           children: [
             const ListTile(
-              title: Text("设置"),
+              title: Text("設定"),
               trailing: IconButton(
                 onPressed: AppNavigator.closePage,
                 icon: Icon(Icons.close),
@@ -313,7 +313,7 @@ getImgLinks();
             ),
             Obx(
               () => ListTile(
-                title: const Text("字体大小"),
+                title: const Text("字型大小"),
                 leading: const Icon(Icons.text_fields_rounded),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -351,7 +351,7 @@ getImgLinks();
             ),
             ListTile(
               leading: const Icon(Icons.photo),
-              title: const Text("进入看图模式"),
+              title: const Text("進入看圖模式"),
               onTap: () {
                 AppNavigator.closePage();
                 photoView();

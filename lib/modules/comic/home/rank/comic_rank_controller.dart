@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class ComicRankController extends BasePageController<ComicRankListItemModel> {
   final ComicRequest request = ComicRequest();
   RxMap<int, String> tags = {
-    0: "全部分类",
+    0: "全部分類",
   }.obs;
   var tag = 0.obs;
 
@@ -15,14 +15,14 @@ class ComicRankController extends BasePageController<ComicRankListItemModel> {
     0: "日排行",
     1: "周排行",
     2: "月排行",
-    3: "总排行",
+    3: "總排行",
   };
   var byTime = 0.obs;
 
   Map<int, String> rankTypes = {
-    0: "人气排行",
+    0: "人氣排行",
     1: "吐槽排行",
-    2: "订阅排行",
+    2: "訂閱排行",
   };
   var rankType = 0.obs;
 

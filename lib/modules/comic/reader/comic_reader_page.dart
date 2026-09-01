@@ -157,7 +157,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                   ),
                 ),
               ),
-              //顶部
+              //頂部
               Obx(
                 () => AnimatedPositioned(
                   top: controller.showControls.value
@@ -512,7 +512,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
               onPressed: () {
                 controller.showComment();
               },
-              child: const Text("查看更多"),
+              child: const Text("檢視更多"),
             ),
           ),
           AppStyle.vGap12,
@@ -528,11 +528,11 @@ class ComicReaderPage extends GetView<ComicReaderController> {
     switch (connectivityType) {
       case ConnectivityResult.bluetooth:
         icon = Remix.wifi_line;
-        name = "蓝牙";
+        name = "藍芽";
         break;
       case ConnectivityResult.ethernet:
         icon = Remix.computer_line;
-        name = "有线";
+        name = "有線";
         break;
       case ConnectivityResult.mobile:
         icon = Remix.base_station_line;
@@ -548,7 +548,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         break;
       case ConnectivityResult.none:
         icon = Remix.wifi_off_line;
-        name = "无网络";
+        name = "無網路";
         break;
       case ConnectivityResult.other:
         icon = Remix.question_line;
@@ -607,7 +607,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
           // ),
           // AppStyle.hGap4,
           Text(
-            "电量 $battery%",
+            "電量 $battery%",
             style: const TextStyle(fontSize: 12, height: 1.0),
           ),
           AppStyle.hGap8,

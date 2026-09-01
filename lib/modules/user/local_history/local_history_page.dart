@@ -32,8 +32,8 @@ class LocalHistoryPage extends StatelessWidget {
             unselectedLabelColor:
                 Get.isDarkMode ? Colors.white70 : Colors.black87,
             tabs: const [
-              Tab(text: "漫画记录"),
-              Tab(text: "小说记录"),
+              Tab(text: "漫畫記錄"),
+              Tab(text: "小說記錄"),
             ],
           ),
         ),

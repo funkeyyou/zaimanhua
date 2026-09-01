@@ -76,13 +76,13 @@ class ComicSubscribeView extends StatelessWidget {
                       TextButton.icon(
                         onPressed: controller.addFavorite,
                         icon: const Icon(Icons.star_border),
-                        label: const Text("添加收藏"),
+                        label: const Text("新增收藏"),
                       ),
                       AppStyle.hGap8,
                       TextButton.icon(
                         onPressed: controller.cancelSub,
                         icon: const Icon(Icons.favorite_border),
-                        label: const Text("取消订阅"),
+                        label: const Text("取消訂閱"),
                       ),
                       AppStyle.hGap8,
                       TextButton.icon(

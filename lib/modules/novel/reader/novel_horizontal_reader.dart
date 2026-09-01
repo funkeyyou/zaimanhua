@@ -96,12 +96,12 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
     }
   }
 
-  /// 分割文本
+  /// 分割文字
   Future initText() async {
     var startTime = DateTime.now().millisecondsSinceEpoch;
     var fontSize = (textStyle.fontSize ?? 16).toDouble();
     var lineHeight = textStyle.height ?? 1.5;
-    // 计算出出各个类型的大小
+    // 計算出出各個型別的大小
     Size chineseCharSize = calcFontSize("中",
         fontSize: fontSize.toDouble(), lineHeight: lineHeight);
     fontHieght = chineseCharSize.height;
@@ -111,9 +111,9 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
         fontSize: fontSize.toDouble(), lineHeight: lineHeight);
     Size spaceCharSize = calcFontSize(" ",
         fontSize: fontSize.toDouble(), lineHeight: lineHeight);
-    // 计算可渲染的最大行数
+    // 計算可渲染的最大行數
     int maxLine = (maxHeight / chineseCharSize.height).floor();
-    // 在新线程中进行分页
+    // 在新執行緒中進行分頁
 
     var pages = await compute(
       splitText,
@@ -129,30 +129,30 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
         spaceWidth: spaceCharSize.width,
       ),
     );
-    Log.d("耗时:${DateTime.now().millisecondsSinceEpoch - startTime}ms");
-    Log.d("页数:${pages.length}");
+    Log.d("耗時:${DateTime.now().millisecondsSinceEpoch - startTime}ms");
+    Log.d("頁數:${pages.length}");
     widget.onPageChanged?.call(index, pages.length);
     setState(() {
       textPages = pages;
     });
   }
 
-  /// 文本处理、分页
-  /// 由于TextPainter.layout无法在isolate中使用，且计算极其耗时，所以手动写一个处理方法
-  /// 处理一段12万字的文本，TextPainter.layout需要耗时16000ms左右；此方法则可以到1600ms，且能用isolate
-  /// 该方法还不是很完善，符号换行等还未实现，速度也可以再优化
+  /// 文字處理、分頁
+  /// 由於TextPainter.layout無法在isolate中使用，且計算極其耗時，所以手動寫一個處理方法
+  /// 處理一段12萬字的文字，TextPainter.layout需要耗時16000ms左右；此方法則可以到1600ms，且能用isolate
+  /// 該方法還不是很完善，符號換行等還未實現，速度也可以再最佳化
   static List<List<String>> splitText(
     ComputeParameter parameter,
   ) {
     var str = parameter.content;
 
-    Log.w("字数:${str.length}");
+    Log.w("字數:${str.length}");
 
-    // 定义正则表达式（匹配中文字符、英文单词、符号、全角符号、数字串）
+    // 定義正規表示式（匹配中文字元、英文單詞、符號、全形符號、數字串）
     //RegExp reg = RegExp(r"([\u4e00-\u9fa5]|\b\w+\b|\x20|　|\S|\p{Han}|\n)");
     RegExp reg = RegExp(r"([^\x00-\xff]|\b\w+\b|\p{P}|\x20|\S|\u3000|\n)");
 
-    // 使用正则表达式分割字符串
+    // 使用正規表示式分割字串
     List<String> resultList =
         reg.allMatches(str).map((match) => match.group(0) ?? "").toList();
     List<CharInfo> chars = [];
@@ -216,13 +216,13 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
       );
     }
 
-    //开始分页
+    //開始分頁
     List<String> rows = [];
     List<List<String>> pages = [];
     String rowStr = "";
     double rowWidth = 0;
     for (var item in chars) {
-      //是否超出了最大行数
+      //是否超出了最大行數
       if (rows.length >= parameter.maxLine) {
         pages.add(rows);
         rows = [];
@@ -235,7 +235,7 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
         //rowStr += item.text;
         continue;
       }
-      //是否超出了最大宽度
+      //是否超出了最大寬度
       if ((rowWidth + item.width) > parameter.width) {
         rows.add(rowStr);
         rowStr = "";
@@ -254,7 +254,7 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
     return pages;
   }
 
-  /// 计算文字大小
+  /// 計算文字大小
   Size calcFontSize(
     String text, {
     required double fontSize,
@@ -281,7 +281,7 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
     return textPages.isEmpty
         ? Center(
             child: Text(
-              "加载中...",
+              "載入中...",
               style: widget.style,
             ),
           )
@@ -342,7 +342,7 @@ class NovelTextPainter extends CustomPainter {
 
       i++;
     }
-    Log.d("绘制单页耗时:${DateTime.now().millisecondsSinceEpoch - startTime}ms");
+    Log.d("繪製單頁耗時:${DateTime.now().millisecondsSinceEpoch - startTime}ms");
   }
 
   @override
@@ -354,15 +354,15 @@ class NovelTextPainter extends CustomPainter {
 }
 
 enum CharType {
-  //中文及全角符号
+  //中文及全形符號
   chinese,
-  //单词
+  //單詞
   word,
-  //数字
+  //數字
   number,
-  //符号
+  //符號
   symbol,
-  //换行符
+  //換行符
   newline
 }
 

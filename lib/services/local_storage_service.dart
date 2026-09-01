@@ -11,38 +11,38 @@ class LocalStorageService extends GetxService {
 
   static bool kDebug = false;
 
-  /// 显示模式
-  /// * [0] 跟随系统
-  /// * [1] 浅色模式
+  /// 顯示模式
+  /// * [0] 跟隨系統
+  /// * [1] 淺色模式
   /// * [2] 深色模式
   static const String kThemeMode = "ThemeMode";
 
-  /// 首次运行
+  /// 首次執行
   static const String kFirstRun = "FirstRun";
 
-  /// 用户登录信息
-  /// * 类型：LoginResultModel
+  /// 使用者登入資訊
+  /// * 型別：LoginResultModel
   static const String kUserAuthInfo = "UserAuthInfo";
 
-  /// 漫画阅读方向
+  /// 漫畫閱讀方向
   static const String kComicReaderDirection = "ComicReaderDirection";
 
-  /// 漫画全屏阅读
+  /// 漫畫全屏閱讀
   static const String kComicReaderFullScreen = "ComicReaderFullScreen";
 
-  /// 漫画阅读显示状态信息
+  /// 漫畫閱讀顯示狀態資訊
   static const String kComicReaderShowStatus = "ComicReaderShowStatus";
 
-  /// 漫画阅读尾页显示观点/吐槽
+  /// 漫畫閱讀尾頁顯示觀點/吐槽
   static const String kComicReaderShowViewPoint = "ComicReaderShowViewPoint";
 
-  /// 启用旧版吐槽
+  /// 啟用舊版吐槽
   static const String kComicReaderOldViewPoint = "ComicReaderOldViewPoint";
 
-  /// 小说阅读方向
+  /// 小說閱讀方向
   static const String kNovelReaderDirection = "NovelReaderDirection";
 
-  /// 小说字体大小
+  /// 小說字型大小
   static const String kNovelReaderFontSize = "NovelReaderFontSize";
 
   /// Novel reader custom font path
@@ -51,52 +51,52 @@ class LocalStorageService extends GetxService {
   /// Novel reader imported font paths
   static const String kNovelReaderFontPaths = "NovelReaderFontPaths";
 
-  /// 小说行距
+  /// 小說行距
   static const String kNovelReaderLineSpacing = "NovelReaderLineSpacing";
 
-  /// 小说阅读主题
+  /// 小說閱讀主題
   static const String kNovelReaderTheme = "NovelReaderTheme";
 
-  /// 小说阅读显示状态信息
+  /// 小說閱讀顯示狀態資訊
   static const String kNovelReaderShowStatus = "NovelReaderShowStatus";
 
-  /// 小说全屏阅读
+  /// 小說全屏閱讀
   static const String kNovelReaderFullScreen = "NovelReaderFullScreen";
 
-  /// 下载是否允许使用流量
+  /// 下載是否允許使用流量
   static const String kDownloadAllowCellular = "DownloadAllowCellular";
 
-  /// 下载小说最大任务数
+  /// 下載小說最大任務數
   static const String kDownloadNovelTaskCount = "DownloadNovelTaskCount";
 
-  /// 下载漫画最大任务数
+  /// 下載漫畫最大任務數
   static const String kDownloadComicTaskCount = "DownloadComicTaskCount";
 
-  /// 漫画搜索使用Web接口
+  /// 漫畫搜尋使用Web介面
   static const String kComicSearchUseWebApi = "ComicSearchUseWebApi";
 
-  /// 显示字体大小跟随系统
+  /// 顯示字型大小跟隨系統
   static const String kUseSystemFontSize = "UseSystemFontSize";
 
-  /// 漫画-左手模式
+  /// 漫畫-左手模式
   static const String kComicReaderLeftHandMode = "ComicReaderLeftHandMode";
 
-  /// 小说-左手模式
+  /// 小說-左手模式
   static const String kNovelReaderLeftHandMode = "NovelReaderLeftHandMode";
 
-  /// 漫画阅读优先加载高清图
+  /// 漫畫閱讀優先載入高畫質圖
   static const String kComicReaderHD = "ComicReaderHD";
 
-  /// 漫画阅读-翻页动画
+  /// 漫畫閱讀-翻頁動畫
   static const String kComicReaderPageAnimation = "ComicReaderPageAnimation";
 
-  /// 小说阅读-翻页动画
+  /// 小說閱讀-翻頁動畫
   static const String kNovelReaderPageAnimation = "NovelReaderPageAnimation";
 
-  /// 新闻字体大小
+  /// 新聞字型大小
   static const String kNewsFontSize = "NewsFontSize";
 
-  /// 自动添加神隐漫画至收藏夹
+  /// 自動新增神隱漫畫至收藏夾
   static const String kCollectHideComic = "CollectHideComic";
 
   /// Reader volume key page turning

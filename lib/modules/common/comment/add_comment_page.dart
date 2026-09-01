@@ -23,7 +23,7 @@ class AddCommentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("添加评论"),
+        title: const Text("新增評論"),
       ),
       body: ListView(
         padding: AppStyle.edgeInsetsA12,
@@ -43,7 +43,7 @@ class AddCommentPage extends StatelessWidget {
           TextField(
             controller: controller.textEditingController,
             decoration: const InputDecoration(
-              hintText: "你想说点什么...",
+              hintText: "你想說點什麼...",
               border: OutlineInputBorder(),
             ),
             onSubmitted: (e) {
@@ -56,7 +56,7 @@ class AddCommentPage extends StatelessWidget {
           AppStyle.vGap12,
           ElevatedButton(
             onPressed: controller.submit,
-            child: const Text("发布"),
+            child: const Text("釋出"),
           ),
         ],
       ),

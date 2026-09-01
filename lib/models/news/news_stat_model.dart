@@ -16,7 +16,7 @@ class NewsStatModel {
   });
 
   factory NewsStatModel.fromJson(Map<String, dynamic> json) => NewsStatModel(
-        /// DMZJ后端是真混乱... commentAmount是string，mood_amount是int
+        /// DMZJ後端是真混亂... commentAmount是string，mood_amount是int
         commentAmount: int.tryParse(json['comment_amount'].toString()) ?? 0,
         moodAmount: int.tryParse(json['mood_amount'].toString()) ?? 0,
         rowPicUrl: asT<String>(json['row_pic_url'])!,

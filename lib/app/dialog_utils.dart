@@ -10,7 +10,7 @@ import 'package:zai_x/app/utils.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
-/// 桌面端也允许用鼠标拖动滚动（PageView 默认不支持鼠标拖拽）
+/// 桌面端也允許用滑鼠拖動滾動（PageView 預設不支援滑鼠拖拽）
 class _MouseScrollBehavior extends MaterialScrollBehavior {
   @override
   Set<PointerDeviceKind> get dragDevices => {
@@ -23,11 +23,11 @@ class _MouseScrollBehavior extends MaterialScrollBehavior {
 }
 
 class DialogUtils {
-  /// 提示弹窗
-  /// - `content` 内容
-  /// - `title` 弹窗标题
-  /// - `confirm` 确认按钮内容，留空为确定
-  /// - `cancel` 取消按钮内容，留空为取消
+  /// 提示彈窗
+  /// - `content` 內容
+  /// - `title` 彈窗標題
+  /// - `confirm` 確認按鈕內容，留空為確定
+  /// - `cancel` 取消按鈕內容，留空為取消
   static Future<bool> showAlertDialog(
     String content, {
     String title = '',
@@ -59,7 +59,7 @@ class DialogUtils {
           ),
           TextButton(
             onPressed: (() => Get.back(result: true)),
-            child: Text(confirm.isEmpty ? "确定" : confirm),
+            child: Text(confirm.isEmpty ? "確定" : confirm),
           ),
           ...?actions,
         ],
@@ -69,10 +69,10 @@ class DialogUtils {
     return result ?? false;
   }
 
-  /// 提示弹窗
-  /// - `content` 内容
-  /// - `title` 弹窗标题
-  /// - `confirm` 确认按钮内容，留空为确定
+  /// 提示彈窗
+  /// - `content` 內容
+  /// - `title` 彈窗標題
+  /// - `confirm` 確認按鈕內容，留空為確定
   static Future<bool> showMessageDialog(String content,
       {String title = '', String confirm = '', bool selectable = false}) async {
     var result = await Get.dialog(
@@ -85,7 +85,7 @@ class DialogUtils {
         actions: [
           TextButton(
             onPressed: (() => Get.back(result: true)),
-            child: Text(confirm.isEmpty ? "确定" : confirm),
+            child: Text(confirm.isEmpty ? "確定" : confirm),
           ),
         ],
       ),
@@ -93,11 +93,11 @@ class DialogUtils {
     return result ?? false;
   }
 
-  /// 文本编辑的弹窗
-  /// - `content` 编辑框默认的内容
-  /// - `title` 弹窗标题
-  /// - `confirm` 确认按钮内容
-  /// - `cancel` 取消按钮内容
+  /// 文字編輯的彈窗
+  /// - `content` 編輯框預設的內容
+  /// - `title` 彈窗標題
+  /// - `confirm` 確認按鈕內容
+  /// - `cancel` 取消按鈕內容
   static Future<String?> showEditTextDialog(String content,
       {String title = '',
       String? hintText,
@@ -133,7 +133,7 @@ class DialogUtils {
             onPressed: () {
               Get.back(result: textEditingController.text);
             },
-            child: const Text("确定"),
+            child: const Text("確定"),
           ),
         ],
       ),
@@ -180,8 +180,8 @@ class DialogUtils {
     showAlertDialog(
       text,
       selectable: true,
-      title: "免责声明",
-      confirm: "已阅读并同意",
+      title: "免責宣告",
+      confirm: "已閱讀並同意",
       cancel: "退出",
       barrierDismissible: false,
     ).then((value) {
@@ -288,7 +288,7 @@ class DialogUtils {
                   Utils.saveImage(images[index.value]);
                 },
                 icon: const Icon(Icons.save),
-                label: const Text("保存"),
+                label: const Text("儲存"),
               ),
             ),
           ],

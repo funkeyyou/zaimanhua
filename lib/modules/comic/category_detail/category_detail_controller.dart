@@ -22,7 +22,7 @@ class CategoryDetailController
     var items = filters.where((x) => x.selectId.value != 0 && x.title != "排序");
 
     if (items.isEmpty) {
-      return "全部漫画";
+      return "全部漫畫";
     } else {
       return items
           .map((e) =>
@@ -46,18 +46,18 @@ class CategoryDetailController
           title: "排序",
           items: [
             ComicCategoryFilterItemModel(tagId: 1, tagName: "更新排序"),
-            ComicCategoryFilterItemModel(tagId: 2, tagName: "热度排序"),
+            ComicCategoryFilterItemModel(tagId: 2, tagName: "熱度排序"),
           ],
         )..selectId.value = 1,
       );
       filters.insert(
         1,
         ComicCategoryFilterModel(
-          title: "状态",
+          title: "狀態",
           items: [
             ComicCategoryFilterItemModel(tagId: 0, tagName: "全部"),
             ComicCategoryFilterItemModel(tagId: 1, tagName: "连载中"),
-            ComicCategoryFilterItemModel(tagId: 2, tagName: "已完结"),
+            ComicCategoryFilterItemModel(tagId: 2, tagName: "已完結"),
           ],
         ),
       );

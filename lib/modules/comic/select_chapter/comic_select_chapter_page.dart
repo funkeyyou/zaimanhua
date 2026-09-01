@@ -23,11 +23,11 @@ class ComicSelectChapterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("选择下载章节"),
+        title: const Text("選擇下載章節"),
         actions: [
           TextButton(
             onPressed: controller.toDownloadManage,
-            child: const Text("下载管理"),
+            child: const Text("下載管理"),
           ),
         ],
       ),
@@ -70,7 +70,7 @@ class ComicSelectChapterPage extends StatelessWidget {
                     Remix.checkbox_line,
                     size: 20,
                   ),
-                  label: const Text("全选"),
+                  label: const Text("全選"),
                 ),
               ),
               Expanded(
@@ -83,7 +83,7 @@ class ComicSelectChapterPage extends StatelessWidget {
                     Remix.checkbox_blank_line,
                     size: 20,
                   ),
-                  label: const Text("取消选中"),
+                  label: const Text("取消選中"),
                 ),
               ),
               Expanded(
@@ -97,7 +97,7 @@ class ComicSelectChapterPage extends StatelessWidget {
                     size: 20,
                   ),
                   label:
-                      Obx(() => Text("下载选中(${controller.chapterIds.length})")),
+                      Obx(() => Text("下載選中(${controller.chapterIds.length})")),
                 ),
               ),
             ],
@@ -131,7 +131,7 @@ class ComicSelectChapterPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    "${item.title}(共${item.chapters.length}话)",
+                    "${item.title}(共${item.chapters.length}話)",
                     style: Get.textTheme.titleSmall,
                   ),
                 ),
@@ -184,7 +184,7 @@ class ComicSelectChapterPage extends StatelessWidget {
                 itemBuilder: (_, i) {
                   if (item.showMoreButton && !item.showAll.value && i == 14) {
                     return Tooltip(
-                      message: "展开全部章节",
+                      message: "展開全部章節",
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.grey,

@@ -27,7 +27,7 @@ import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ComicReaderController extends BaseController {
-  /// 是否为条漫
+  /// 是否為條漫
   final bool isLongComic;
   final int comicId;
   final String comicTitle;
@@ -47,64 +47,64 @@ class ComicReaderController extends BaseController {
     chapterIndex.value = chapters.indexOf(chapter);
   }
 
-  /// APP设置控制器
+  /// APP設定控制器
   final settings = AppSettingsService.instance;
 
-  /// 预加载控制器
+  /// 預載入控制器
   final PreloadPageController preloadPageController = PreloadPageController();
 
   /// 上下模式控制器
   final ItemScrollController itemScrollController = ItemScrollController();
 
-  /// 监听上下滚动
+  /// 監聽上下滾動
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
 
-  /// 章节详情
+  /// 章節詳情
   Rx<ComicChapterDetail> detail =
       Rx<ComicChapterDetail>(ComicChapterDetail.empty());
 
-  /// 连接信息监听
+  /// 連線資訊監聽
   StreamSubscription<List<ConnectivityResult>>? connectivitySubscription;
 
-  /// 电量信息监听
+  /// 電量資訊監聽
   StreamSubscription<BatteryState>? batterySubscription;
 
-  /// 当处于放大图片时，锁定滑动手势
+  /// 當處於放大圖片時，鎖定滑動手勢
   var lockSwipe = false.obs;
 
-  /// 当前章节索引
+  /// 當前章節索引
   var chapterIndex = 0.obs;
 
-  /// 当前页面
+  /// 當前頁面
   var currentIndex = 0.obs;
 
   /// 初始化
   var initialIndex = 0;
 
-  /// 是否显示控制器
+  /// 是否顯示控制器
   var showControls = false.obs;
 
-  /// 阅读方向
+  /// 閱讀方向
   var direction = 0.obs;
 
   /// 左手模式
   bool get leftHandMode => settings.comicReaderLeftHandMode.value;
 
-  /// 翻页动画
+  /// 翻頁動畫
   bool get pageAnimation => settings.comicReaderPageAnimation.value;
 
-  /// 观点、吐槽
+  /// 觀點、吐槽
   RxList<ComicViewPointModel> viewPoints = RxList<ComicViewPointModel>();
 
-  /// 连接类型
+  /// 連線型別
   Rx<ConnectivityResult> connectivityType =
       Rx<ConnectivityResult>(ConnectivityResult.other);
 
-  /// 电量信息
+  /// 電量資訊
   Rx<int> batteryLevel = 0.obs;
 
-  /// 显示电量
+  /// 顯示電量
   RxBool showBattery = true.obs;
 
   @override
@@ -132,10 +132,10 @@ class ComicReaderController extends BaseController {
     super.onInit();
   }
 
-  /// 初始化电池信息
+  /// 初始化電池資訊
   void initBattery() async {
     try {
-      //没有电池的Mac似乎会闪退,暂时屏蔽Mac
+      //沒有電池的Mac似乎會閃退,暫時遮蔽Mac
       //https://github.com/xiaoyaocz/zai_x/discussions/146
       if (Platform.isMacOS) {
         showBattery.value = false;
@@ -159,7 +159,7 @@ class ComicReaderController extends BaseController {
     }
   }
 
-  /// 初始化连接状态
+  /// 初始化連線狀態
   void initConnectivity() async {
     var connectivity = Connectivity();
     connectivitySubscription =
@@ -168,7 +168,7 @@ class ComicReaderController extends BaseController {
       //提醒
       if (connectivityType.value != result &&
           result == ConnectivityResult.mobile) {
-        SmartDialog.showToast("您已切换至数据网络，请注意流量消耗");
+        SmartDialog.showToast("您已切換至資料網路，請注意流量消耗");
       }
       connectivityType.value = result;
     });
@@ -212,7 +212,7 @@ class ComicReaderController extends BaseController {
     currentIndex.value = index;
   }
 
-  /// 加载信息
+  /// 載入資訊
   void loadDetail() async {
     try {
       pageLoadding.value = true;
@@ -221,8 +221,8 @@ class ComicReaderController extends BaseController {
       detail.value = ComicChapterDetail.empty();
       var chapterId = chapters[chapterIndex.value].chapterId;
       if (chapters[chapterIndex.value].isVip) {
-        //禁止观看VIP章节
-        throw AppError("请使用动漫之家官方APP观看VIP章节");
+        //禁止觀看VIP章節
+        throw AppError("請使用動漫之家官方APP觀看VIP章節");
       }
       loadViewPoints();
 
@@ -250,7 +250,7 @@ class ComicReaderController extends BaseController {
       Future.delayed(const Duration(milliseconds: 100), () {
         jumpToPage(initialIndex);
       });
-      //上传记录
+      //上傳記錄
       uploadHistory();
     } catch (e) {
       pageError.value = true;
@@ -261,7 +261,7 @@ class ComicReaderController extends BaseController {
     }
   }
 
-  /// 加载吐槽、观点
+  /// 載入吐槽、觀點
   void loadViewPoints() async {
     try {
       viewPoints.clear();
@@ -272,12 +272,12 @@ class ComicReaderController extends BaseController {
       result.sort((a, b) => b.num.value.compareTo(a.num.value));
       viewPoints.value = result;
     } catch (e) {
-      //SmartDialog.showToast("读取吐槽失败");
+      //SmartDialog.showToast("讀取吐槽失敗");
       Log.logPrint(e.toString());
     }
   }
 
-  /// 设置显示/隐藏控制按钮
+  /// 設定顯示/隱藏控制按鈕
   void setShowControls() {
     if (settings.comicReaderFullScreen.value) {
       if (showControls.value) {
@@ -291,7 +291,7 @@ class ComicReaderController extends BaseController {
     });
   }
 
-  /// 显示目录
+  /// 顯示目錄
   void showMenu() async {
     setShowControls();
     showModalBottomSheet(
@@ -311,7 +311,7 @@ class ComicReaderController extends BaseController {
         child: Column(
           children: [
             ListTile(
-              title: Text("目录(${chapters.length})"),
+              title: Text("目錄(${chapters.length})"),
               trailing: IconButton(
                 onPressed: Get.back,
                 icon: const Icon(Icons.close),
@@ -339,7 +339,7 @@ class ComicReaderController extends BaseController {
                     title: Text(item.chapterTitle),
                     subtitle: item.updateTime != 0
                         ? Text(
-                            "更新于${Utils.formatTimestampToDate(item.updateTime)}")
+                            "更新於${Utils.formatTimestampToDate(item.updateTime)}")
                         : null,
                     onTap: () {
                       chapterIndex.value = i;
@@ -360,7 +360,7 @@ class ComicReaderController extends BaseController {
   /// 下一章
   void nextChapter() {
     if (chapterIndex.value == chapters.length - 1) {
-      SmartDialog.showToast("后面没有了");
+      SmartDialog.showToast("後面沒有了");
       return;
     }
 
@@ -371,7 +371,7 @@ class ComicReaderController extends BaseController {
   /// 上一章
   void forwardChapter() {
     if (chapterIndex.value == 0) {
-      SmartDialog.showToast("前面没有了");
+      SmartDialog.showToast("前面沒有了");
       return;
     }
 
@@ -379,10 +379,10 @@ class ComicReaderController extends BaseController {
     loadDetail();
   }
 
-  /// 下一页
+  /// 下一頁
   void nextPage() {
     var value = currentIndex.value;
-    Log.w("下一页$value");
+    Log.w("下一頁$value");
     var max = detail.value.pageUrls.length;
     if (value >= max - 1) {
       nextChapter();
@@ -391,10 +391,10 @@ class ComicReaderController extends BaseController {
     }
   }
 
-  /// 上一页
+  /// 上一頁
   void forwardPage() {
     var value = currentIndex.value;
-    Log.w("上一页$value");
+    Log.w("上一頁$value");
     if (value == 0) {
       forwardChapter();
     } else {
@@ -402,9 +402,9 @@ class ComicReaderController extends BaseController {
     }
   }
 
-  /// 跳转页数
+  /// 跳轉頁數
   void jumpToPage(int page, {bool anime = false}) {
-    //竖向
+    //豎向
     if (direction.value == ReaderDirection.kUpToDown) {
       itemScrollController.jumpTo(index: page);
     } else {
@@ -415,7 +415,7 @@ class ComicReaderController extends BaseController {
     }
   }
 
-  /// 查看吐槽
+  /// 檢視吐槽
   void showComment() {
     setShowControls();
     TextEditingController tucaoController = TextEditingController();
@@ -546,14 +546,14 @@ class ComicReaderController extends BaseController {
                   sendViewPoint(e);
                 },
                 decoration: InputDecoration(
-                  hintText: "发表吐槽",
+                  hintText: "發表吐槽",
                   contentPadding: AppStyle.edgeInsetsH12,
                   border: const OutlineInputBorder(),
                   suffixIcon: TextButton(
                     onPressed: () {
                       sendViewPoint(tucaoController.text);
                     },
-                    child: const Text("发布"),
+                    child: const Text("釋出"),
                   ),
                 ),
               ),
@@ -565,7 +565,7 @@ class ComicReaderController extends BaseController {
     );
   }
 
-  /// 显示设置
+  /// 顯示設定
   void showSettings() {
     setShowControls();
 
@@ -586,7 +586,7 @@ class ComicReaderController extends BaseController {
         child: Column(
           children: [
             ListTile(
-              title: const Text("设置"),
+              title: const Text("設定"),
               trailing: IconButton(
                 onPressed: Get.back,
                 icon: const Icon(Icons.close),
@@ -605,19 +605,19 @@ class ComicReaderController extends BaseController {
                           settings.setComicReaderHD(e);
                           loadDetail();
                         },
-                        title: const Text("优先加载高清图"),
-                        subtitle: const Text("部分单行本可能未分页"),
+                        title: const Text("優先載入高畫質圖"),
+                        subtitle: const Text("部分單行本可能未分頁"),
                       ),
                     ),
                     //AppStyle.vGap12,
                     Visibility(
-                      //条漫不允许修改阅读方向
+                      //條漫不允許修改閱讀方向
                       visible: !isLongComic,
                       child: Padding(
                         padding: AppStyle.edgeInsetsT12,
                         child: buildBGItem(
                           child: ListTile(
-                            title: const Text("阅读方向"),
+                            title: const Text("閱讀方向"),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -663,8 +663,8 @@ class ComicReaderController extends BaseController {
                         onChanged: (e) {
                           settings.setComicReaderLeftHandMode(e);
                         },
-                        title: const Text("操作反转"),
-                        subtitle: const Text("点击左侧下一页，右侧上一页"),
+                        title: const Text("操作反轉"),
+                        subtitle: const Text("點選左側下一頁，右側上一頁"),
                       ),
                     ),
                     AppStyle.vGap12,
@@ -679,7 +679,7 @@ class ComicReaderController extends BaseController {
                             exitFull();
                           }
                         },
-                        title: const Text("全屏阅读"),
+                        title: const Text("全屏閱讀"),
                       ),
                     ),
                     AppStyle.vGap12,
@@ -689,7 +689,7 @@ class ComicReaderController extends BaseController {
                         onChanged: (e) {
                           settings.setComicReaderShowStatus(e);
                         },
-                        title: const Text("显示状态信息"),
+                        title: const Text("顯示狀態資訊"),
                       ),
                     ),
                     AppStyle.vGap12,
@@ -700,7 +700,7 @@ class ComicReaderController extends BaseController {
                           settings.setComicReaderShowViewPoint(e);
                           setShowViewPoint(e);
                         },
-                        title: const Text("显示吐槽"),
+                        title: const Text("顯示吐槽"),
                       ),
                     ),
                     // AppStyle.vGap12,
@@ -710,7 +710,7 @@ class ComicReaderController extends BaseController {
                     //     onChanged: (e) {
                     //       settings.setComicReaderOldViewPoint(e);
                     //     },
-                    //     title: const Text("旧板吐槽"),
+                    //     title: const Text("舊板吐槽"),
                     //   ),
                     // ),
                     AppStyle.vGap12,
@@ -720,7 +720,7 @@ class ComicReaderController extends BaseController {
                         onChanged: (e) {
                           settings.setComicReaderPageAnimation(e);
                         },
-                        title: const Text("翻页动画"),
+                        title: const Text("翻頁動畫"),
                       ),
                     ),
                   ],
@@ -796,7 +796,7 @@ class ComicReaderController extends BaseController {
     );
   }
 
-  /// 进入全屏
+  /// 進入全屏
   void setFull() {
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
@@ -804,7 +804,7 @@ class ComicReaderController extends BaseController {
     );
   }
 
-  /// 进入全屏edgeToEdge模式
+  /// 進入全屏edgeToEdge模式
   void setFullEdge() {
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.edgeToEdge,
@@ -838,11 +838,11 @@ class ComicReaderController extends BaseController {
 
   void sendViewPoint(String content) async {
     if (!await UserService.instance.login()) {
-      SmartDialog.showToast("请先登录");
+      SmartDialog.showToast("請先登入");
       return;
     }
     if (content.isEmpty) {
-      SmartDialog.showToast("内容不能为空");
+      SmartDialog.showToast("內容不能為空");
       return;
     }
     Get.back();

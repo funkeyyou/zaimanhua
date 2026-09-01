@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:zai_x/app/app_style.dart';
 import 'package:remixicon/remixicon.dart';
 
-/// 一个加载图标会旋转的加载按钮。加载图标（[Remix.refresh_line]）在左，文字（[text])在
+/// 一個載入圖示會旋轉的載入按鈕。載入圖示（[Remix.refresh_line]）在左，文字（[text])在
 /// 右。
 ///
-/// 在点击widget时会在执行[onRefresh]函数的同时旋转加载图标。加载图标会一直旋转直到该函数
-/// 返还。
+/// 在點選widget時會在執行[onRefresh]函式的同時旋轉載入圖示。載入圖示會一直旋轉直到該函式
+/// 返還。
 ///
-/// 加载图标会旋转不小于1秒的时间，即如果[onRefresh]函数在1秒之内执行完毕，加载图标会继续旋
-/// 转直到距离onRefresh函数开始执行已经过了1秒。
+/// 載入圖示會旋轉不小於1秒的時間，即如果[onRefresh]函式在1秒之內執行完畢，載入圖示會繼續旋
+/// 轉直到距離onRefresh函式開始執行已經過了1秒。
 class RefreshUntilWidget extends StatefulWidget {
   final Future Function() onRefresh;
   final String text;
@@ -40,7 +40,7 @@ class _RefreshUntilWidgetState extends State<RefreshUntilWidget>
     return GestureDetector(
       onTap: () async {
         _controller.repeat();
-        // 确保在网络很好的情况下，动画不会太快结束（至少1秒）
+        // 確保在網路很好的情況下，動畫不會太快結束（至少1秒）
         await Future.wait([
           widget.onRefresh(),
           Future.delayed(const Duration(seconds: 1)),

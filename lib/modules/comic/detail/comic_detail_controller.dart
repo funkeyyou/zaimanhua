@@ -28,17 +28,17 @@ class ComicDetailControler extends BaseController {
 
   var expandDescription = false.obs;
 
-  /// 是否已订阅
+  /// 是否已訂閱
   var subscribeStatus = false.obs;
 
   /// 是否已收藏
-  /// 收藏是收藏到本地的，订阅是同步到动漫之家服务器的
+  /// 收藏是收藏到本地的，訂閱是同步到動漫之家伺服器的
   var favorited = false.obs;
 
-  /// 阅读记录
+  /// 閱讀記錄
   Rx<ComicHistory?> history = Rx<ComicHistory?>(null);
 
-  /// 更新漫画记录
+  /// 更新漫畫記錄
   StreamSubscription<dynamic>? updateComicSubscription;
 
   @override
@@ -52,7 +52,7 @@ class ComicDetailControler extends BaseController {
       },
     );
     favorited.value = DBService.instance.hasComicFavorited(comicId: comicId);
-    // 从本地读取订阅状态
+    // 從本地讀取訂閱狀態
     subscribeStatus.value =
         UserService.instance.subscribedComicIds.contains(comicId);
     getHistory();
@@ -68,7 +68,7 @@ class ComicDetailControler extends BaseController {
     loadSubscribeStatus();
   }
 
-  /// 更新订阅的阅读状态
+  /// 更新訂閱的閱讀狀態
   void updateSubscribeRead() {
     try {
       userRequest.subscribeRead(id: comicId, type: AppConstant.kTypeComic);
@@ -105,11 +105,11 @@ class ComicDetailControler extends BaseController {
         val!.volumes = result.volumes;
       });
     } catch (e) {
-      SmartDialog.showToast("无法获取章节");
+      SmartDialog.showToast("無法獲取章節");
     }
   }
 
-  /// 加载信息
+  /// 載入資訊
   void loadDetail() async {
     try {
       pageLoadding.value = true;
@@ -130,7 +130,7 @@ class ComicDetailControler extends BaseController {
     }
   }
 
-  /// 检查订阅状态
+  /// 檢查訂閱狀態
   void loadSubscribeStatus() async {
     try {
       var result = await userRequest.checkSubscribeStatus(
@@ -148,7 +148,7 @@ class ComicDetailControler extends BaseController {
     }
   }
 
-  /// 查看评论
+  /// 檢視評論
   void comment() {
     AppNavigator.toComment(objId: comicId, type: AppConstant.kTypeComic);
   }
@@ -164,7 +164,7 @@ class ComicDetailControler extends BaseController {
     );
   }
 
-  /// 订阅
+  /// 訂閱
   void subscribe() async {
     var result = await (subscribeStatus.value
         ? UserService.instance
@@ -175,22 +175,22 @@ class ComicDetailControler extends BaseController {
     }
   }
 
-  /// 下载
+  /// 下載
   void download() {
     AppNavigator.toComicDownloadSelect(comicId);
   }
 
-  /// 开始/继续阅读
+  /// 開始/繼續閱讀
   void read() {
     if (detail.value.volumes.isEmpty) {
-      SmartDialog.showToast("没有可阅读的章节");
+      SmartDialog.showToast("沒有可閱讀的章節");
       return;
     }
     if (detail.value.volumes.first.chapters.isEmpty) {
-      SmartDialog.showToast("没有可阅读的章节");
+      SmartDialog.showToast("沒有可閱讀的章節");
       return;
     }
-    //查找记录
+    //查詢記錄
     if (history.value != null && history.value!.chapterId != 0) {
       ComicDetailVolume? volume;
       ComicDetailChapterItem? chapter;
@@ -217,7 +217,7 @@ class ComicDetailControler extends BaseController {
           isLongComic: detail.value.isLong,
         );
       } else {
-        SmartDialog.showToast("未找到历史记录对应章节，将从头开始阅读");
+        SmartDialog.showToast("未找到歷史記錄對應章節，將從頭開始閱讀");
         readStart();
       }
     } else {
@@ -226,7 +226,7 @@ class ComicDetailControler extends BaseController {
   }
 
   void readStart() {
-    //从头开始
+    //從頭開始
     var volume = detail.value.volumes.first;
     var chapters = List<ComicDetailChapterItem>.from(volume.chapters);
     //正序
@@ -243,9 +243,9 @@ class ComicDetailControler extends BaseController {
   }
 
   void readChapter(ComicDetailVolume volume, ComicDetailChapterItem item) {
-    //禁止观看VIP章节
+    //禁止觀看VIP章節
     if (item.isVip) {
-      SmartDialog.showToast("请使用动漫之家官方APP观看VIP章节");
+      SmartDialog.showToast("請使用動漫之家官方APP觀看VIP章節");
       return;
     }
     var chapters = List<ComicDetailChapterItem>.from(volume.chapters);
@@ -279,7 +279,7 @@ class ComicDetailControler extends BaseController {
 
   void toAuthorDetail(ComicDetailTag e) {
     if (e.tagId == 0) {
-      //神隐漫画没有ID，直接跳转搜索
+      //神隱漫畫沒有ID，直接跳轉搜尋
       AppNavigator.toComicSearch(keyword: e.tagName);
     } else {
       AppNavigator.toComicAuthorDetail(e.tagId);
@@ -288,7 +288,7 @@ class ComicDetailControler extends BaseController {
 
   void toCategoryDetail(ComicDetailTag e) {
     if (e.tagId == 0) {
-      //神隐漫画没有ID，直接跳转搜索
+      //神隱漫畫沒有ID，直接跳轉搜尋
       AppNavigator.toComicSearch(keyword: e.tagName);
     } else {
       AppNavigator.toComicCategoryDetail(e.tagId);
@@ -306,13 +306,13 @@ class ComicDetailControler extends BaseController {
         cover: detail.value.cover,
       );
       favorited.value = true;
-      SmartDialog.showToast("已将漫画添加至本地收藏");
+      SmartDialog.showToast("已將漫畫新增至本地收藏");
     }
   }
 
   void cancelFavorite() {
     DBService.instance.removeComicFavorite(comicId: comicId);
     favorited.value = false;
-    SmartDialog.showToast("已从本地收藏删除漫画");
+    SmartDialog.showToast("已從本地收藏刪除漫畫");
   }
 }

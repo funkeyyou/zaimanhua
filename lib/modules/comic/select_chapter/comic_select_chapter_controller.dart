@@ -31,7 +31,7 @@ class ComicSelectChapterController extends BaseController {
       var result =
           await request.comicDetail(comicId: comicId, priorityV1: true);
       if (result.volumes.isEmpty) {
-        SmartDialog.showToast("没有找到任何章节");
+        SmartDialog.showToast("沒有找到任何章節");
         return;
       }
       comicTitle = result.title;
@@ -43,11 +43,11 @@ class ComicSelectChapterController extends BaseController {
       }
       volumes.value = result.volumes;
     } catch (e) {
-      SmartDialog.showToast("无法获取章节");
+      SmartDialog.showToast("無法獲取章節");
     }
   }
 
-  /// 加载信息
+  /// 載入資訊
   void loadDetail() async {
     try {
       pageLoadding.value = true;
@@ -74,9 +74,9 @@ class ComicSelectChapterController extends BaseController {
   }
 
   void selectItem(ComicDetailChapterItem item) {
-    //禁止下载VIP章节
+    //禁止下載VIP章節
     if (item.isVip) {
-      SmartDialog.showToast("请使用动漫之家官方APP下载VIP章节");
+      SmartDialog.showToast("請使用動漫之家官方APP下載VIP章節");
       return;
     }
     if (chapterIds.contains(item.chapterId)) {
@@ -110,11 +110,11 @@ class ComicSelectChapterController extends BaseController {
 
   void startDownload() {
     if (chapterIds.isEmpty) {
-      SmartDialog.showToast("请选择需要下载的章节");
+      SmartDialog.showToast("請選擇需要下載的章節");
       return;
     }
     for (var id in chapterIds) {
-      //搜索章节
+      //搜尋章節
       ComicDetailVolume? volume;
       ComicDetailChapterItem? chapter;
       for (var item in volumes) {
@@ -142,6 +142,6 @@ class ComicSelectChapterController extends BaseController {
       );
     }
     chapterIds.clear();
-    SmartDialog.showToast("已添加到下载列表，下载过程中请保持APP在前台运行");
+    SmartDialog.showToast("已新增到下載列表，下載過程中請保持APP在前臺執行");
   }
 }

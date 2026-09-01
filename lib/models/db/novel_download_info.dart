@@ -26,27 +26,27 @@ class NovelDownloadInfo {
     required this.imageUrls,
   });
 
-  ///TaskID 任务，由小说ID_章节ID组成
+  ///TaskID 任務，由小說ID_章節ID組成
   @HiveField(0)
   String taskId;
 
-  ///NovelID 小说ID
+  ///NovelID 小說ID
   @HiveField(1)
   int novelId;
 
-  ///NovelName 小说名称
+  ///NovelName 小說名稱
   @HiveField(2)
   String novelName;
 
-  ///NovelCover 小说封面
+  ///NovelCover 小說封面
   @HiveField(3)
   String novelCover;
 
-  ///ChapterID 章节ID
+  ///ChapterID 章節ID
   @HiveField(4)
   int chapterId;
 
-  ///chapterName 章节名称
+  ///chapterName 章節名稱
   @HiveField(5)
   String chapterName;
 
@@ -54,7 +54,7 @@ class NovelDownloadInfo {
   @HiveField(6)
   int volumeID;
 
-  ///VoulmeName 分卷名称
+  ///VoulmeName 分卷名稱
   @HiveField(7)
   String volumeName;
 
@@ -66,40 +66,40 @@ class NovelDownloadInfo {
   @HiveField(9)
   int chapterSort;
 
-  ///SavePath 存储路径
+  ///SavePath 儲存路徑
   @HiveField(10)
   String savePath;
 
-  ///Files 文件列表
+  ///Files 檔案列表
   @HiveField(11)
   String fileName;
 
-  ///isImage 是否为插图
+  ///isImage 是否為插圖
   @HiveField(12)
   bool isImage;
 
-  /// 图片保存路径
+  /// 圖片儲存路徑
   @HiveField(13)
   List<String> imageFiles;
 
-  ///下载进度 0-100
+  ///下載進度 0-100
   @HiveField(14)
   int progress;
 
-  ///Status 当前状态
+  ///Status 當前狀態
   @HiveField(15)
   DownloadStatus status;
 
-  ///AddTime 任务时间
+  ///AddTime 任務時間
   @HiveField(16)
   DateTime addTime;
 
-  /// 是否VIP章节
-  /// * 暂时没啥用，总之先加上
+  /// 是否VIP章節
+  /// * 暫時沒啥用，總之先加上
   @HiveField(17)
   bool isVip;
 
-  /// 下载图片链接
+  /// 下載圖片連結
   @HiveField(18)
   List<String> imageUrls;
 }

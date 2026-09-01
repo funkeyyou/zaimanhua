@@ -43,7 +43,7 @@ class ComicDownloader {
   }
 
   void cancel() async {
-    var result = await DialogUtils.showAlertDialog("确定要取消此任务吗?", title: "取消任务");
+    var result = await DialogUtils.showAlertDialog("確定要取消此任務嗎?", title: "取消任務");
     if (!result) {
       return;
     }
@@ -111,7 +111,7 @@ class ComicDownloader {
 
   Future _downloadImage(String url, int index) async {
     try {
-      //检查本地是否有缓存，有缓存直接复制本地的
+      //檢查本地是否有快取，有快取直接複製本地的
       Uint8List bytes;
       var localFile = await getCachedImageFile(url);
       if (localFile != null) {
@@ -177,7 +177,7 @@ class ComicDownloader {
     await _saveInfo();
   }
 
-  /// 保存信息
+  /// 儲存資訊
   Future _saveInfo() async {
     await ComicDownloadService.instance.box.put(info.value.taskId, info.value);
   }

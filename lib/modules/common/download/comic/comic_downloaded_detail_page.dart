@@ -51,7 +51,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                             Remix.checkbox_line,
                             size: 20,
                           ),
-                          label: const Text("选择"),
+                          label: const Text("選擇"),
                         ),
                       ),
                       Expanded(
@@ -64,7 +64,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                             Remix.information_line,
                             size: 20,
                           ),
-                          label: const Text("详情"),
+                          label: const Text("詳情"),
                         ),
                       ),
                       Expanded(
@@ -90,7 +90,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                             Remix.play_line,
                             size: 20,
                           ),
-                          label: const Text("阅读"),
+                          label: const Text("閱讀"),
                         ),
                       ),
                     ],
@@ -110,7 +110,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                             Remix.checkbox_line,
                             size: 20,
                           ),
-                          label: const Text("全选"),
+                          label: const Text("全選"),
                         ),
                       ),
                       Expanded(
@@ -123,7 +123,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                             Remix.delete_bin_line,
                             size: 20,
                           ),
-                          label: const Text("删除"),
+                          label: const Text("刪除"),
                         ),
                       ),
                       Expanded(
@@ -161,7 +161,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    "${item.title}(共${item.chapters.length}话)",
+                    "${item.title}(共${item.chapters.length}話)",
                     style: Get.textTheme.titleSmall,
                   ),
                 ),
@@ -214,7 +214,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                 itemBuilder: (_, i) {
                   if (item.showMoreButton && !item.showAll.value && i == 14) {
                     return Tooltip(
-                      message: "展开全部章节",
+                      message: "展開全部章節",
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.grey,

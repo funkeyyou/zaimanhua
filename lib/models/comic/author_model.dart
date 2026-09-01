@@ -9,8 +9,8 @@ class ComicAuthorModel {
     this.totalNum,
   });
 
-  /// 从新版接口 /comic/list_by_author 响应解析
-  /// 响应结构: { errno, errmsg, data: { authorInfo, comicList, totalNum } }
+  /// 從新版介面 /comic/list_by_author 響應解析
+  /// 響應結構: { errno, errmsg, data: { authorInfo, comicList, totalNum } }
   factory ComicAuthorModel.fromJson(Map<String, dynamic> json) {
     final Map<String, dynamic> dataMap =
         (json['data'] as Map<String, dynamic>?) ?? {};
@@ -33,16 +33,16 @@ class ComicAuthorModel {
   /// 作者名
   String nickname;
 
-  /// 作者简介
+  /// 作者簡介
   String? description;
 
-  /// 作者头像
+  /// 作者頭像
   String cover;
 
-  /// 漫画总数
+  /// 漫畫總數
   int? totalNum;
 
-  /// 漫画列表
+  /// 漫畫列表
   List<ComicAuthorComicModel> data;
 
   @override

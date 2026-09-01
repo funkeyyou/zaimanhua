@@ -27,8 +27,8 @@ class CommentPage extends StatelessWidget {
               unselectedLabelColor:
                   Get.isDarkMode ? Colors.white70 : Colors.black87,
               tabs: const [
-                Tab(text: "最新评论"),
-                Tab(text: "热门评论"),
+                Tab(text: "最新評論"),
+                Tab(text: "熱門評論"),
               ],
             ),
           ),

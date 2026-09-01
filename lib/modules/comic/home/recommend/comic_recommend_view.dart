@@ -27,11 +27,11 @@ class ComicRecommendView extends StatelessWidget {
         showPageLoadding: true,
         itemBuilder: (context, i) {
           var item = controller.list[i];
-          //大图推荐
+          //大圖推薦
           if (item.categoryId == 95) {
             return buildBanner(item);
           }
-          //我的订阅
+          //我的訂閱
           if (item.categoryId == 49) {
             return buildCard(
               context,
@@ -40,13 +40,13 @@ class ComicRecommendView extends StatelessWidget {
               action: buildShowMore(onTap: controller.toMySubscribe),
             );
           }
-          //近期必看\国漫\热门连载\最新上架
+          //近期必看\國漫\熱門連載\最新上架
           if (item.categoryId == 47 ||
               item.categoryId == 52 ||
               item.categoryId == 54 ||
               item.categoryId == 56) {
             Widget? action;
-            //刷新国漫
+            //重新整理國漫
             if (item.categoryId == 47) {
               action = buildRefresh(onRefresh: controller.refreshRecommend);
             }
@@ -68,7 +68,7 @@ class ComicRecommendView extends StatelessWidget {
             return const SizedBox.shrink();
           }
 
-          //火热专题\美漫大事件\条漫
+          //火熱專題\美漫大事件\條漫
           if (item.categoryId == 48 ||
               item.categoryId == 53 ||
               item.categoryId == 55) {
@@ -81,7 +81,7 @@ class ComicRecommendView extends StatelessWidget {
                   : null,
             );
           }
-          //大师
+          //大師
           if (item.categoryId == 51) {
             return buildCard(
               context,
@@ -145,7 +145,7 @@ class ComicRecommendView extends StatelessWidget {
       child: const Row(
         children: [
           Text(
-            "查看更多",
+            "檢視更多",
             style: TextStyle(fontSize: 14, color: Colors.grey),
           ),
           Icon(Icons.chevron_right, size: 18, color: Colors.grey),
@@ -155,7 +155,7 @@ class ComicRecommendView extends StatelessWidget {
   }
 
   Widget buildRefresh({required Future Function() onRefresh}) {
-    return RefreshUntilWidget(onRefresh: onRefresh, text: "换一批");
+    return RefreshUntilWidget(onRefresh: onRefresh, text: "換一批");
   }
 
   Widget buildBanner(ComicRecommendModel item) {

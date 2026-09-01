@@ -10,7 +10,7 @@ class NovelSubscribeController
   NovelSubscribeController() {
     for (var item in List.generate(
         26, (index) => String.fromCharCode(index + 65).toLowerCase())) {
-      letters.addAll({item: "${item.toUpperCase()}开头"});
+      letters.addAll({item: "${item.toUpperCase()}開頭"});
     }
   }
   final UserRequest request = UserRequest();
@@ -19,13 +19,13 @@ class NovelSubscribeController
 
   Map letters = {
     "": "全部",
-    "number": "数字开头",
+    "number": "數字開頭",
   };
 
   Map<int, String> types = {
-    0: "全部订阅",
-    2: "已读",
-    1: "未读",
+    0: "全部訂閱",
+    2: "已讀",
+    1: "未讀",
   };
   var type = 0.obs;
 

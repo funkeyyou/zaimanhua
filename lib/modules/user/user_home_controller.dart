@@ -17,28 +17,28 @@ class UserHomeController extends GetxController {
     super.onInit();
   }
 
-  /// 登录
+  /// 登入
   void login() {
     UserService.instance.login();
   }
 
-  /// 退出登录
+  /// 退出登入
   void logout() async {
     var result = await DialogUtils.showAlertDialog(
-      "确定要退出登录吗？",
-      title: "退出登录",
+      "確定要退出登入嗎？",
+      title: "退出登入",
     );
     if (result) {
       UserService.instance.logout();
     }
   }
 
-  /// 主题设置
+  /// 主題設定
   void setTheme() {
     settings.changeTheme();
   }
 
-  /// 关于我们
+  /// 關於我們
   void about() {
     Get.dialog(AboutDialog(
       applicationIcon: Container(
@@ -63,12 +63,12 @@ class UserHomeController extends GetxController {
     ));
   }
 
-  /// 检查更新
+  /// 檢查更新
   void checkUpdate() {
     Utils.checkUpdate(showMsg: true);
   }
 
-  /// 订阅
+  /// 訂閱
   void toUserSubscribe() async {
     if (!await UserService.instance.login()) {
       return;
@@ -76,7 +76,7 @@ class UserHomeController extends GetxController {
     AppNavigator.toUserSubscribe();
   }
 
-  /// 历史
+  /// 歷史
   void toUserHistory() async {
     if (!await UserService.instance.login()) {
       return;
@@ -84,7 +84,7 @@ class UserHomeController extends GetxController {
     AppNavigator.toUserHistory();
   }
 
-  /// 本机历史
+  /// 本機歷史
   void toLocalHistory() async {
     if (!await UserService.instance.login()) {
       return;

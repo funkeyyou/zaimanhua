@@ -22,7 +22,7 @@ class UserLoginDialog extends StatelessWidget {
           children: [
             ListTile(
               contentPadding: AppStyle.edgeInsetsL12,
-              title: const Text("登录"),
+              title: const Text("登入"),
               trailing: IconButton(
                 onPressed: Get.back,
                 icon: const Icon(Icons.close),
@@ -36,8 +36,8 @@ class UserLoginDialog extends StatelessWidget {
                 autofocus: true,
                 textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(
-                  hintText: "请输入用户名/手机号",
-                  labelText: "用户名/手机号",
+                  hintText: "請輸入使用者名稱/手機號",
+                  labelText: "使用者名稱/手機號",
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   contentPadding: AppStyle.edgeInsetsH8,
                   border: OutlineInputBorder(),
@@ -52,8 +52,8 @@ class UserLoginDialog extends StatelessWidget {
                 obscureText: true,
                 textInputAction: TextInputAction.done,
                 decoration: const InputDecoration(
-                  hintText: "请输入密码",
-                  labelText: "密码",
+                  hintText: "請輸入密碼",
+                  labelText: "密碼",
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   contentPadding: AppStyle.edgeInsetsH8,
                   border: OutlineInputBorder(),
@@ -87,7 +87,7 @@ class UserLoginDialog extends StatelessWidget {
                               color: Colors.white,
                             ),
                           )
-                        : const Text("登录"),
+                        : const Text("登入"),
                   ),
                 ),
               ),

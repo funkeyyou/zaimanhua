@@ -8,11 +8,11 @@ import 'package:html_unescape/html_unescape.dart';
 class CommentRequest {
   var unescape = HtmlUnescape();
 
-  /// 读取最新的评论
-  /// - [type] 类型
+  /// 讀取最新的評論
+  /// - [type] 型別
   /// - [objId] ID
-  /// - [page] 页数
-  /// - [pageSize] 每页数量
+  /// - [page] 頁數
+  /// - [pageSize] 每頁數量
   Future<List<CommentItem>> getComment({
     required int type,
     required int objId,
@@ -61,7 +61,7 @@ class CommentRequest {
     var item = comments[id];
     final author = item['author'] is Map ? item['author'] as Map : null;
 
-    // 图片列表：优先使用 imgList 数组，回退到旧的 upload_images 逗号字符串
+    // 圖片列表：優先使用 imgList 陣列，回退到舊的 upload_images 逗號字串
     List<String> images = [];
     final imgList = item['imgList'];
     if (imgList is List && imgList.isNotEmpty) {
@@ -74,7 +74,7 @@ class CommentRequest {
           .toList();
     }
 
-    //返回的类型非常随机，有时候是int，有时候是string，所以使用int.tryParse
+    //返回的型別非常隨機，有時候是int，有時候是string，所以使用int.tryParse
     return CommentItem(
       type: type,
       id: int.tryParse(item['id'].toString()) ?? 0,
@@ -97,13 +97,13 @@ class CommentRequest {
     );
   }
 
-  /// 发表评论
+  /// 發表評論
   /// - [objId] ID
-  /// - [type] 类型 ,见AppConstant
-  /// - [content] 内容
-  /// - [toCommentId] 回复评论ID
-  /// - [originCommentId] 原始评论ID
-  /// - [toUid] 回复用户
+  /// - [type] 型別 ,見AppConstant
+  /// - [content] 內容
+  /// - [toCommentId] 回覆評論ID
+  /// - [originCommentId] 原始評論ID
+  /// - [toUid] 回覆使用者
   Future<bool> sendComment({
     required int objId,
     required int type,
@@ -128,7 +128,7 @@ class CommentRequest {
     return true;
   }
 
-  /// 评论点赞
+  /// 評論點贊
   Future<int?> likeComment({
     required int commentId,
     required int objId,
@@ -153,7 +153,7 @@ class CommentRequest {
     return null;
   }
 
-  /// 取消评论点赞
+  /// 取消評論點贊
   Future<int?> deleteLikeComment({
     required int commentId,
     required int objId,
@@ -178,10 +178,10 @@ class CommentRequest {
     return null;
   }
 
-  /// 读取用户的评论
-  /// - [type] 类型 0=漫画，1=轻小说，2=新闻
-  /// - [uid] 用户ID
-  /// - [page] 页数,从0开始
+  /// 讀取使用者的評論
+  /// - [type] 型別 0=漫畫，1=輕小說，2=新聞
+  /// - [uid] 使用者ID
+  /// - [page] 頁數,從0開始
   Future<List<UserCommentItem>> getUserComment({
     required int type,
     required int uid,

@@ -18,7 +18,7 @@ class NewsDetailPage extends StatelessWidget {
   final NewsDetailController controller;
   NewsDetailPage({
     required this.newsUrl,
-    this.title = "资讯详情",
+    this.title = "資訊詳情",
     required this.newsId,
     super.key,
   }) : controller = Get.put(
@@ -85,7 +85,7 @@ class NewsDetailPage extends StatelessWidget {
                     ),
                     label: Text(controller.commentAmount > 0
                         ? "${controller.commentAmount}"
-                        : "评论"),
+                        : "評論"),
                   ),
                 ),
               ),
@@ -116,7 +116,7 @@ class NewsDetailPage extends StatelessWidget {
                     Remix.settings_line,
                     size: 20,
                   ),
-                  label: const Text("设置"),
+                  label: const Text("設定"),
                 ),
               ),
             ],

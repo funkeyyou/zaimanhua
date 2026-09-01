@@ -25,7 +25,7 @@ class ComicSearchPage extends StatelessWidget {
             controller: controller.searchController,
             autofocus: true,
             decoration: InputDecoration(
-              hintText: "搜索漫画",
+              hintText: "搜尋漫畫",
               contentPadding: AppStyle.edgeInsetsH12,
               border: const OutlineInputBorder(),
               prefixIcon: SizedBox(
@@ -76,7 +76,7 @@ class ComicSearchPage extends StatelessWidget {
           //         child: Column(
           //           children: [
           //             const ListTile(
-          //               title: Text("热门搜索"),
+          //               title: Text("熱門搜尋"),
           //             ),
           //             Padding(
           //               padding: AppStyle.edgeInsetsH12.copyWith(bottom: 12),

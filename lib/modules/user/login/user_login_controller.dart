@@ -12,11 +12,11 @@ class UserLoginController extends GetxController {
   var loadding = false.obs;
   void login() async {
     if (userNameController.text.isEmpty) {
-      SmartDialog.showToast("请输入用户名");
+      SmartDialog.showToast("請輸入使用者名稱");
       return;
     }
     if (passwordController.text.isEmpty) {
-      SmartDialog.showToast("请输入密码");
+      SmartDialog.showToast("請輸入密碼");
       return;
     }
     try {
