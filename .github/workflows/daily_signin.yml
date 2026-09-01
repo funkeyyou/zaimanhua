@@ -1,0 +1,20 @@
+name: daily-signin
+# 再漫畫每日自動簽到（預設停用）
+# 啟用方式：Settings → Secrets 加 ZMH_USERNAME/ZMH_PASSWORD；Variables 加 ENABLE_DAILY_SIGNIN=1
+on:
+  schedule:
+    - cron: "30 0 * * *" # UTC 00:30 = 台北 08:30
+  workflow_dispatch:
+
+jobs:
+  signin:
+    runs-on: ubuntu-latest
+    if: ${{ vars.ENABLE_DAILY_SIGNIN == '1' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sign in
+        shell: pwsh
+        env:
+          ZMH_USERNAME: ${{ secrets.ZMH_USERNAME }}
+          ZMH_PASSWORD: ${{ secrets.ZMH_PASSWORD }}
+        run: ./tools/auto_signin/auto_signin.ps1

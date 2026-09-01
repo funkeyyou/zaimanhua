@@ -1,3 +1,16 @@
+# 再漫畫
+
+本倉庫是 [Fusn126/ZAI_X](https://github.com/Fusn126/ZAI_X)（再漫画第三方客戶端，源自 [xiaoyaocz/flutter_dmzj](https://github.com/xiaoyaocz/flutter_dmzj)）的個人迭代分支，**安卓優先開發，功能再同步 Windows 版**。
+
+- 開發路線：[docs/ROADMAP.md](docs/ROADMAP.md)
+- 每日自動簽到工具（不開 App 也能簽）：[tools/auto_signin](tools/auto_signin)
+- 建置：Flutter 3.38.10（CI 舊檔寫的 3.22 已過時）；Windows 本機建置請走 ASCII 路徑（中文路徑會使原生建置步驟讀壞檔案，可用 `mklink /J` 建 junction）
+- 授權：GPL-3.0，保留原作者署名，禁止商業用途
+
+以下為 ZAI_X 原 README：
+
+---
+
 本家app的摇一摇广告太烦人了，这个改版原作者太久没更新，所以就自己fork大修了下。
 </br>
 自己在用，基本功能应该正常，因为改了flutter版本可能会有兼容问题就不往原来的代码仓合并了。
