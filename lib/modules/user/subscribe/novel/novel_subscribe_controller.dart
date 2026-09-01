@@ -31,10 +31,16 @@ class NovelSubscribeController
   };
   var type = 0.obs;
 
-  /// 排序方式 0=订阅顺序 1=更新时间
+  /// 排序方式
+  /// * [0] 订阅时间（接口默认顺序，新到旧）
+  /// * [1] 订阅时间（旧到新）
+  /// * [2] 更新时间（新到旧）
+  /// * [3] 更新时间（旧到新）
   Map<int, String> sorts = {
-    0: "订阅时间".i18n,
-    1: "更新时间".i18n,
+    0: "订阅时间 ↓".i18n,
+    1: "订阅时间 ↑".i18n,
+    2: "更新时间 ↓".i18n,
+    3: "更新时间 ↑".i18n,
   };
   late var sort = AppSettingsService.instance.subscribeSort.value.obs;
 
@@ -57,17 +63,31 @@ class NovelSubscribeController
     while (canLoadMore.value && list.length < 500 && guard++ < 25) {
       await super.loadData();
     }
+    canLoadMore.value = false;
     applySort();
   }
 
   void applySort() {
-    if (sort.value != 1) {
-      return;
+    switch (sort.value) {
+      case 1:
+        // 介面預設是新到舊，反轉即為舊到新
+        list.value = list.reversed.toList();
+        return;
+      case 2:
+        list.sort(
+          (a, b) => (b.lastUpdateChapterId ?? 0)
+              .compareTo(a.lastUpdateChapterId ?? 0),
+        );
+        break;
+      case 3:
+        list.sort(
+          (a, b) => (a.lastUpdateChapterId ?? 0)
+              .compareTo(b.lastUpdateChapterId ?? 0),
+        );
+        break;
+      default:
+        return;
     }
-    list.sort(
-      (a, b) => (b.lastUpdateChapterId ?? 0)
-          .compareTo(a.lastUpdateChapterId ?? 0),
-    );
     list.refresh();
   }
 

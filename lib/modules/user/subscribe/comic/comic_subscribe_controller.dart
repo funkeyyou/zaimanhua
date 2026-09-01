@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:zai_x/app/app_constant.dart';
 import 'package:zai_x/app/controller/base_controller.dart';
 import 'package:zai_x/models/user/subscribe_comic_model.dart';
 import 'package:zai_x/requests/user_request.dart';
 import 'package:zai_x/services/db_service.dart';
+import 'package:zai_x/services/subscribe_tag_service.dart';
 import 'package:zai_x/services/user_service.dart';
 import 'package:zai_x/services/app_settings_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -11,20 +14,7 @@ import 'package:zai_x/app/i18n.dart';
 
 class ComicSubscribeController
     extends BasePageController<UserSubscribeComicItemModel> {
-  ComicSubscribeController() {
-    for (var item in List.generate(
-        26, (index) => String.fromCharCode(index + 65).toLowerCase())) {
-      letters.addAll({item: "${item.toUpperCase()}开头".i18n});
-    }
-  }
   final UserRequest request = UserRequest();
-
-  var letter = "".obs;
-
-  Map letters = {
-    "": "全部".i18n,
-    "number": "数字开头".i18n,
-  };
 
   Map<int, String> types = {
     1: "全部订阅".i18n,
@@ -34,60 +24,145 @@ class ComicSubscribeController
   var type = 1.obs;
 
   /// 排序方式
-  /// * [0] 订阅顺序（接口默认）
-  /// * [1] 更新时间（最新更新在前）
+  /// * [0] 订阅时间（接口默认顺序，新到旧）
+  /// * [1] 订阅时间（旧到新）
+  /// * [2] 更新时间（新到旧）
+  /// * [3] 更新时间（旧到新）
   Map<int, String> sorts = {
-    0: "订阅时间".i18n,
-    1: "更新时间".i18n,
+    0: "订阅时间 ↓".i18n,
+    1: "订阅时间 ↑".i18n,
+    2: "更新时间 ↓".i18n,
+    3: "更新时间 ↑".i18n,
   };
   late var sort = AppSettingsService.instance.subscribeSort.value.obs;
 
-  void setSort(int value) {
-    if (sort.value == value) {
-      return;
-    }
-    sort.value = value;
-    AppSettingsService.instance.setSubscribeSort(value);
-    refreshData();
-  }
+  /// 题材标签筛选（空字串=全部）
+  var tag = "".obs;
+  var tags = <String>[].obs;
+  var tagLoading = false.obs;
 
-  /// 依更新時間排序時需要完整清單，因此先把分頁補齊再排序
-  @override
-  Future loadData() async {
-    await super.loadData();
-    if (sort.value == 0) {
-      return;
-    }
-    var guard = 0;
-    while (canLoadMore.value && list.length < 500 && guard++ < 25) {
-      await super.loadData();
-    }
-    applySort();
-  }
-
-  void applySort() {
-    if (sort.value != 1) {
-      return;
-    }
-    // 章節 ID 為全站遞增，數字越大代表更新時間越近
-    list.sort(
-      (a, b) => b.lastUpdateChapterId.compareTo(a.lastUpdateChapterId),
-    );
-    list.refresh();
-  }
+  /// 完整的订阅清单（未套用标签筛选与排序）
+  final _all = <UserSubscribeComicItemModel>[];
 
   var editMode = false.obs;
+
+  /// 標籤篩選與非預設排序都需要完整清單才能算對
+  bool get _needsFullList => sort.value != 0 || tag.value.isNotEmpty;
 
   @override
   Future<List<UserSubscribeComicItemModel>> getData(
       int page, int pageSize) async {
     var ls = await request.comicSubscribes(
       subType: type.value,
-      letter: letter.value,
+      letter: "",
       page: page,
     );
     UserService.instance.subscribedComicIds.addAll(ls.map((e) => e.id));
     return ls;
+  }
+
+  @override
+  Future loadData() async {
+    await super.loadData();
+    if (_needsFullList) {
+      // 只排序／篩選已載入的那一頁會誤導，先把分頁補齊（上限 500 筆）
+      var guard = 0;
+      while (canLoadMore.value && list.length < 500 && guard++ < 25) {
+        await super.loadData();
+      }
+      canLoadMore.value = false;
+    }
+    _all
+      ..clear()
+      ..addAll(list);
+    // 先把清單畫出來，標籤在背景補抓，抓到再更新下拉選單與篩選結果
+    applyFilterAndSort();
+    unawaited(_loadTags());
+  }
+
+  /// 訂閱清單沒有題材欄位，標籤要另外從漫畫詳情補抓（結果會快取）
+  Future _loadTags() async {
+    var ids = _all.map((e) => e.id).toList();
+    tags.value = SubscribeTagService.availableTags(ids);
+    if (tags.isEmpty && ids.isEmpty) {
+      return;
+    }
+    if (tagLoading.value) {
+      return;
+    }
+    tagLoading.value = true;
+    try {
+      var updated = await SubscribeTagService.fetchMissing(ids);
+      if (updated) {
+        tags.value = SubscribeTagService.availableTags(ids);
+        applyFilterAndSort();
+      }
+    } finally {
+      tagLoading.value = false;
+    }
+  }
+
+  void applyFilterAndSort() {
+    var items = tag.value.isEmpty
+        ? List<UserSubscribeComicItemModel>.from(_all)
+        : _all
+            .where((e) => SubscribeTagService.tagsOf(e.id).contains(tag.value))
+            .toList();
+    switch (sort.value) {
+      case 1:
+        // 介面預設是新到舊，反轉即為舊到新
+        items = items.reversed.toList();
+        break;
+      case 2:
+        // 章節 ID 為全站遞增，數字越大代表更新時間越近
+        items.sort(
+          (a, b) => b.lastUpdateChapterId.compareTo(a.lastUpdateChapterId),
+        );
+        break;
+      case 3:
+        items.sort(
+          (a, b) => a.lastUpdateChapterId.compareTo(b.lastUpdateChapterId),
+        );
+        break;
+    }
+    list.value = items;
+    pageEmpty.value = items.isEmpty;
+  }
+
+  void setSort(int value) {
+    if (sort.value == value) {
+      return;
+    }
+    var wasFull = _needsFullList;
+    sort.value = value;
+    AppSettingsService.instance.setSubscribeSort(value);
+    if (!wasFull && _needsFullList) {
+      refreshData();
+    } else {
+      applyFilterAndSort();
+    }
+  }
+
+  void setTag(String value) {
+    if (tag.value == value) {
+      return;
+    }
+    var wasFull = _needsFullList;
+    tag.value = value;
+    if (!wasFull && _needsFullList) {
+      refreshData();
+    } else {
+      applyFilterAndSort();
+    }
+  }
+
+  /// 標籤下拉選單的內容
+  Map<String, String> get tagOptions {
+    var map = <String, String>{"": "全部".i18n};
+    for (var t in tags) {
+      map[t] = t;
+    }
+    return map;
   }
 
   void cancelEdit() {

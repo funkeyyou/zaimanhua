@@ -24,13 +24,13 @@ class ComicSubscribeView extends StatelessWidget {
             () => Row(
               children: [
                 buildFilter(
-                  // ignore: invalid_use_of_protected_member
-                  types: controller.letters,
-                  value: controller.letter.value,
+                  // 題材標籤（由漫畫詳情補抓後快取）
+                  types: controller.tagOptions,
+                  value: controller.tag.value,
                   onSelected: (e) {
-                    controller.letter.value = e;
-                    controller.refreshData();
+                    controller.setTag(e.toString());
                   },
+                  loading: controller.tagLoading.value,
                 ),
                 buildFilter(
                   types: controller.types,
@@ -247,6 +247,7 @@ class ComicSubscribeView extends StatelessWidget {
     required Map types,
     required dynamic value,
     required Function(dynamic) onSelected,
+    bool loading = false,
   }) {
     return Expanded(
       child: PopupMenuButton(
@@ -268,10 +269,19 @@ class ComicSubscribeView extends StatelessWidget {
               Text(
                 (types[value] ?? "").toString().i18n,
               ),
-              const Icon(
-                Icons.arrow_drop_down,
-                color: Colors.grey,
-              )
+              loading
+                  ? const Padding(
+                      padding: EdgeInsets.only(left: 6),
+                      child: SizedBox(
+                        width: 12,
+                        height: 12,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    )
+                  : const Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.grey,
+                    )
             ],
           ),
         ),
