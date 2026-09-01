@@ -2,6 +2,15 @@
 
 本倉庫是 [Fusn126/ZAI_X](https://github.com/Fusn126/ZAI_X)（再漫画第三方客戶端，源自 [xiaoyaocz/flutter_dmzj](https://github.com/xiaoyaocz/flutter_dmzj)）的個人迭代分支，**安卓優先開發，功能再同步 Windows 版**。
 
+## 本分支新增功能
+
+- **界面語言切換**：跟隨系統／簡體／繁體（台灣用語），切換即時生效
+- **內容即時簡轉繁**：漫畫標題、資訊內文、小說正文、評論等伺服器內容依語言設定顯示（OpenCC 全量詞表，最長詞優先）
+- **翻頁觸控區寬度可調**：左右各 5–40%（上游 issue #157）
+- **閱讀時螢幕常亮**（可關）；**閱讀器內亮度調節**（安卓/iOS，退出自動還原）
+- **每日自動簽到**：App 內建 + 獨立排程工具（`tools/auto_signin`，不開 App 也能簽）
+- Android 正式簽名發佈、CI 自動出包（見 [Releases](../../releases)）
+
 - 開發路線：[docs/ROADMAP.md](docs/ROADMAP.md)
 - 每日自動簽到工具（不開 App 也能簽）：[tools/auto_signin](tools/auto_signin)
 - 建置：Flutter 3.38.10（CI 舊檔寫的 3.22 已過時）；Windows 本機建置請走 ASCII 路徑（中文路徑會使原生建置步驟讀壞檔案，可用 `mklink /J` 建 junction）
