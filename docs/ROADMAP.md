@@ -9,7 +9,7 @@
 - [x] 自有 GitHub 倉庫 + CI（tag 觸發自動出 APK 與 Windows zip；無 secrets 時自動退回 debug 簽名）
 - [x] Android 正式簽名金鑰（keystore 位於 C:\Users\funke\keys，密碼與 base64 已存入 repo secrets；**務必備份，遺失則無法更新已安裝的 App**）
 - [x] 本機 Android 開發環境（JDK 17.0.20.1 + Android SDK 36 + build-tools 36.0.0，flutter 已指向）
-- [ ] App 內更新檢查指向本倉庫的 `document/app_version.json`（需倉庫轉 public，或另尋可公開存取的位置）
+- [ ] App 內更新檢查已改讀本倉庫的 GitHub Release（`api.github.com/repos/funkeyyou/zaimanhua/releases/latest`，自動抓 apk／zip 資產）；**倉庫仍為 private，API 回 404，需轉 public 才會生效**
 
 ## P1 快速勝利（小工作量、立即有感）
 

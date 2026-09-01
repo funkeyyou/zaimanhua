@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/app/i18n.dart';
 import 'package:zai_x/models/db/comic_download_info.dart';
 import 'package:zai_x/models/db/download_status.dart';
 import 'package:zai_x/models/db/local_favorite.dart';
@@ -138,8 +139,11 @@ class DMZJApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      locale: const Locale("zh", "CN"),
-      supportedLocales: const [Locale("zh", "CN")],
+      // Material/Cupertino 内建文案(如「查看许可」「关闭」)跟随界面语言设置
+      locale: AppI18n.useTraditional
+          ? const Locale("zh", "TW")
+          : const Locale("zh", "CN"),
+      supportedLocales: const [Locale("zh", "CN"), Locale("zh", "TW")],
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
       navigatorObservers: [FlutterSmartDialog.observer],
