@@ -44,7 +44,8 @@ class ComicDownloader {
   }
 
   void cancel() async {
-    var result = await DialogUtils.showAlertDialog("确定要取消此任务吗?".i18n, title: "取消任务".i18n);
+    var result = await DialogUtils.showAlertDialog("确定要取消此任务吗?".i18n,
+        title: "取消任务".i18n);
     if (!result) {
       return;
     }

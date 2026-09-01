@@ -99,6 +99,12 @@ class LocalStorageService extends GetxService {
   /// 漫画阅读器左右翻页触控区宽度（占屏宽百分比，单侧）
   static const String kComicReaderTapZone = "ComicReaderTapZone";
 
+  /// 漫画双页对开模式 0=关闭 1=宽屏自动 2=总是
+  static const String kComicReaderDualPage = "ComicReaderDualPage";
+
+  /// 双页模式下首页（封面）单独占一页
+  static const String kComicReaderDualPageCover = "ComicReaderDualPageCover";
+
   /// 阅读时保持屏幕常亮
   static const String kReaderKeepScreenOn = "ReaderKeepScreenOn";
 

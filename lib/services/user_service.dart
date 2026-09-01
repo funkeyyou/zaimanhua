@@ -49,7 +49,8 @@ class UserService extends GetxService {
       : userProfile.value?.description ?? "";
 
   String get vipInfo =>
-      "会员有效期至${Utils.dateFormat.format(userProfile.value?.userfeeinfo?.expiresTime ?? DateTime.now())}".i18n;
+      "会员有效期至${Utils.dateFormat.format(userProfile.value?.userfeeinfo?.expiresTime ?? DateTime.now())}"
+          .i18n;
 
   /// 是否已经绑定手机号
   var bindTel = true.obs;

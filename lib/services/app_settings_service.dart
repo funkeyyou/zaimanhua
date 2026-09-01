@@ -43,6 +43,10 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kComicReaderOldViewPoint, false);
     comicReaderTapZone.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderTapZone, 10);
+    comicReaderDualPage.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderDualPage, 1);
+    comicReaderDualPageCover.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderDualPageCover, true);
     //小说
     novelReaderDirection.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderDirection, 0);
@@ -71,8 +75,8 @@ class AppSettingsService extends GetxController {
         (path) => NovelFontService.instance.getFontKey(path) == selectedFontKey,
         orElse: () => '',
       );
-      LocalStorageService.instance
-          .setValue(LocalStorageService.kNovelReaderFontPath, novelReaderFontPath.value);
+      LocalStorageService.instance.setValue(
+          LocalStorageService.kNovelReaderFontPath, novelReaderFontPath.value);
     }
     _saveNovelReaderFontPaths();
     for (final fontPath in novelReaderFontPaths) {
@@ -115,8 +119,8 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kReaderKeepScreenOn, true);
     readerBrightness.value = LocalStorageService.instance
         .getValue(LocalStorageService.kReaderBrightness, -1.0);
-    eInkMode.value =
-        LocalStorageService.instance.getValue(LocalStorageService.kEInkMode, false);
+    eInkMode.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kEInkMode, false);
     if (eInkMode.value) {
       applyEInkModeSettings();
     }
@@ -473,6 +477,25 @@ class AppSettingsService extends GetxController {
     readerKeepScreenOn.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kReaderKeepScreenOn, value);
+  }
+
+  /// 漫画双页对开模式（平板/折叠屏展开态）
+  /// * [0] 关闭
+  /// * [1] 宽屏自动
+  /// * [2] 总是
+  RxInt comicReaderDualPage = 1.obs;
+  void setComicReaderDualPage(int value) {
+    comicReaderDualPage.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderDualPage, value);
+  }
+
+  /// 双页模式下首页（封面）单独占一页
+  RxBool comicReaderDualPageCover = true.obs;
+  void setComicReaderDualPageCover(bool value) {
+    comicReaderDualPageCover.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderDualPageCover, value);
   }
 
   /// 阅读器屏幕亮度（0.05-1.0，-1 表示跟随系统）

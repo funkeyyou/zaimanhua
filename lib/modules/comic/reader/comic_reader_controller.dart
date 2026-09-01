@@ -84,6 +84,15 @@ class ComicReaderController extends BaseController {
   /// 初始化
   var initialIndex = 0;
 
+  /// 進入章節後直接跳到最後一頁（由「上一頁」翻進上一話時使用）
+  var openAtLastPage = false;
+
+  /// 雙頁對開目前是否生效（由畫面寬度與設定共同決定）
+  var dualPageActive = false.obs;
+
+  /// 頁面分組：雙頁時每組最多 2 頁，單頁時每組 1 頁
+  var pageGroups = <List<int>>[].obs;
+
   /// 是否显示控制器
   var showControls = false.obs;
 
@@ -249,12 +258,17 @@ class ComicReaderController extends BaseController {
       } else {
         initialIndex = 0;
       }
+      if (openAtLastPage) {
+        openAtLastPage = false;
+        initialIndex = result.pageUrls.isEmpty ? 0 : result.pageUrls.length - 1;
+      }
       currentIndex.value = initialIndex;
       if (settings.comicReaderShowViewPoint.value) {
         result.pageUrls.add("TC");
       }
 
       detail.value = result;
+      buildPageGroups();
       Future.delayed(const Duration(milliseconds: 100), () {
         jumpToPage(initialIndex);
       });
@@ -347,7 +361,8 @@ class ComicReaderController extends BaseController {
                     title: Text(item.chapterTitle.i18n),
                     subtitle: item.updateTime != 0
                         ? Text(
-                            "更新于${Utils.formatTimestampToDate(item.updateTime)}".i18n)
+                            "更新于${Utils.formatTimestampToDate(item.updateTime)}"
+                                .i18n)
                         : null,
                     onTap: () {
                       chapterIndex.value = i;
@@ -377,18 +392,28 @@ class ComicReaderController extends BaseController {
   }
 
   /// 上一章
-  void forwardChapter() {
+  void forwardChapter({bool toLastPage = false}) {
     if (chapterIndex.value == 0) {
       SmartDialog.showToast("前面没有了".i18n);
       return;
     }
 
+    openAtLastPage = toLastPage;
     chapterIndex.value -= 1;
     loadDetail();
   }
 
   /// 下一页
   void nextPage() {
+    if (isDualPaging) {
+      var group = currentGroupIndex;
+      if (group >= pageGroups.length - 1) {
+        nextChapter();
+      } else {
+        jumpToGroup(group + 1, anime: true);
+      }
+      return;
+    }
     var value = currentIndex.value;
     Log.w("下一页$value".i18n);
     var max = detail.value.pageUrls.length;
@@ -401,13 +426,101 @@ class ComicReaderController extends BaseController {
 
   /// 上一页
   void forwardPage() {
+    if (isDualPaging) {
+      var group = currentGroupIndex;
+      if (group <= 0) {
+        forwardChapter(toLastPage: true);
+      } else {
+        jumpToGroup(group - 1, anime: true);
+      }
+      return;
+    }
     var value = currentIndex.value;
     Log.w("上一页$value".i18n);
     if (value == 0) {
-      forwardChapter();
+      forwardChapter(toLastPage: true);
     } else {
       jumpToPage(value - 1, anime: true);
     }
+  }
+
+  /// 雙頁對開是否正在生效（僅橫向翻頁時可能為真）
+  bool get isDualPaging =>
+      dualPageActive.value && direction.value != ReaderDirection.kUpToDown;
+
+  /// 依目前模式重建頁面分組
+  void buildPageGroups() {
+    var urls = detail.value.pageUrls;
+    var groups = <List<int>>[];
+    if (urls.isEmpty) {
+      pageGroups.value = groups;
+      return;
+    }
+    if (!isDualPaging) {
+      for (var i = 0; i < urls.length; i++) {
+        groups.add([i]);
+      }
+      pageGroups.value = groups;
+      return;
+    }
+    // 吐槽頁固定單獨成組
+    var hasViewPoint = urls.last == "TC";
+    var imageCount = hasViewPoint ? urls.length - 1 : urls.length;
+    var i = 0;
+    if (settings.comicReaderDualPageCover.value && imageCount > 0) {
+      groups.add([0]);
+      i = 1;
+    }
+    while (i < imageCount) {
+      if (i + 1 < imageCount) {
+        groups.add([i, i + 1]);
+        i += 2;
+      } else {
+        groups.add([i]);
+        i += 1;
+      }
+    }
+    if (hasViewPoint) {
+      groups.add([urls.length - 1]);
+    }
+    pageGroups.value = groups;
+  }
+
+  /// 頁碼所屬的分組索引
+  int groupIndexOf(int page) {
+    for (var i = 0; i < pageGroups.length; i++) {
+      if (pageGroups[i].contains(page)) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
+  int get currentGroupIndex => groupIndexOf(currentIndex.value);
+
+  /// 切換雙頁生效狀態，並保持目前頁面位置
+  void setDualPageActive(bool value) {
+    if (dualPageActive.value == value) {
+      return;
+    }
+    var page = currentIndex.value;
+    dualPageActive.value = value;
+    buildPageGroups();
+    Future.delayed(const Duration(milliseconds: 50), () {
+      jumpToPage(page);
+    });
+  }
+
+  /// 跳轉到指定分組
+  void jumpToGroup(int group, {bool anime = false}) {
+    if (group < 0 || group >= pageGroups.length) {
+      return;
+    }
+    currentIndex.value = pageGroups[group].first;
+    anime && pageAnimation
+        ? preloadPageController.animateToPage(group,
+            duration: const Duration(milliseconds: 200), curve: Curves.linear)
+        : preloadPageController.jumpToPage(group);
   }
 
   /// 跳转页数
@@ -415,12 +528,16 @@ class ComicReaderController extends BaseController {
     //竖向
     if (direction.value == ReaderDirection.kUpToDown) {
       itemScrollController.jumpTo(index: page);
-    } else {
-      anime && pageAnimation
-          ? preloadPageController.animateToPage(page,
-              duration: const Duration(milliseconds: 200), curve: Curves.linear)
-          : preloadPageController.jumpToPage(page);
+      return;
     }
+    if (isDualPaging) {
+      jumpToGroup(groupIndexOf(page), anime: anime);
+      return;
+    }
+    anime && pageAnimation
+        ? preloadPageController.animateToPage(page,
+            duration: const Duration(milliseconds: 200), curve: Curves.linear)
+        : preloadPageController.jumpToPage(page);
   }
 
   /// 查看吐槽
@@ -693,6 +810,83 @@ class ComicReaderController extends BaseController {
                         ),
                       ),
                     ),
+                    Visibility(
+                      //条漫、上下滚动不适用双页对开
+                      visible: !isLongComic &&
+                          direction.value != ReaderDirection.kUpToDown,
+                      child: Padding(
+                        padding: AppStyle.edgeInsetsT12,
+                        child: buildBGItem(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                title: Text("双页对开".i18n),
+                                subtitle: Text(
+                                  dualPageActive.value
+                                      ? "当前：双页".i18n
+                                      : "当前：单页".i18n,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    buildSelectedButton(
+                                      onTap: () {
+                                        settings.setComicReaderDualPage(0);
+                                      },
+                                      selected:
+                                          settings.comicReaderDualPage.value ==
+                                              0,
+                                      child: Text("关闭".i18n),
+                                    ),
+                                    AppStyle.hGap8,
+                                    buildSelectedButton(
+                                      onTap: () {
+                                        settings.setComicReaderDualPage(1);
+                                      },
+                                      selected:
+                                          settings.comicReaderDualPage.value ==
+                                              1,
+                                      child: Text("宽屏".i18n),
+                                    ),
+                                    AppStyle.hGap8,
+                                    buildSelectedButton(
+                                      onTap: () {
+                                        settings.setComicReaderDualPage(2);
+                                      },
+                                      selected:
+                                          settings.comicReaderDualPage.value ==
+                                              2,
+                                      child: Text("总是".i18n),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              if (settings.comicReaderDualPage.value != 0)
+                                SwitchListTile(
+                                  value:
+                                      settings.comicReaderDualPageCover.value,
+                                  onChanged: (e) {
+                                    settings.setComicReaderDualPageCover(e);
+                                    var page = currentIndex.value;
+                                    buildPageGroups();
+                                    Future.delayed(
+                                      const Duration(milliseconds: 50),
+                                      () => jumpToPage(page),
+                                    );
+                                  },
+                                  title: Text("封面单独一页".i18n),
+                                  subtitle: Text(
+                                    "第一页不与第二页并排显示".i18n,
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     AppStyle.vGap12,
                     buildBGItem(
                       child: SwitchListTile(
@@ -798,6 +992,7 @@ class ComicReaderController extends BaseController {
     initialIndex = currentIndex.value;
     settings.setComicReaderDirection(value);
     direction.value = value;
+    buildPageGroups();
     if (initialIndex != 0) {
       Future.delayed(const Duration(milliseconds: 200), () {
         jumpToPage(initialIndex);
@@ -819,6 +1014,7 @@ class ComicReaderController extends BaseController {
         });
       }
     }
+    buildPageGroups();
   }
 
   void uploadHistory() {

@@ -62,7 +62,8 @@ class ComicReaderPage extends GetView<ComicReaderController> {
               ),
               Positioned.fill(
                 child: Obx(() {
-                  final zone = AppSettingsService.instance.comicReaderTapZone.value;
+                  final zone =
+                      AppSettingsService.instance.comicReaderTapZone.value;
                   return Row(
                     children: [
                       Expanded(
@@ -152,7 +153,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                             ),
                             AppStyle.hGap8,
                             Text(
-                              "${controller.currentIndex.value + 1} / ${controller.detail.value.pageUrls.length}",
+                              buildPageLabel(),
                               style: const TextStyle(fontSize: 12, height: 1.0),
                             ),
                           ],
@@ -287,75 +288,153 @@ class ComicReaderPage extends GetView<ComicReaderController> {
   }
 
   Widget buildHorizontal() {
-    return EasyRefresh(
-      header: MaterialHeader2(
-        triggerOffset: 80,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: AppStyle.radius24,
+    // 響應式讀取必須留在 Obx 的 build 期間：LayoutBuilder 的 builder 於 layout 階段
+    // 才執行，屆時的 .value 讀取不會被外層 Obx 追蹤，故先在此取值再往下傳。
+    var mode = controller.settings.comicReaderDualPage.value;
+    var dualActive = controller.isDualPaging;
+    var groups = controller.pageGroups.toList();
+    var urls = controller.detail.value.pageUrls;
+    var reverse = controller.direction.value == ReaderDirection.kRightToLeft;
+    var locked = controller.lockSwipe.value;
+    var preload = controller.settings.eInkMode.value ? 2 : 4;
+    return LayoutBuilder(
+      builder: (context, box) {
+        // 寬螢幕（平板橫屏、折疊機展開態）才自動啟用雙頁對開
+        var wide = box.maxWidth >= 700 && box.maxWidth > box.maxHeight;
+        var shouldDual =
+            !controller.isLongComic && (mode == 2 || (mode == 1 && wide));
+        if (shouldDual != controller.dualPageActive.value) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            controller.setDualPageActive(shouldDual);
+          });
+        }
+        return EasyRefresh(
+          header: MaterialHeader2(
+            triggerOffset: 80,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: AppStyle.radius24,
+              ),
+              padding: AppStyle.edgeInsetsA12,
+              child: const Icon(
+                Icons.arrow_circle_left,
+                color: Colors.blue,
+              ),
+            ),
           ),
-          padding: AppStyle.edgeInsetsA12,
-          child: const Icon(
-            Icons.arrow_circle_left,
-            color: Colors.blue,
+          footer: MaterialFooter2(
+            triggerOffset: 80,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: AppStyle.radius24,
+              ),
+              padding: AppStyle.edgeInsetsA12,
+              child: const Icon(
+                Icons.arrow_circle_right,
+                color: Colors.blue,
+              ),
+            ),
           ),
-        ),
-      ),
-      footer: MaterialFooter2(
-        triggerOffset: 80,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: AppStyle.radius24,
-          ),
-          padding: AppStyle.edgeInsetsA12,
-          child: const Icon(
-            Icons.arrow_circle_right,
-            color: Colors.blue,
-          ),
-        ),
-      ),
-      refreshOnStart: false,
-      onRefresh: () async {
-        controller.forwardChapter();
-      },
-      onLoad: () async {
-        controller.nextChapter();
-      },
-      child: PreloadPageView.builder(
-        controller: controller.preloadPageController,
-        onPageChanged: (e) {
-          controller.currentIndex.value = e;
-        },
-        reverse: controller.direction.value == ReaderDirection.kRightToLeft,
-        physics: controller.lockSwipe.value
-            ? const NeverScrollableScrollPhysics()
-            : null,
-        itemCount: controller.detail.value.pageUrls.length,
-        preloadPagesCount: controller.settings.eInkMode.value ? 2 : 4,
-        itemBuilder: (_, i) {
-          var url = controller.detail.value.pageUrls[i];
-          if (i == controller.detail.value.pageUrls.length - 1 && url == "TC") {
-            return buildViewPoints();
-          }
-          return PhotoView.customChild(
-            wantKeepAlive: true,
-            initialScale: 1.0,
-            onScaleEnd: (context, detail, e) {
-              controller.lockSwipe.value = (e.scale ?? 1) > 1.0;
+          refreshOnStart: false,
+          onRefresh: () async {
+            // 往前翻出本話 → 停在上一話最後一頁
+            controller.forwardChapter(toLastPage: true);
+          },
+          onLoad: () async {
+            controller.nextChapter();
+          },
+          child: PreloadPageView.builder(
+            controller: controller.preloadPageController,
+            onPageChanged: (e) {
+              if (dualActive && e < groups.length) {
+                controller.currentIndex.value = groups[e].first;
+              } else {
+                controller.currentIndex.value = e;
+              }
             },
-            child: controller.detail.value.isLocal
-                ? LocalImage(url, fit: BoxFit.contain)
-                : NetImage(
-                    url,
-                    fit: BoxFit.contain,
-                    progress: true,
-                  ),
-          );
-        },
+            reverse: reverse,
+            physics: locked ? const NeverScrollableScrollPhysics() : null,
+            itemCount: dualActive ? groups.length : urls.length,
+            preloadPagesCount: preload,
+            itemBuilder: (_, i) {
+              if (dualActive) {
+                if (i >= groups.length) {
+                  return const SizedBox();
+                }
+                return buildPageGroup(groups[i], urls, reverse);
+              }
+              return buildPageGroup([i], urls, reverse);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  /// 頁碼標示，雙頁對開時顯示為 "3-4 / 20"
+  String buildPageLabel() {
+    var total = controller.detail.value.pageUrls.length;
+    var current = controller.currentIndex.value;
+    if (controller.isDualPaging) {
+      var group = controller.pageGroups.isEmpty
+          ? <int>[current]
+          : controller.pageGroups[controller.currentGroupIndex];
+      if (group.length > 1) {
+        return "${group.first + 1}-${group.last + 1} / $total";
+      }
+    }
+    return "${current + 1} / $total";
+  }
+
+  /// 單頁或雙頁對開
+  Widget buildPageGroup(List<int> pages, List<String> urls, bool reverse) {
+    if (pages.isEmpty) {
+      return const SizedBox();
+    }
+    if (pages.length == 1) {
+      var index = pages.first;
+      if (index >= urls.length) {
+        return const SizedBox();
+      }
+      if (index == urls.length - 1 && urls[index] == "TC") {
+        return buildViewPoints();
+      }
+      return buildZoomable(buildPageImage(urls[index]));
+    }
+    // 對開：右到左閱讀時，較前的一頁放在右邊
+    var ordered = reverse ? pages.reversed.toList() : pages;
+    return buildZoomable(
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: ordered
+            .where((p) => p < urls.length)
+            .map<Widget>((p) => Expanded(child: buildPageImage(urls[p])))
+            .toList(),
       ),
     );
+  }
+
+  Widget buildZoomable(Widget child) {
+    return PhotoView.customChild(
+      wantKeepAlive: true,
+      initialScale: 1.0,
+      onScaleEnd: (context, detail, e) {
+        controller.lockSwipe.value = (e.scale ?? 1) > 1.0;
+      },
+      child: child,
+    );
+  }
+
+  Widget buildPageImage(String url) {
+    return controller.detail.value.isLocal
+        ? LocalImage(url, fit: BoxFit.contain)
+        : NetImage(
+            url,
+            fit: BoxFit.contain,
+            progress: true,
+          );
   }
 
   Widget buildVertical() {
