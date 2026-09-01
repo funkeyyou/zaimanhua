@@ -39,8 +39,10 @@ class IndexPage extends GetView<IndexController> {
                 currentIndex: controller.index.value,
                 onTap: controller.setIndex,
                 type: BottomNavigationBarType.fixed,
-                showSelectedLabels: false,
-                showUnselectedLabels: false,
+                showSelectedLabels: true,
+                showUnselectedLabels: true,
+                selectedFontSize: 11,
+                unselectedFontSize: 11,
                 backgroundColor: Theme.of(context).cardColor,
                 items: [
                   BottomNavigationBarItem(
