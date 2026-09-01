@@ -33,12 +33,12 @@ jobs:
         if: ${{ env.HAS_KEYSTORE == 'true' }}
         shell: bash
         run: |
-          echo "${{ secrets.ZAI_KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/zaimanhua-release.jks"
+          printf '%s' "${{ secrets.ZAI_KEYSTORE_BASE64 }}" | tr -d '\r\n' | base64 -di > "$RUNNER_TEMP/zaimanhua-release.jks"
           {
             echo "storeFile=$RUNNER_TEMP/zaimanhua-release.jks"
-            echo "storePassword=${{ secrets.ZAI_STORE_PASSWORD }}"
-            echo "keyPassword=${{ secrets.ZAI_KEY_PASSWORD }}"
-            echo "keyAlias=${{ secrets.ZAI_KEY_ALIAS }}"
+            echo "storePassword=${{ secrets.ZAI_STORE_PASSWORD }}" | tr -d '\r'
+            echo "keyPassword=${{ secrets.ZAI_KEY_PASSWORD }}" | tr -d '\r'
+            echo "keyAlias=${{ secrets.ZAI_KEY_ALIAS }}" | tr -d '\r'
           } > android/zai_key.properties
       - name: Build APK
         run: flutter build apk --release
