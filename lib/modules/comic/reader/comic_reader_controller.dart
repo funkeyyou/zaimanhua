@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zai_x/app/app_constant.dart';
@@ -138,6 +139,9 @@ class ComicReaderController extends BaseController {
       onVolumeDown: nextPageByInput,
     );
 
+    // 翻到接近本话结尾时先把下一话准备好
+    ever(currentIndex, (_) => maybePrefetchNextChapter());
+
     itemPositionsListener.itemPositions.addListener(updateItemPosition);
     if (settings.readerKeepScreenOn.value) {
       WakelockPlus.enable().catchError((e) => Log.logPrint(e));
@@ -232,22 +236,26 @@ class ComicReaderController extends BaseController {
   /// 加载信息
   void loadDetail() async {
     try {
-      pageLoadding.value = true;
-      pageError.value = false;
-
-      detail.value = ComicChapterDetail.empty();
       var chapterId = chapters[chapterIndex.value].chapterId;
+      // 预先抓好的下一话可以直接用，省掉整屏 loading
+      var cached = _prefetchedChapters.remove(chapterId);
+      pageLoadding.value = cached == null;
+      pageError.value = false;
+      if (cached == null) {
+        detail.value = ComicChapterDetail.empty();
+      }
       if (chapters[chapterIndex.value].isVip) {
         //禁止观看VIP章节
         throw AppError("请使用动漫之家官方APP观看VIP章节".i18n);
       }
       loadViewPoints();
 
-      var result = await request.chapterDetail(
-        comicId: comicId,
-        chapterId: chapterId,
-        useHD: AppSettingsService.instance.comicReaderHD.value,
-      );
+      var result = cached ??
+          await request.chapterDetail(
+            comicId: comicId,
+            chapterId: chapterId,
+            useHD: AppSettingsService.instance.comicReaderHD.value,
+          );
       var his = DBService.instance.getComicHistory(comicId);
       if (his != null && his.chapterId == chapterId && his.page != 0) {
         var hisIndex = (his.page - 1) < 0 ? 0 : his.page - 1;
@@ -281,6 +289,68 @@ class ComicReaderController extends BaseController {
     } finally {
       pageLoadding.value = false;
     }
+  }
+
+  /// 预先抓好的章节内容（章节id -> 内容）
+  final Map<int, ComicChapterDetail> _prefetchedChapters = {};
+
+  /// 正在预抓的章节id
+  int? _prefetchingChapterId;
+
+  /// 快翻到本话结尾时，先把下一话抓回来
+  ///
+  /// 只抓内容与前两页图片；换话时就不必再等接口和首图，
+  /// 整屏 loading 也可以跳过。
+  void prefetchNextChapter() async {
+    var next = chapterIndex.value + 1;
+    if (next >= chapters.length) {
+      return;
+    }
+    var item = chapters[next];
+    if (item.isVip ||
+        _prefetchingChapterId == item.chapterId ||
+        _prefetchedChapters.containsKey(item.chapterId)) {
+      return;
+    }
+    _prefetchingChapterId = item.chapterId;
+    try {
+      var result = await request.chapterDetail(
+        comicId: comicId,
+        chapterId: item.chapterId,
+        useHD: AppSettingsService.instance.comicReaderHD.value,
+      );
+      _prefetchedChapters[item.chapterId] = result;
+      for (var url in result.pageUrls.take(2)) {
+        if (url.isEmpty || url == "TC") {
+          continue;
+        }
+        try {
+          await ExtendedNetworkImageProvider(
+            url,
+            cache: true,
+            headers: const {'Referer': "http://www.zaimanhua.com/"},
+          ).getNetworkImageData();
+        } catch (_) {}
+      }
+    } catch (e) {
+      Log.logPrint(e);
+    } finally {
+      _prefetchingChapterId = null;
+    }
+  }
+
+  /// 距离本话结尾还有几页时开始预抓
+  static const int kPrefetchAheadPages = 3;
+
+  void maybePrefetchNextChapter() {
+    var urls = detail.value.pageUrls;
+    if (urls.isEmpty || pageLoadding.value) {
+      return;
+    }
+    if (currentIndex.value < urls.length - kPrefetchAheadPages) {
+      return;
+    }
+    prefetchNextChapter();
   }
 
   /// 加载吐槽、观点
@@ -1094,6 +1164,13 @@ class ComicReaderController extends BaseController {
       SmartDialog.dismiss(status: SmartStatus.loading);
     }
   }
+
+  /// 阅读器自己消化的翻页键（不再往下传给滚动动作）
+  static bool isTurnPageKey(LogicalKeyboardKey key) =>
+      key == LogicalKeyboardKey.arrowLeft ||
+      key == LogicalKeyboardKey.arrowRight ||
+      key == LogicalKeyboardKey.pageUp ||
+      key == LogicalKeyboardKey.pageDown;
 
   void keyDown(LogicalKeyboardKey key) {
     if (key == LogicalKeyboardKey.arrowLeft ||

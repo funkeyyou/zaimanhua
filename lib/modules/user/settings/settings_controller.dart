@@ -7,6 +7,7 @@ import 'package:zai_x/services/novel_font_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:zai_x/app/i18n.dart';
+import 'package:zai_x/services/notification_service.dart';
 import 'package:zai_x/services/subscribe_notify_scheduler.dart';
 import 'package:zai_x/services/subscribe_notify_service.dart';
 import 'package:zai_x/services/user_service.dart';
@@ -31,6 +32,15 @@ class SettingsController extends GetxController {
   void setSubscribeNotifyHours(int value) {
     settings.setSubscribeNotifyHours(value);
     SubscribeNotifyScheduler.apply();
+  }
+
+  /// 签到结果通知
+  void setSignInNotify(bool value) async {
+    if (value && !await AppNotification.requestPermission()) {
+      SmartDialog.showToast("未取得通知权限".i18n);
+      return;
+    }
+    settings.setSignInNotify(value);
   }
 
   /// 立即跑一次订阅更新检查（用来确认通知链路是否正常）

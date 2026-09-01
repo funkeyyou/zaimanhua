@@ -31,12 +31,18 @@ class ComicReaderPage extends GetView<ComicReaderController> {
 
   @override
   Widget build(BuildContext context) {
-    return KeyboardListener(
-      onKeyEvent: (e) {
-        if (e.runtimeType == KeyUpEvent) {
+    return Focus(
+      // 用 Focus 而不是 KeyboardListener：翻页键要在这里吃掉，
+      // 否则会继续传给 Flutter 预设的滚动动作，把可滚动区域推到越界，
+      // 触发外层 EasyRefresh 的上一话/下一话。
+      onKeyEvent: (node, e) {
+        if (e is KeyUpEvent) {
           controller.keyDown(e.logicalKey);
           Log.d(e.toString());
         }
+        return ComicReaderController.isTurnPageKey(e.logicalKey)
+            ? KeyEventResult.handled
+            : KeyEventResult.ignored;
       },
       focusNode: controller.focusNode,
       autofocus: true,

@@ -136,7 +136,10 @@ class DMZJApp extends StatelessWidget {
       initialRoute: AppPages.kIndex,
       // 内容页跑在子路由、叠在首页之上；Material 预设转场会在动画期间铺一层
       // 不透明底色，返回时就会闪一下空白。改用滑动转场避免这个填色。
-      defaultTransition: Transition.cupertino,
+      // E-Ink 模式下墨水屏重绘慢，直接不做转场动画。
+      defaultTransition: AppSettingsService.instance.eInkMode.value
+          ? Transition.noTransition
+          : Transition.cupertino,
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

@@ -14,6 +14,8 @@ import 'package:zai_x/modules/user/login/user_login_dialog.dart';
 import 'package:zai_x/requests/user_request.dart';
 import 'package:zai_x/services/db_service.dart';
 import 'package:zai_x/services/local_storage_service.dart';
+import 'package:zai_x/services/app_settings_service.dart';
+import 'package:zai_x/services/notification_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -130,6 +132,7 @@ class UserService extends GetxService {
       SmartDialog.showLoading();
       await request.userSignIn();
       SmartDialog.showToast("签到成功".i18n);
+      _markSignInNotified();
     } catch (e) {
       SmartDialog.showToast(e.toString().i18n);
     } finally {
@@ -147,16 +150,63 @@ class UserService extends GetxService {
       userProfile.value = await request.userProfile();
       // 未签到时才调用签到接口
       if (userProfile.value?.isSign == false) {
-        try {
-          await request.userSignIn();
-          SmartDialog.showToast("签到成功".i18n);
-        } catch (e) {
-          SmartDialog.showToast(e.toString());
-        }
+        await _autoSignIn();
       }
     } catch (e) {
       Log.logPrint(e);
     }
+  }
+
+  /// 每日自动签到：结果同时用 toast 与系统通知回报
+  ///
+  /// App 常常是在后台或刚启动时跑完签到，光靠 toast 很容易错过，
+  /// 所以成功与失败都补一条通知；同一天只发一次。
+  Future<void> _autoSignIn() async {
+    var success = false;
+    var message = "";
+    try {
+      await request.userSignIn();
+      success = true;
+      message = "签到成功".i18n;
+    } catch (e) {
+      message = e.toString().i18n;
+    }
+    SmartDialog.showToast(message);
+    await _notifySignInResult(success: success, message: message);
+  }
+
+  /// 今天的日期(yyyy-MM-dd)
+  String get _today {
+    final now = DateTime.now();
+    return "${now.year}-${now.month.toString().padLeft(2, '0')}"
+        "-${now.day.toString().padLeft(2, '0')}";
+  }
+
+  /// 记下今天已经提醒过，避免重复通知
+  void _markSignInNotified() {
+    storage.setValue(LocalStorageService.kSignInNotifyDate, _today);
+  }
+
+  Future<void> _notifySignInResult({
+    required bool success,
+    required String message,
+  }) async {
+    if (!AppSettingsService.instance.signInNotify.value) {
+      return;
+    }
+    final last = storage.getValue(LocalStorageService.kSignInNotifyDate, "");
+    if (last == _today) {
+      return;
+    }
+    _markSignInNotified();
+    await AppNotification.show(
+      id: AppNotification.kSignInNotifyId,
+      title: success ? "签到成功".i18n : "签到失败".i18n,
+      body: success
+          ? "今天的每日签到已经完成".i18n
+          : "${"自动签到没有成功：".i18n}$message",
+      channel: NotifyChannel.signIn,
+    );
   }
 
   /// 更新一下用户的历史记录

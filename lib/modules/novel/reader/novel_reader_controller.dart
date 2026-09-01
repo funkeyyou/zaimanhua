@@ -997,7 +997,40 @@ class NovelReaderController extends BaseController {
     currentIndex.value = target;
   }
 
+  /// 阅读器自己消化的翻页键
+  static bool isTurnPageKey(LogicalKeyboardKey key) =>
+      key == LogicalKeyboardKey.arrowLeft ||
+      key == LogicalKeyboardKey.arrowRight ||
+      key == LogicalKeyboardKey.pageUp ||
+      key == LogicalKeyboardKey.pageDown;
+
+  /// 上下滚动模式下翻一屏
+  void scrollScreen({required bool forward}) {
+    if (!scrollController.hasClients) {
+      return;
+    }
+    final position = scrollController.position;
+    final delta = position.viewportDimension * 0.9;
+    final target = (position.pixels + (forward ? delta : -delta))
+        .clamp(0.0, position.maxScrollExtent);
+    pageAnimation
+        ? scrollController.animateTo(
+            target,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.linear,
+          )
+        : scrollController.jumpTo(target);
+  }
+
   void keyDown(LogicalKeyboardKey key) {
+    if (isTurnPageKey(key) && direction.value == ReaderDirection.kUpToDown) {
+      // 上下滚动模式下左右键改成翻一屏
+      scrollScreen(
+        forward: key == LogicalKeyboardKey.arrowRight ||
+            key == LogicalKeyboardKey.pageDown,
+      );
+      return;
+    }
     if (key == LogicalKeyboardKey.arrowLeft ||
         key == LogicalKeyboardKey.pageUp ||
         (!Platform.isAndroid &&

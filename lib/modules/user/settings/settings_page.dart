@@ -5,6 +5,7 @@ import 'package:zai_x/modules/user/settings/settings_controller.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:zai_x/app/i18n.dart';
+import 'package:zai_x/services/notification_service.dart';
 import 'package:zai_x/services/subscribe_notify_scheduler.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -127,6 +128,15 @@ class SettingsPage extends StatelessWidget {
               ),
             ],
           ],
+          if (AppNotification.supported)
+            SwitchListTile(
+              value: controller.settings.signInNotify.value,
+              onChanged: (e) {
+                controller.setSignInNotify(e);
+              },
+              title: Text("签到结果通知".i18n),
+              subtitle: Text("每日自动签到完成后通知结果，一天只提醒一次".i18n),
+            ),
           SwitchListTile(
             value: controller.settings.eInkMode.value,
             onChanged: (e) {

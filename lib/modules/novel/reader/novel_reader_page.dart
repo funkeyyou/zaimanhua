@@ -33,12 +33,16 @@ class NovelReaderPage extends GetView<NovelReaderController> {
 
   @override
   Widget build(BuildContext context) {
-    return KeyboardListener(
-      onKeyEvent: (e) {
-        if (e.runtimeType == KeyUpEvent) {
+    return Focus(
+      // 翻页键在这里吃掉，避免继续传给预设滚动动作
+      onKeyEvent: (node, e) {
+        if (e is KeyUpEvent) {
           controller.keyDown(e.logicalKey);
           Log.d(e.toString());
         }
+        return NovelReaderController.isTurnPageKey(e.logicalKey)
+            ? KeyEventResult.handled
+            : KeyEventResult.ignored;
       },
       focusNode: controller.focusNode,
       autofocus: true,

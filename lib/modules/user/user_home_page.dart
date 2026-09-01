@@ -328,7 +328,7 @@ class UserHomePage extends GetView<UserHomeController> {
                       ),
                       onTap: () {
                         launchUrlString(
-                          "https://github.com/xiaoyaocz/zai_x",
+                          "https://github.com/funkeyyou/zaimanhua",
                           mode: LaunchMode.externalApplication,
                         );
                       },

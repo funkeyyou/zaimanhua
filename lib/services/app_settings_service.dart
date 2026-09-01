@@ -51,6 +51,8 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kSubscribeNotify, false);
     subscribeNotifyHours.value = LocalStorageService.instance
         .getValue(LocalStorageService.kSubscribeNotifyHours, 6);
+    signInNotify.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kSignInNotify, true);
     subscribeSort.value = LocalStorageService.instance
         .getValue(LocalStorageService.kSubscribeSort, 0);
     //小说
@@ -520,6 +522,14 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kSubscribeNotifyHours, value);
   }
 
+  /// 每日自动签到后发通知
+  RxBool signInNotify = true.obs;
+  void setSignInNotify(bool value) {
+    signInNotify.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kSignInNotify, value);
+  }
+
   /// 我的订阅排序
   /// * [0] 订阅顺序（接口默认）
   /// * [1] 更新时间
@@ -624,9 +634,18 @@ class AppSettingsService extends GetxController {
   void setEInkMode(bool value) {
     eInkMode.value = value;
     LocalStorageService.instance.setValue(LocalStorageService.kEInkMode, value);
+    applyPageTransition();
     if (value) {
       applyEInkModeSettings();
     }
+  }
+
+  /// E-Ink 模式取消页面转场动画
+  void applyPageTransition() {
+    Get.config(
+      defaultTransition:
+          eInkMode.value ? Transition.noTransition : Transition.cupertino,
+    );
   }
 
   void applyEInkModeSettings() {

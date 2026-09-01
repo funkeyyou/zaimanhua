@@ -111,6 +111,12 @@ class LocalStorageService extends GetxService {
   /// 订阅更新检查间隔（小时）
   static const String kSubscribeNotifyHours = "SubscribeNotifyHours";
 
+  /// 签到结果通知
+  static const String kSignInNotify = "SignInNotify";
+
+  /// 最近一次发出签到通知的日期(yyyy-MM-dd)，用来一天只提醒一次
+  static const String kSignInNotifyDate = "SignInNotifyDate";
+
   /// 我的订阅排序 0=订阅顺序 1=更新时间
   static const String kSubscribeSort = "SubscribeSort";
 
