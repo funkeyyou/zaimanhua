@@ -1,5 +1,5 @@
 name: daily-signin
-# 再漫畫每日自動簽到（預設停用）
+# 再漫畫每日自動簽到（預設停用；cron 以 UTC 計）
 # 啟用方式：Settings → Secrets 加 ZMH_USERNAME/ZMH_PASSWORD；Variables 加 ENABLE_DAILY_SIGNIN=1
 on:
   schedule:
