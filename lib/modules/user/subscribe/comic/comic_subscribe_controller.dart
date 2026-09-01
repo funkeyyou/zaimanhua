@@ -4,6 +4,7 @@ import 'package:zai_x/models/user/subscribe_comic_model.dart';
 import 'package:zai_x/requests/user_request.dart';
 import 'package:zai_x/services/db_service.dart';
 import 'package:zai_x/services/user_service.dart';
+import 'package:zai_x/services/app_settings_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:zai_x/app/i18n.dart';
@@ -31,6 +32,49 @@ class ComicSubscribeController
     3: "已完结".i18n,
   };
   var type = 1.obs;
+
+  /// 排序方式
+  /// * [0] 订阅顺序（接口默认）
+  /// * [1] 更新时间（最新更新在前）
+  Map<int, String> sorts = {
+    0: "订阅时间".i18n,
+    1: "更新时间".i18n,
+  };
+  late var sort = AppSettingsService.instance.subscribeSort.value.obs;
+
+  void setSort(int value) {
+    if (sort.value == value) {
+      return;
+    }
+    sort.value = value;
+    AppSettingsService.instance.setSubscribeSort(value);
+    refreshData();
+  }
+
+  /// 依更新時間排序時需要完整清單，因此先把分頁補齊再排序
+  @override
+  Future loadData() async {
+    await super.loadData();
+    if (sort.value == 0) {
+      return;
+    }
+    var guard = 0;
+    while (canLoadMore.value && list.length < 500 && guard++ < 25) {
+      await super.loadData();
+    }
+    applySort();
+  }
+
+  void applySort() {
+    if (sort.value != 1) {
+      return;
+    }
+    // 章節 ID 為全站遞增，數字越大代表更新時間越近
+    list.sort(
+      (a, b) => b.lastUpdateChapterId.compareTo(a.lastUpdateChapterId),
+    );
+    list.refresh();
+  }
 
   var editMode = false.obs;
 

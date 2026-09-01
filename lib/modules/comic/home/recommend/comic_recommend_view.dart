@@ -239,7 +239,7 @@ class ComicRecommendView extends StatelessWidget {
         padding: EdgeInsets.zero,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: gridCount(box.maxWidth, 160, 3),
+        crossAxisCount: gridCount(box.maxWidth, 160, 3, items.length),
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
         itemCount: items.length,
@@ -294,7 +294,7 @@ class ComicRecommendView extends StatelessWidget {
         padding: EdgeInsets.zero,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: gridCount(box.maxWidth, 120, 3),
+        crossAxisCount: gridCount(box.maxWidth, 120, 3, items.length),
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
         itemCount: items.length,
@@ -338,7 +338,7 @@ class ComicRecommendView extends StatelessWidget {
         padding: EdgeInsets.zero,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: gridCount(box.maxWidth, 240, 2),
+        crossAxisCount: gridCount(box.maxWidth, 240, 2, items.length),
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
         itemCount: items.length,
@@ -378,11 +378,20 @@ class ComicRecommendView extends StatelessWidget {
     });
   }
 
-  /// 依可用寬度換算欄數：平板橫屏、折疊機展開態自動變多欄
+  /// 依可用寬度換算欄數：平板橫屏、折疊機展開態自動變多欄。
+  ///
+  /// 首頁各區塊的筆數由伺服器決定（例如「我的訂閱」只給 3 筆），欄數若多於
+  /// 筆數，右側就會留下空位，因此這裡再依 [itemCount] 收斂成能填滿的欄數。
   /// * [itemWidth] 單欄理想寬度
   /// * [min] 手機直向時的原始欄數，不低於此值
-  static int gridCount(double width, int itemWidth, int min) {
+  static int gridCount(double width, int itemWidth, int min, int itemCount) {
     var count = width ~/ itemWidth;
-    return count < min ? min : count;
+    if (count < min) count = min;
+    if (itemCount <= 0) return count;
+    if (itemCount < count) return itemCount;
+    for (var d = count; d >= min; d--) {
+      if (itemCount % d == 0) return d;
+    }
+    return count;
   }
 }

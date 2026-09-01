@@ -10,6 +10,7 @@ import 'package:zai_x/widgets/refresh_until_widget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/modules/comic/home/recommend/comic_recommend_view.dart';
 import 'package:zai_x/app/i18n.dart';
 
 class NovelRecommendView extends StatelessWidget {
@@ -179,8 +180,8 @@ class NovelRecommendView extends StatelessWidget {
 
   Widget buildTreeColumnGridView(List<NovelRecommendItemModel> items) {
     return LayoutBuilder(builder: (context, box) {
-      var count = box.maxWidth ~/ 160;
-      if (count < 3) count = 3;
+      var count = ComicRecommendView.gridCount(
+          box.maxWidth, 160, 3, items.length);
       return MasonryGridView.count(
         padding: EdgeInsets.zero,
         shrinkWrap: true,

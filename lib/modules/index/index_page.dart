@@ -61,6 +61,11 @@ class IndexPage extends GetView<IndexController> {
                     label: "轻小说".i18n,
                   ),
                   BottomNavigationBarItem(
+                    icon: Icon(Remix.book_marked_line),
+                    activeIcon: Icon(Remix.book_marked_fill),
+                    label: "书架".i18n,
+                  ),
+                  BottomNavigationBarItem(
                     icon: Icon(Remix.user_smile_line),
                     activeIcon: Icon(Remix.user_smile_fill),
                     label: "我的".i18n,
@@ -115,6 +120,10 @@ class IndexPage extends GetView<IndexController> {
                   NavigationRailDestination(
                     icon: Icon(Remix.book_open_line),
                     label: Text("轻小说".i18n),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Remix.book_marked_line),
+                    label: Text("书架".i18n),
                   ),
                   NavigationRailDestination(
                     icon: Icon(Remix.user_smile_line),

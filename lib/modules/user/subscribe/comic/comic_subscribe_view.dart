@@ -40,6 +40,13 @@ class ComicSubscribeView extends StatelessWidget {
                     controller.refreshData();
                   },
                 ),
+                buildFilter(
+                  types: controller.sorts,
+                  value: controller.sort.value,
+                  onSelected: (e) {
+                    controller.setSort(e);
+                  },
+                ),
               ],
             ),
           ),
@@ -249,7 +256,7 @@ class ComicSubscribeView extends StatelessWidget {
               (k) => CheckedPopupMenuItem(
                 value: k,
                 checked: k == value,
-                child: Text(types[k] ?? ""),
+                child: Text((types[k] ?? "").toString().i18n),
               ),
             )
             .toList(),
@@ -259,7 +266,7 @@ class ComicSubscribeView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                types[value] ?? "",
+                (types[value] ?? "").toString().i18n,
               ),
               const Icon(
                 Icons.arrow_drop_down,

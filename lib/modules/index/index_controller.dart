@@ -6,6 +6,7 @@ import 'package:zai_x/app/dialog_utils.dart';
 import 'package:zai_x/app/event_bus.dart';
 import 'package:zai_x/app/utils.dart';
 import 'package:zai_x/modules/comic/home/comic_home_page.dart';
+import 'package:zai_x/modules/bookshelf/bookshelf_page.dart';
 import 'package:zai_x/modules/news/home/news_home_controller.dart';
 import 'package:zai_x/modules/news/home/news_home_page.dart';
 import 'package:zai_x/modules/novel/home/novel_home_controller.dart';
@@ -37,6 +38,7 @@ class IndexController extends GetxController {
     ComicHomePage(),
     const SizedBox(),
     const SizedBox(),
+    const SizedBox(),
     const UserHomePage(),
   ];
   @override
@@ -55,6 +57,8 @@ class IndexController extends GetxController {
     } else if (i == 2 && pages[i] is SizedBox) {
       Get.put(NovelHomeController());
       pages[i] = NovelHomePage();
+    } else if (i == 3 && pages[i] is SizedBox) {
+      pages[i] = BookshelfPage();
     }
     if (index.value == i) {
       EventBus.instance.emit<int>(EventBus.kBottomNavigationBarClicked, i);

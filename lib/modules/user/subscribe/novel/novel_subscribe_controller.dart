@@ -3,6 +3,7 @@ import 'package:zai_x/app/controller/base_controller.dart';
 import 'package:zai_x/models/user/subscribe_novel_model.dart';
 import 'package:zai_x/requests/user_request.dart';
 import 'package:zai_x/services/user_service.dart';
+import 'package:zai_x/services/app_settings_service.dart';
 import 'package:get/get.dart';
 import 'package:zai_x/app/i18n.dart';
 
@@ -29,6 +30,46 @@ class NovelSubscribeController
     1: "未读".i18n,
   };
   var type = 0.obs;
+
+  /// 排序方式 0=订阅顺序 1=更新时间
+  Map<int, String> sorts = {
+    0: "订阅时间".i18n,
+    1: "更新时间".i18n,
+  };
+  late var sort = AppSettingsService.instance.subscribeSort.value.obs;
+
+  void setSort(int value) {
+    if (sort.value == value) {
+      return;
+    }
+    sort.value = value;
+    AppSettingsService.instance.setSubscribeSort(value);
+    refreshData();
+  }
+
+  @override
+  Future loadData() async {
+    await super.loadData();
+    if (sort.value == 0) {
+      return;
+    }
+    var guard = 0;
+    while (canLoadMore.value && list.length < 500 && guard++ < 25) {
+      await super.loadData();
+    }
+    applySort();
+  }
+
+  void applySort() {
+    if (sort.value != 1) {
+      return;
+    }
+    list.sort(
+      (a, b) => (b.lastUpdateChapterId ?? 0)
+          .compareTo(a.lastUpdateChapterId ?? 0),
+    );
+    list.refresh();
+  }
 
   @override
   Future<List<UserSubscribeNovelModel>> getData(int page, int pageSize) async {

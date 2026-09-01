@@ -41,6 +41,13 @@ class NovelSubscribeView extends StatelessWidget {
                     controller.refreshData();
                   },
                 ),
+                buildFilter(
+                  types: controller.sorts,
+                  value: controller.sort.value,
+                  onSelected: (e) {
+                    controller.setSort(e);
+                  },
+                ),
               ],
             ),
           ),
