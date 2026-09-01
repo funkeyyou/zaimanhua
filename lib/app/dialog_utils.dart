@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:zai_x/app/utils.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:zai_x/app/i18n.dart';
 
 /// 桌面端也允许用鼠标拖动滚动（PageView 默认不支持鼠标拖拽）
 class _MouseScrollBehavior extends MaterialScrollBehavior {
@@ -55,11 +56,11 @@ class DialogUtils {
         actions: [
           TextButton(
             onPressed: (() => Get.back(result: false)),
-            child: Text(cancel.isEmpty ? "取消" : cancel),
+            child: Text(cancel.isEmpty ? "取消".i18n : cancel),
           ),
           TextButton(
             onPressed: (() => Get.back(result: true)),
-            child: Text(confirm.isEmpty ? "确定" : confirm),
+            child: Text(confirm.isEmpty ? "确定".i18n : confirm),
           ),
           ...?actions,
         ],
@@ -85,7 +86,7 @@ class DialogUtils {
         actions: [
           TextButton(
             onPressed: (() => Get.back(result: true)),
-            child: Text(confirm.isEmpty ? "确定" : confirm),
+            child: Text(confirm.isEmpty ? "确定".i18n : confirm),
           ),
         ],
       ),
@@ -127,13 +128,13 @@ class DialogUtils {
         actions: [
           TextButton(
             onPressed: Get.back,
-            child: const Text("取消"),
+            child: Text("取消".i18n),
           ),
           TextButton(
             onPressed: () {
               Get.back(result: textEditingController.text);
             },
-            child: const Text("确定"),
+            child: Text("确定".i18n),
           ),
         ],
       ),
@@ -178,11 +179,11 @@ class DialogUtils {
     var text = await rootBundle.loadString("assets/statement.txt");
 
     showAlertDialog(
-      text,
+      text.i18n,
       selectable: true,
-      title: "免责声明",
-      confirm: "已阅读并同意",
-      cancel: "退出",
+      title: "免责声明".i18n,
+      confirm: "已阅读并同意".i18n,
+      cancel: "退出".i18n,
       barrierDismissible: false,
     ).then((value) {
       if (!value) {
@@ -288,7 +289,7 @@ class DialogUtils {
                   Utils.saveImage(images[index.value]);
                 },
                 icon: const Icon(Icons.save),
-                label: const Text("保存"),
+                label: Text("保存".i18n),
               ),
             ),
           ],

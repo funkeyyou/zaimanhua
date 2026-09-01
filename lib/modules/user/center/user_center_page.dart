@@ -10,6 +10,7 @@ import 'package:zai_x/widgets/page_list_view.dart';
 import 'package:zai_x/widgets/user_photo.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class UserCenterPage extends StatelessWidget {
   final int userId;
@@ -36,7 +37,7 @@ class UserCenterPage extends StatelessWidget {
               AppStyle.hGap8,
               Flexible(
                 child: Text(
-                  controller.info.value?.nickname ?? "用户评论",
+                  controller.info.value?.nickname ?? "用户评论".i18n,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -55,7 +56,7 @@ class UserCenterPage extends StatelessWidget {
                     ? Icons.check
                     : Icons.person_add_alt_1_outlined,
               ),
-              label: Text(controller.isFocus.value ? "已关注" : "关注"),
+              label: Text(controller.isFocus.value ? "已关注".i18n : "关注".i18n),
             ),
           ),
         ],

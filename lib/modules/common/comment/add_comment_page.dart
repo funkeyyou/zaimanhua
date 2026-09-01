@@ -3,6 +3,7 @@ import 'package:zai_x/app/app_style.dart';
 import 'package:zai_x/models/comment/comment_item.dart';
 import 'package:zai_x/modules/common/comment/add_comment_controller.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class AddCommentPage extends StatelessWidget {
   final int type;
@@ -23,7 +24,7 @@ class AddCommentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("添加评论"),
+        title: Text("添加评论".i18n),
       ),
       body: ListView(
         padding: AppStyle.edgeInsetsA12,
@@ -42,8 +43,8 @@ class AddCommentPage extends StatelessWidget {
           ),
           TextField(
             controller: controller.textEditingController,
-            decoration: const InputDecoration(
-              hintText: "你想说点什么...",
+            decoration: InputDecoration(
+              hintText: "你想说点什么...".i18n,
               border: OutlineInputBorder(),
             ),
             onSubmitted: (e) {
@@ -56,7 +57,7 @@ class AddCommentPage extends StatelessWidget {
           AppStyle.vGap12,
           ElevatedButton(
             onPressed: controller.submit,
-            child: const Text("发布"),
+            child: Text("发布".i18n),
           ),
         ],
       ),

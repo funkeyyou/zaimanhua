@@ -2,13 +2,14 @@ import 'package:zai_x/app/controller/base_controller.dart';
 import 'package:zai_x/models/comic/update_item_model.dart';
 import 'package:zai_x/requests/comic_request.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicLatestController extends BasePageController<ComicUpdateItemModel> {
   final ComicRequest request = ComicRequest();
   Map types = {
-    "全部漫画": 100,
-    "原创漫画": 1,
-    "译制漫画": 0,
+    "全部漫画".i18n: 100,
+    "原创漫画".i18n: 1,
+    "译制漫画".i18n: 0,
   };
   var type = 100.obs;
 

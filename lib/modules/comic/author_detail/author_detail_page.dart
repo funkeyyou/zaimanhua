@@ -10,6 +10,7 @@ import 'package:zai_x/widgets/status/app_error_widget.dart';
 import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicAuthorDetailPage extends StatelessWidget {
   final int id;
@@ -36,7 +37,7 @@ class ComicAuthorDetailPage extends StatelessWidget {
                 height: 32,
               ),
               AppStyle.hGap8,
-              Text(controller.detail.value?.nickname ?? "作者"),
+              Text(controller.detail.value?.nickname ?? "作者".i18n),
             ],
           ),
         ),
@@ -44,7 +45,7 @@ class ComicAuthorDetailPage extends StatelessWidget {
           TextButton.icon(
             onPressed: controller.subscribeAll,
             icon: const Icon(Remix.heart_line),
-            label: const Text("全部订阅"),
+            label: Text("全部订阅".i18n),
           ),
         ],
       ),

@@ -15,8 +15,8 @@
 
 - [x] App 內自動簽到（ZAI_X 已內建：啟動時已登入且未簽到就自動簽）
 - [x] 獨立自動簽到工具（不開 App 也能簽）：`tools/auto_signin/`，支援本機排程與 GitHub Actions 每日 cron 兩種跑法
-- [x] 繁體中文介面——建置期 OpenCC s2twp 轉換（`tools/s2twp/`）：源碼保持簡體與上游一致，CI 矩陣同時產出簡/繁兩種 APK 與 Windows 包；本機繁體 Windows 版用 `tools/s2twp/build_tc_windows.ps1`
-- [ ] 內容（漫畫標題/簡介）簡轉繁顯示切換——需執行期轉換，另行設計
+- [x] 繁體中文介面——**執行期切換**（設定→界面语言：跟隨系統/簡/繁，預設跟隨系統）。做法：源碼字面量保持簡體（貼近上游），codemod 為 UI 字串加 `.i18n` 後綴，`tools/i18n/gen_dict.py` 以 OpenCC s2twp 生成整句對照表（`lib/app/i18n_dict.g.dart`），插值字串走逐字備援。新增 UI 字串後重跑 gen_dict；合併上游後重跑 `tools/i18n/apply_i18n.py` + `fix_const.py`
+- [ ] 內容（漫畫標題/簡介）簡轉繁顯示切換——已有 `.i18n` 基建，之後只需在內容顯示點套用＋設定開關
 - [ ] 簽到結果通知（安卓通知列 / Windows toast）
 
 ## P2 閱讀體驗（安卓優先）

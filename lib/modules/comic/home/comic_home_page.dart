@@ -7,19 +7,20 @@ import 'package:zai_x/modules/comic/home/recommend/comic_recommend_view.dart';
 //import 'package:zai_x/modules/comic/home/special/comic_special_view.dart';
 import 'package:zai_x/widgets/tab_appbar.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicHomePage extends GetView<ComicHomeController> {
-  const ComicHomePage({super.key});
+  ComicHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TabAppBar(
-        tabs: const [
-          Tab(text: "推荐"),
-          Tab(text: "更新"),
-          Tab(text: "分类"),
-          Tab(text: "排行"),
+        tabs: [
+          Tab(text: "推荐".i18n),
+          Tab(text: "更新".i18n),
+          Tab(text: "分类".i18n),
+          Tab(text: "排行".i18n),
           //  Tab(text: "专题"),
         ],
         controller: controller.tabController,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zai_x/routes/app_navigator.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class TestSubRoutePage extends StatelessWidget {
   const TestSubRoutePage({super.key});
@@ -8,7 +9,7 @@ class TestSubRoutePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("测试路由"),
+        title: Text("测试路由".i18n),
         leading: IconButton(
           onPressed: () {
             AppNavigator.closePage();

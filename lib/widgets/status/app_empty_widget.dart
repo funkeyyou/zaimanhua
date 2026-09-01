@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zai_x/app/app_style.dart';
 import 'package:lottie/lottie.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class AppEmptyWidget extends StatelessWidget {
   final Function()? onRefresh;
@@ -24,8 +25,8 @@ class AppEmptyWidget extends StatelessWidget {
                 height: 200,
                 repeat: false,
               ),
-              const Text(
-                "这里什么都没有",
+              Text(
+                "这里什么都没有".i18n,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               ),

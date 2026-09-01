@@ -17,6 +17,12 @@ class LocalStorageService extends GetxService {
   /// * [2] 深色模式
   static const String kThemeMode = "ThemeMode";
 
+  /// 界面语言
+  /// * [0] 跟随系统
+  /// * [1] 简体中文
+  /// * [2] 繁体中文
+  static const String kAppLanguage = "AppLanguage";
+
   /// 首次运行
   static const String kFirstRun = "FirstRun";
 

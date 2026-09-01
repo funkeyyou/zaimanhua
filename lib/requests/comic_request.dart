@@ -27,6 +27,7 @@ import 'package:zai_x/services/comic_download_service.dart';
 import 'package:zai_x/services/user_service.dart';
 
 import '../models/comic/special_detail_model.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicRequest {
   /// 漫画-推荐
@@ -70,7 +71,7 @@ class ComicRequest {
     }
     return ComicRecommendModel(
       categoryId: 49,
-      title: "我的订阅",
+      title: "我的订阅".i18n,
       sort: 0,
       data: list,
     );
@@ -119,7 +120,7 @@ class ComicRequest {
       list.add(ComicCategoryFilterItemModel.fromJson(item));
     }
     return [
-      ComicCategoryFilterModel(title: "全部分类", items: list),
+      ComicCategoryFilterModel(title: "全部分类".i18n, items: list),
     ];
   }
 
@@ -181,7 +182,7 @@ class ComicRequest {
     //   queryParameters: {"source": 1},
     //   checkCode: true,
     // );
-    Map<int, String> map = {0: "全部分类"};
+    Map<int, String> map = {0: "全部分类".i18n};
     return map;
   }
 
@@ -253,7 +254,7 @@ class ComicRequest {
         }
       } catch (e) {
         errorMsg += "\n${priorityV1 ? "V4" : "V1"}：$e";
-        throw AppError("ComicID:$comicId\n无法读取漫画信息，可能需要登录或有等级限制\n$errorMsg");
+        throw AppError("ComicID:$comicId\n无法读取漫画信息，可能需要登录或有等级限制\n$errorMsg".i18n);
       }
     }
     return info;
@@ -286,7 +287,7 @@ class ComicRequest {
       throw AppError(data["msg"]);
     }
     if (data["data"]?["info"]?["id"] == null) {
-      throw AppError("无法读取漫画信息");
+      throw AppError("无法读取漫画信息".i18n);
     }
     return ComicDetailV1Model.fromJson(data["data"]);
   }
@@ -351,7 +352,7 @@ class ComicRequest {
       } catch (e) {
         Log.logPrint(e);
 
-        throw AppError("ComicID:$comicId ChapterID:$chapterId\n无法读取章节信息");
+        throw AppError("ComicID:$comicId ChapterID:$chapterId\n无法读取章节信息".i18n);
       }
     }
     return info;

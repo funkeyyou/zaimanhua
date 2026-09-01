@@ -29,6 +29,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
+import 'package:zai_x/app/i18n.dart';
 
 class NovelReaderController extends BaseController {
   final int novelId;
@@ -162,7 +163,7 @@ class NovelReaderController extends BaseController {
       //提醒
       if (connectivityType.value != result &&
           result == ConnectivityResult.mobile) {
-        SmartDialog.showToast("您已切换至数据网络，请注意流量消耗");
+        SmartDialog.showToast("您已切换至数据网络，请注意流量消耗".i18n);
       }
       connectivityType.value = result;
     });
@@ -241,7 +242,7 @@ class NovelReaderController extends BaseController {
         content.value = text;
         maxPage.value = pictures.length;
 
-        SmartDialog.showToast("双击插画可放大、保存哦~");
+        SmartDialog.showToast("双击插画可放大、保存哦~".i18n);
       } else {
         isPicture.value = false;
 
@@ -297,7 +298,7 @@ class NovelReaderController extends BaseController {
         content.value = text;
         maxPage.value = pictures.length;
 
-        SmartDialog.showToast("双击插画可放大、保存哦~");
+        SmartDialog.showToast("双击插画可放大、保存哦~".i18n);
       } else {
         isPicture.value = false;
 
@@ -366,7 +367,7 @@ class NovelReaderController extends BaseController {
   /// 下一章
   void nextChapter() {
     if (chapterIndex.value == chapters.length - 1) {
-      SmartDialog.showToast("后面没有了");
+      SmartDialog.showToast("后面没有了".i18n);
       return;
     }
 
@@ -378,7 +379,7 @@ class NovelReaderController extends BaseController {
   /// 上一章
   void forwardChapter() {
     if (chapterIndex.value == 0) {
-      SmartDialog.showToast("前面没有了");
+      SmartDialog.showToast("前面没有了".i18n);
       return;
     }
 
@@ -450,7 +451,7 @@ class NovelReaderController extends BaseController {
         child: Column(
           children: [
             ListTile(
-              title: const Text("设置"),
+              title: Text("设置".i18n),
               trailing: IconButton(
                 onPressed: Get.back,
                 icon: const Icon(Icons.close),
@@ -464,7 +465,7 @@ class NovelReaderController extends BaseController {
                   children: [
                     buildBGItem(
                       child: ListTile(
-                        title: const Text("阅读方向"),
+                        title: Text("阅读方向".i18n),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -501,7 +502,7 @@ class NovelReaderController extends BaseController {
                     AppStyle.vGap12,
                     buildBGItem(
                       child: ListTile(
-                        title: const Text("阅读主题"),
+                        title: Text("阅读主题".i18n),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: AppColor.novelThemes.keys
@@ -542,8 +543,8 @@ class NovelReaderController extends BaseController {
                         onChanged: (e) {
                           settings.setNovelReaderLeftHandMode(e);
                         },
-                        title: const Text("操作反转"),
-                        subtitle: const Text("点击左侧下一页，右侧上一页"),
+                        title: Text("操作反转".i18n),
+                        subtitle: Text("点击左侧下一页，右侧上一页".i18n),
                       ),
                     ),
                     AppStyle.vGap12,
@@ -553,7 +554,7 @@ class NovelReaderController extends BaseController {
                         onChanged: (e) {
                           settings.setNovelReaderShowStatus(e);
                         },
-                        title: const Text("显示状态信息"),
+                        title: Text("显示状态信息".i18n),
                       ),
                     ),
                     AppStyle.vGap12,
@@ -563,13 +564,13 @@ class NovelReaderController extends BaseController {
                         onChanged: (e) {
                           settings.setNovelReaderPageAnimation(e);
                         },
-                        title: const Text("翻页动画"),
+                        title: Text("翻页动画".i18n),
                       ),
                     ),
                     AppStyle.vGap12,
                     buildBGItem(
                       child: ListTile(
-                        title: const Text("字体大小"),
+                        title: Text("字体大小".i18n),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -605,7 +606,7 @@ class NovelReaderController extends BaseController {
                     AppStyle.vGap12,
                     buildBGItem(
                       child: ListTile(
-                        title: const Text("字体"),
+                        title: Text("字体".i18n),
                         subtitle: Text(settings.novelReaderFontName),
                         onTap: showFontDialog,
                         trailing: const Icon(
@@ -617,7 +618,7 @@ class NovelReaderController extends BaseController {
                     AppStyle.vGap12,
                     buildBGItem(
                       child: ListTile(
-                        title: const Text("行距"),
+                        title: Text("行距".i18n),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -671,10 +672,10 @@ class NovelReaderController extends BaseController {
     Get.dialog(
       Obx(
         () => SimpleDialog(
-          title: const Text("选择字体"),
+          title: Text("选择字体".i18n),
           children: [
             RadioListTile<String>(
-              title: const Text("系统默认"),
+              title: Text("系统默认".i18n),
               value: '',
               groupValue: settings.novelReaderFontPath.value,
               onChanged: (value) async {
@@ -687,7 +688,7 @@ class NovelReaderController extends BaseController {
                 title: Text(NovelFontService.instance.getFontName(path)),
                 controlAffinity: ListTileControlAffinity.leading,
                 secondary: IconButton(
-                  tooltip: "删除字体",
+                  tooltip: "删除字体".i18n,
                   icon: const Icon(Icons.delete_outline),
                   onPressed: () => deleteFont(path),
                 ),
@@ -701,7 +702,7 @@ class NovelReaderController extends BaseController {
             ),
             ListTile(
               leading: const Icon(Icons.add),
-              title: const Text("导入字体"),
+              title: Text("导入字体".i18n),
               onTap: () async {
                 Get.back();
                 try {
@@ -725,16 +726,16 @@ class NovelReaderController extends BaseController {
   Future<void> deleteFont(String path) async {
     final fontName = NovelFontService.instance.getFontName(path);
     final result = await DialogUtils.showAlertDialog(
-      "删除后需要重新导入才能再次使用。",
-      title: "删除字体「$fontName」？",
-      confirm: "删除",
+      "删除后需要重新导入才能再次使用。".i18n,
+      title: "删除字体「$fontName」？".i18n,
+      confirm: "删除".i18n,
     );
     if (!result) {
       return;
     }
     try {
       await settings.deleteNovelReaderFontPath(path);
-      SmartDialog.showToast("删除成功");
+      SmartDialog.showToast("删除成功".i18n);
     } catch (e) {
       SmartDialog.showToast(e.toString());
     }
@@ -784,7 +785,7 @@ class NovelReaderController extends BaseController {
         child: Column(
           children: [
             ListTile(
-              title: Text("目录(${chapters.length})"),
+              title: Text("目录(${chapters.length})".i18n),
               trailing: IconButton(
                 onPressed: Get.back,
                 icon: const Icon(Icons.close),

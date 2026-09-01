@@ -9,6 +9,7 @@ import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicSelectChapterPage extends StatelessWidget {
   final int comicId;
@@ -23,11 +24,11 @@ class ComicSelectChapterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("选择下载章节"),
+        title: Text("选择下载章节".i18n),
         actions: [
           TextButton(
             onPressed: controller.toDownloadManage,
-            child: const Text("下载管理"),
+            child: Text("下载管理".i18n),
           ),
         ],
       ),
@@ -70,7 +71,7 @@ class ComicSelectChapterPage extends StatelessWidget {
                     Remix.checkbox_line,
                     size: 20,
                   ),
-                  label: const Text("全选"),
+                  label: Text("全选".i18n),
                 ),
               ),
               Expanded(
@@ -83,7 +84,7 @@ class ComicSelectChapterPage extends StatelessWidget {
                     Remix.checkbox_blank_line,
                     size: 20,
                   ),
-                  label: const Text("取消选中"),
+                  label: Text("取消选中".i18n),
                 ),
               ),
               Expanded(
@@ -97,7 +98,7 @@ class ComicSelectChapterPage extends StatelessWidget {
                     size: 20,
                   ),
                   label:
-                      Obx(() => Text("下载选中(${controller.chapterIds.length})")),
+                      Obx(() => Text("下载选中(${controller.chapterIds.length})".i18n)),
                 ),
               ),
             ],
@@ -131,7 +132,7 @@ class ComicSelectChapterPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    "${item.title}(共${item.chapters.length}话)",
+                    "${item.title}(共${item.chapters.length}话)".i18n,
                     style: Get.textTheme.titleSmall,
                   ),
                 ),
@@ -149,7 +150,7 @@ class ComicSelectChapterPage extends StatelessWidget {
                           Remix.sort_asc,
                           size: 20,
                         ),
-                        label: const Text("升序"),
+                        label: Text("升序".i18n),
                       )
                     : TextButton.icon(
                         style: TextButton.styleFrom(
@@ -164,7 +165,7 @@ class ComicSelectChapterPage extends StatelessWidget {
                           Remix.sort_desc,
                           size: 20,
                         ),
-                        label: const Text("倒序"),
+                        label: Text("倒序".i18n),
                       ),
               ],
             ),
@@ -184,7 +185,7 @@ class ComicSelectChapterPage extends StatelessWidget {
                 itemBuilder: (_, i) {
                   if (item.showMoreButton && !item.showAll.value && i == 14) {
                     return Tooltip(
-                      message: "展开全部章节",
+                      message: "展开全部章节".i18n,
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.grey,

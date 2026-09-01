@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
+import 'package:zai_x/app/i18n.dart';
 
 class NovelDownloader {
   late Rx<NovelDownloadInfo> info;
@@ -42,7 +43,7 @@ class NovelDownloader {
   }
 
   void cancel() async {
-    var result = await DialogUtils.showAlertDialog("确定要取消此任务吗?", title: "取消任务");
+    var result = await DialogUtils.showAlertDialog("确定要取消此任务吗?".i18n, title: "取消任务".i18n);
     if (!result) {
       return;
     }

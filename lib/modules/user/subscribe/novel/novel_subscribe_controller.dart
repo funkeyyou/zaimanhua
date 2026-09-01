@@ -4,13 +4,14 @@ import 'package:zai_x/models/user/subscribe_novel_model.dart';
 import 'package:zai_x/requests/user_request.dart';
 import 'package:zai_x/services/user_service.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelSubscribeController
     extends BasePageController<UserSubscribeNovelModel> {
   NovelSubscribeController() {
     for (var item in List.generate(
         26, (index) => String.fromCharCode(index + 65).toLowerCase())) {
-      letters.addAll({item: "${item.toUpperCase()}开头"});
+      letters.addAll({item: "${item.toUpperCase()}开头".i18n});
     }
   }
   final UserRequest request = UserRequest();
@@ -18,14 +19,14 @@ class NovelSubscribeController
   var letter = "".obs;
 
   Map letters = {
-    "": "全部",
-    "number": "数字开头",
+    "": "全部".i18n,
+    "number": "数字开头".i18n,
   };
 
   Map<int, String> types = {
-    0: "全部订阅",
-    2: "已读",
-    1: "未读",
+    0: "全部订阅".i18n,
+    2: "已读".i18n,
+    1: "未读".i18n,
   };
   var type = 0.obs;
 

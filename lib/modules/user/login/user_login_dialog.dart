@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zai_x/app/app_style.dart';
 import 'package:zai_x/modules/user/login/user_login_controller.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class UserLoginDialog extends StatelessWidget {
   final UserLoginController controller = Get.put(UserLoginController());
@@ -22,7 +23,7 @@ class UserLoginDialog extends StatelessWidget {
           children: [
             ListTile(
               contentPadding: AppStyle.edgeInsetsL12,
-              title: const Text("登录"),
+              title: Text("登录".i18n),
               trailing: IconButton(
                 onPressed: Get.back,
                 icon: const Icon(Icons.close),
@@ -35,9 +36,9 @@ class UserLoginDialog extends StatelessWidget {
                 controller: controller.userNameController,
                 autofocus: true,
                 textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  hintText: "请输入用户名/手机号",
-                  labelText: "用户名/手机号",
+                decoration: InputDecoration(
+                  hintText: "请输入用户名/手机号".i18n,
+                  labelText: "用户名/手机号".i18n,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   contentPadding: AppStyle.edgeInsetsH8,
                   border: OutlineInputBorder(),
@@ -51,9 +52,9 @@ class UserLoginDialog extends StatelessWidget {
                 controller: controller.passwordController,
                 obscureText: true,
                 textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(
-                  hintText: "请输入密码",
-                  labelText: "密码",
+                decoration: InputDecoration(
+                  hintText: "请输入密码".i18n,
+                  labelText: "密码".i18n,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   contentPadding: AppStyle.edgeInsetsH8,
                   border: OutlineInputBorder(),
@@ -87,7 +88,7 @@ class UserLoginDialog extends StatelessWidget {
                               color: Colors.white,
                             ),
                           )
-                        : const Text("登录"),
+                        : Text("登录".i18n),
                   ),
                 ),
               ),

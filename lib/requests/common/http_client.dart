@@ -7,6 +7,7 @@ import 'package:zai_x/app/app_error.dart';
 import 'package:zai_x/requests/common/api.dart';
 import 'package:zai_x/requests/common/custom_interceptor.dart';
 import 'package:zai_x/services/user_service.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class HttpClient {
   static HttpClient? _httpUtil;
@@ -90,9 +91,9 @@ class HttpClient {
         rethrow;
       }
       if (e.type == DioExceptionType.badResponse) {
-        return throw AppError("请求失败：${e.response?.statusCode ?? -1}");
+        return throw AppError("请求失败：${e.response?.statusCode ?? -1}".i18n);
       }
-      throw AppError("请求失败,请检查网络");
+      throw AppError("请求失败,请检查网络".i18n);
     }
   }
 
@@ -253,9 +254,9 @@ class HttpClient {
       return result.data;
     } on DioException catch (e) {
       if (e.type == DioExceptionType.badResponse) {
-        return throw AppError("请求失败:状态码：${e.response?.statusCode ?? -1}");
+        return throw AppError("请求失败:状态码：${e.response?.statusCode ?? -1}".i18n);
       }
-      throw AppError("请求失败,请检查网络");
+      throw AppError("请求失败,请检查网络".i18n);
     }
   }
 }

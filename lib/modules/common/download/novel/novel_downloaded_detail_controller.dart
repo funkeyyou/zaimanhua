@@ -9,6 +9,7 @@ import 'package:zai_x/services/novel_download_service.dart';
 import 'package:zai_x/services/db_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelDownloadedDetailController extends GetxController {
   final NovelDownloadedItem info;
@@ -58,11 +59,11 @@ class NovelDownloadedDetailController extends GetxController {
   /// 开始/继续阅读
   void read() {
     if (info.volumes.isEmpty) {
-      SmartDialog.showToast("没有可阅读的章节");
+      SmartDialog.showToast("没有可阅读的章节".i18n);
       return;
     }
     if (info.volumes.first.chapters.isEmpty) {
-      SmartDialog.showToast("没有可阅读的章节");
+      SmartDialog.showToast("没有可阅读的章节".i18n);
       return;
     }
     //查找记录
@@ -92,7 +93,7 @@ class NovelDownloadedDetailController extends GetxController {
           chapters: chapters,
         );
       } else {
-        SmartDialog.showToast("未找到历史记录对应章节，将从头开始阅读");
+        SmartDialog.showToast("未找到历史记录对应章节，将从头开始阅读".i18n);
         readStart();
       }
     } else {
@@ -168,7 +169,7 @@ class NovelDownloadedDetailController extends GetxController {
           .deleteChapter(info.novelId, item.volumeId, item.chapterId);
     }
     exitEditMode();
-    SmartDialog.showToast("删除成功");
+    SmartDialog.showToast("删除成功".i18n);
     AppNavigator.closePage();
   }
 

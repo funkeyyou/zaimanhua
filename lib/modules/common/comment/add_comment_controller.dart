@@ -5,6 +5,7 @@ import 'package:zai_x/models/comment/comment_item.dart';
 import 'package:zai_x/requests/comment_request.dart';
 import 'package:zai_x/routes/app_navigator.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class AddCommentController extends BaseController {
   final int type;
@@ -20,7 +21,7 @@ class AddCommentController extends BaseController {
 
   void submit() async {
     if (textEditingController.text.isEmpty) {
-      SmartDialog.showToast("内容不能为空");
+      SmartDialog.showToast("内容不能为空".i18n);
       return;
     }
     try {
@@ -42,7 +43,7 @@ class AddCommentController extends BaseController {
         );
       }
 
-      SmartDialog.showToast("发表成功");
+      SmartDialog.showToast("发表成功".i18n);
       EventBus.instance.emit(EventBus.kRefreshComment, objId);
       AppNavigator.closePage();
     } catch (e) {

@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
+import 'package:zai_x/app/i18n.dart';
 
 class NovelFontService extends GetxService {
   static NovelFontService get instance => Get.find<NovelFontService>();
@@ -23,7 +24,7 @@ class NovelFontService extends GetxService {
 
   String getFontName(String fontPath) {
     if (fontPath.isEmpty) {
-      return '系统默认';
+      return '系统默认'.i18n;
     }
     return getFontNameFromFileName(p.basename(fontPath));
   }
@@ -87,12 +88,12 @@ class NovelFontService extends GetxService {
 
     final extension = p.extension(file.name).toLowerCase();
     if (!['.ttf', '.otf', '.ttc'].contains(extension)) {
-      throw Exception('请选择 ttf、otf 或 ttc 字体文件');
+      throw Exception('请选择 ttf、otf 或 ttc 字体文件'.i18n);
     }
 
     final fontName = getFontNameFromFileName(file.name);
     if (hasSameFontName(fontName, existingFontPaths)) {
-      throw Exception('已添加同名字体：$fontName');
+      throw Exception('已添加同名字体：$fontName'.i18n);
     }
 
     final dir = await _fontDirectory();
@@ -129,7 +130,7 @@ class NovelFontService extends GetxService {
     }
     final file = File(fontPath);
     if (!await file.exists()) {
-      throw Exception('字体文件不存在');
+      throw Exception('字体文件不存在'.i18n);
     }
     try {
       final bytes = await file.readAsBytes();

@@ -10,6 +10,7 @@ import 'package:zai_x/widgets/refresh_until_widget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelRecommendView extends StatelessWidget {
   final NovelRecommendController controller;
@@ -86,10 +87,10 @@ class NovelRecommendView extends StatelessWidget {
   Widget buildShowMore({required Function() onTap}) {
     return GestureDetector(
       onTap: onTap,
-      child: const Row(
+      child: Row(
         children: [
           Text(
-            "查看更多",
+            "查看更多".i18n,
             style: TextStyle(fontSize: 14, color: Colors.grey),
           ),
           Icon(Icons.chevron_right, size: 18, color: Colors.grey),
@@ -99,7 +100,7 @@ class NovelRecommendView extends StatelessWidget {
   }
 
   Widget buildRefresh({required Future Function() onRefresh}) {
-    return RefreshUntilWidget(onRefresh: onRefresh, text: "换一批");
+    return RefreshUntilWidget(onRefresh: onRefresh, text: "换一批".i18n);
   }
 
   Widget buildBanner(NovelRecommendModel item) {

@@ -6,6 +6,7 @@ import 'package:zai_x/services/download_task/comic_downloader.dart';
 import 'package:zai_x/widgets/status/app_empty_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicDownloadingView extends StatelessWidget {
   const ComicDownloadingView({super.key});
@@ -51,7 +52,7 @@ class ComicDownloadingView extends StatelessWidget {
                       Remix.pause_line,
                       size: 20,
                     ),
-                    label: const Text("暂停全部"),
+                    label: Text("暂停全部".i18n),
                   ),
                 ),
                 Expanded(
@@ -64,7 +65,7 @@ class ComicDownloadingView extends StatelessWidget {
                       Remix.download_line,
                       size: 20,
                     ),
-                    label: const Text("开始全部"),
+                    label: Text("开始全部".i18n),
                   ),
                 ),
               ],
@@ -121,7 +122,7 @@ class ComicDownloadingView extends StatelessWidget {
                   children: [
                     buildButton(
                       icon: Icons.refresh_rounded,
-                      text: "重试",
+                      text: "重试".i18n,
                       visible: task.status == DownloadStatus.error ||
                           task.status == DownloadStatus.errorLoad,
                       onPressed: () {
@@ -132,7 +133,7 @@ class ComicDownloadingView extends StatelessWidget {
                       icon: Icons.play_arrow_rounded,
                       visible: task.status == DownloadStatus.wait ||
                           task.status == DownloadStatus.pauseCellular,
-                      text: "开始",
+                      text: "开始".i18n,
                       onPressed: () {
                         task.start();
                       },
@@ -140,7 +141,7 @@ class ComicDownloadingView extends StatelessWidget {
                     buildButton(
                       icon: Icons.play_arrow_rounded,
                       visible: task.status == DownloadStatus.pause,
-                      text: "继续",
+                      text: "继续".i18n,
                       onPressed: () {
                         task.resume();
                       },
@@ -148,14 +149,14 @@ class ComicDownloadingView extends StatelessWidget {
                     buildButton(
                       icon: Icons.pause_rounded,
                       visible: task.status == DownloadStatus.downloading,
-                      text: "暂停",
+                      text: "暂停".i18n,
                       onPressed: () {
                         task.pause();
                       },
                     ),
                     buildButton(
                       icon: Icons.cancel_outlined,
-                      text: "取消",
+                      text: "取消".i18n,
                       onPressed: () {
                         task.cancel();
                       },
@@ -173,25 +174,25 @@ class ComicDownloadingView extends StatelessWidget {
   String parseStatus(DownloadStatus status) {
     switch (status) {
       case DownloadStatus.cancel:
-        return "已取消";
+        return "已取消".i18n;
       case DownloadStatus.complete:
-        return "已完成";
+        return "已完成".i18n;
       case DownloadStatus.downloading:
-        return "下载中";
+        return "下载中".i18n;
       case DownloadStatus.error:
-        return "下载失败";
+        return "下载失败".i18n;
       case DownloadStatus.errorLoad:
-        return "无法读取信息";
+        return "无法读取信息".i18n;
       case DownloadStatus.loadding:
-        return "读取信息中";
+        return "读取信息中".i18n;
       case DownloadStatus.pause:
-        return "暂停中";
+        return "暂停中".i18n;
       case DownloadStatus.pauseCellular:
-        return "等待Wi-Fi";
+        return "等待Wi-Fi".i18n;
       case DownloadStatus.wait:
-        return "等待下载";
+        return "等待下载".i18n;
       case DownloadStatus.waitNetwork:
-        return "等待网络连接";
+        return "等待网络连接".i18n;
       default:
         return status.toString();
     }

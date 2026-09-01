@@ -19,6 +19,7 @@ import 'package:zai_x/widgets/status/app_error_widget.dart';
 import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelReaderPage extends GetView<NovelReaderController> {
   const NovelReaderPage({super.key});
@@ -575,15 +576,15 @@ class NovelReaderPage extends GetView<NovelReaderController> {
     switch (connectivityType) {
       case ConnectivityResult.bluetooth:
         icon = Remix.wifi_line;
-        name = "蓝牙";
+        name = "蓝牙".i18n;
         break;
       case ConnectivityResult.ethernet:
         icon = Remix.computer_line;
-        name = "有线";
+        name = "有线".i18n;
         break;
       case ConnectivityResult.mobile:
         icon = Remix.base_station_line;
-        name = "流量";
+        name = "流量".i18n;
         break;
       case ConnectivityResult.wifi:
         icon = Remix.wifi_line;
@@ -595,11 +596,11 @@ class NovelReaderPage extends GetView<NovelReaderController> {
         break;
       case ConnectivityResult.none:
         icon = Remix.wifi_off_line;
-        name = "无网络";
+        name = "无网络".i18n;
         break;
       case ConnectivityResult.other:
         icon = Remix.question_line;
-        name = "未知";
+        name = "未知".i18n;
         break;
       default:
     }
@@ -647,7 +648,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
         children: [
           //Icon(icon, size: 12, color: color.withValues(alpha: .6)),
           Text(
-            "电量 $battery%",
+            "电量 $battery%".i18n,
             style: TextStyle(
                 fontSize: 12, height: 1.0, color: color.withValues(alpha: .6)),
           ),

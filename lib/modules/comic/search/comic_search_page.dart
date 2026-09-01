@@ -6,6 +6,7 @@ import 'package:zai_x/routes/app_navigator.dart';
 import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_list_view.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicSearchPage extends StatelessWidget {
   final String keyword;
@@ -25,7 +26,7 @@ class ComicSearchPage extends StatelessWidget {
             controller: controller.searchController,
             autofocus: true,
             decoration: InputDecoration(
-              hintText: "搜索漫画",
+              hintText: "搜索漫画".i18n,
               contentPadding: AppStyle.edgeInsetsH12,
               border: const OutlineInputBorder(),
               prefixIcon: SizedBox(

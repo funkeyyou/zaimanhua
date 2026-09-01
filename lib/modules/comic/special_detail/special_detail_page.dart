@@ -10,6 +10,7 @@ import 'package:zai_x/widgets/status/app_error_widget.dart';
 import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class SpecialDetailPage extends StatelessWidget {
   final int id;
@@ -25,7 +26,7 @@ class SpecialDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Obx(
-          () => Text(controller.detail.value?.title ?? "专题"),
+          () => Text(controller.detail.value?.title ?? "专题".i18n),
         ),
       ),
       body: Obx(
@@ -84,7 +85,7 @@ class SpecialDetailPage extends StatelessWidget {
                     Remix.heart_line,
                     size: 20,
                   ),
-                  label: const Text("订阅全部"),
+                  label: Text("订阅全部".i18n),
                 ),
               ),
               Expanded(
@@ -99,7 +100,7 @@ class SpecialDetailPage extends StatelessWidget {
                       size: 20,
                     ),
                     label: Text(
-                        "评论(${controller.detail.value?.commentAmount ?? 0})"),
+                        "评论(${controller.detail.value?.commentAmount ?? 0})".i18n),
                   ),
                 ),
               ),
@@ -113,7 +114,7 @@ class SpecialDetailPage extends StatelessWidget {
                     Remix.share_box_line,
                     size: 20,
                   ),
-                  label: const Text("分享"),
+                  label: Text("分享".i18n),
                 ),
               ),
             ],

@@ -4,6 +4,7 @@ import 'package:zai_x/modules/user/history/comic/comic_history_view.dart';
 import 'package:zai_x/modules/user/history/novel/novel_history_view.dart';
 import 'package:zai_x/modules/user/local_history/local_history_controller.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class LocalHistoryPage extends StatelessWidget {
   final LocalHistoryController controller;
@@ -20,7 +21,7 @@ class LocalHistoryPage extends StatelessWidget {
       appBar: AppBar(
         title: Container(
           alignment: Alignment.center,
-          padding: const EdgeInsets.only(right: 56),
+          padding: EdgeInsets.only(right: 56),
           child: TabBar(
             controller: controller.tabController,
             isScrollable: true,
@@ -31,9 +32,9 @@ class LocalHistoryPage extends StatelessWidget {
             labelColor: Theme.of(context).colorScheme.primary,
             unselectedLabelColor:
                 Get.isDarkMode ? Colors.white70 : Colors.black87,
-            tabs: const [
-              Tab(text: "漫画记录"),
-              Tab(text: "小说记录"),
+            tabs: [
+              Tab(text: "漫画记录".i18n),
+              Tab(text: "小说记录".i18n),
             ],
           ),
         ),

@@ -8,6 +8,7 @@ import 'package:zai_x/widgets/keep_alive_wrapper.dart';
 import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_list_view.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class LocalComicHistoryView extends StatelessWidget {
   final LocalComicHistoryController controller;
@@ -62,11 +63,11 @@ class LocalComicHistoryView extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   AppStyle.vGap4,
-                  Text("看到${item.chapterName} ${item.page}页",
+                  Text("看到${item.chapterName} ${item.page}页".i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   AppStyle.vGap4,
                   Text(
-                      "观看于${Utils.formatTimestampMS(item.updateTime.millisecondsSinceEpoch)}",
+                      "观看于${Utils.formatTimestampMS(item.updateTime.millisecondsSinceEpoch)}".i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

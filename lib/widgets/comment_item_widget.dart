@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'dart:ui' as ui;
 
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 // ignore: must_be_immutable
 class CommentItemWidget extends StatelessWidget {
@@ -167,7 +168,7 @@ class CommentItemWidget extends StatelessWidget {
           padding: AppStyle.edgeInsetsA8,
           child: Center(
               child: Text(
-            "点击展开${list.length - 2}条评论",
+            "点击展开${list.length - 2}条评论".i18n,
             style: const TextStyle(fontSize: 12, color: Colors.grey),
           )),
         ),
@@ -309,7 +310,7 @@ class CommentItemWidget extends StatelessWidget {
           },
         ),
         ListTile(
-          title: const Text("复制内容"),
+          title: Text("复制内容".i18n),
           leading: const Icon(Icons.content_copy),
           onTap: () {
             Utils.copyText(item.content);
@@ -318,7 +319,7 @@ class CommentItemWidget extends StatelessWidget {
           },
         ),
         ListTile(
-          title: const Text("点赞评论"),
+          title: Text("点赞评论".i18n),
           leading: const Icon(Icons.thumb_up_outlined),
           onTap: () {
             AppNavigator.closePage();
@@ -326,7 +327,7 @@ class CommentItemWidget extends StatelessWidget {
           },
         ),
         ListTile(
-          title: const Text("回复评论"),
+          title: Text("回复评论".i18n),
           leading: const Icon(Icons.message_outlined),
           onTap: () {
             AppNavigator.closePage();

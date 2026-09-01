@@ -15,6 +15,7 @@ import 'package:zai_x/requests/common/api.dart';
 import 'package:zai_x/requests/common/http_client.dart';
 import 'package:zai_x/services/db_service.dart';
 import 'package:zai_x/services/user_service.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class UserRequest {
   /// 登录
@@ -145,7 +146,7 @@ class UserRequest {
     );
 
     if (result is Map && result['errno'] == 1) {
-      throw result['errmsg']?.toString() ?? '今天已签到过~';
+      throw result['errmsg']?.toString() ?? '今天已签到过~'.i18n;
     }
     return true;
   }

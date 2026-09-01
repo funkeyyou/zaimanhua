@@ -5,6 +5,7 @@ import 'package:zai_x/routes/app_navigator.dart';
 import 'package:zai_x/services/comic_download_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicSelectChapterController extends BaseController {
   final int comicId;
@@ -31,7 +32,7 @@ class ComicSelectChapterController extends BaseController {
       var result =
           await request.comicDetail(comicId: comicId, priorityV1: true);
       if (result.volumes.isEmpty) {
-        SmartDialog.showToast("没有找到任何章节");
+        SmartDialog.showToast("没有找到任何章节".i18n);
         return;
       }
       comicTitle = result.title;
@@ -43,7 +44,7 @@ class ComicSelectChapterController extends BaseController {
       }
       volumes.value = result.volumes;
     } catch (e) {
-      SmartDialog.showToast("无法获取章节");
+      SmartDialog.showToast("无法获取章节".i18n);
     }
   }
 
@@ -76,7 +77,7 @@ class ComicSelectChapterController extends BaseController {
   void selectItem(ComicDetailChapterItem item) {
     //禁止下载VIP章节
     if (item.isVip) {
-      SmartDialog.showToast("请使用动漫之家官方APP下载VIP章节");
+      SmartDialog.showToast("请使用动漫之家官方APP下载VIP章节".i18n);
       return;
     }
     if (chapterIds.contains(item.chapterId)) {
@@ -110,7 +111,7 @@ class ComicSelectChapterController extends BaseController {
 
   void startDownload() {
     if (chapterIds.isEmpty) {
-      SmartDialog.showToast("请选择需要下载的章节");
+      SmartDialog.showToast("请选择需要下载的章节".i18n);
       return;
     }
     for (var id in chapterIds) {
@@ -142,6 +143,6 @@ class ComicSelectChapterController extends BaseController {
       );
     }
     chapterIds.clear();
-    SmartDialog.showToast("已添加到下载列表，下载过程中请保持APP在前台运行");
+    SmartDialog.showToast("已添加到下载列表，下载过程中请保持APP在前台运行".i18n);
   }
 }

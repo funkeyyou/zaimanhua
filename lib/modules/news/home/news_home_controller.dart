@@ -7,6 +7,7 @@ import 'package:zai_x/models/news/news_tag_model.dart';
 import 'package:zai_x/modules/news/home/news_list_controller.dart';
 import 'package:zai_x/requests/news_request.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NewsHomeController extends GetxController
     with GetTickerProviderStateMixin {
@@ -45,7 +46,7 @@ class NewsHomeController extends GetxController
       error = false;
       update();
       var category = await request.category();
-      category.insert(0, NewsTagModel(id: 0, name: "最新"));
+      category.insert(0, NewsTagModel(id: 0, name: "最新".i18n));
       tabController = TabController(length: category.length, vsync: this);
 
       categores = category;

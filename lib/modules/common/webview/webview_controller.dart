@@ -6,12 +6,13 @@ import 'package:zai_x/services/user_service.dart';
 import 'package:get/get.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class WebViewPageController extends BaseController {
   final String url;
   WebViewPageController(this.url);
   final WebViewController webViewController = WebViewController();
-  var title = "加载中".obs;
+  var title = "加载中".i18n.obs;
   @override
   void onInit() {
     initWebView();

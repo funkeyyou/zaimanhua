@@ -8,6 +8,7 @@ import 'package:zai_x/widgets/keep_alive_wrapper.dart';
 import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_list_view.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelHistoryView extends StatelessWidget {
   final NovelHistoryController controller;
@@ -63,10 +64,10 @@ class NovelHistoryView extends StatelessWidget {
                   ),
                   AppStyle.vGap4,
                   Text(
-                      "看到${item.volumeName} ${item.chapterName} ${item.record}页",
+                      "看到${item.volumeName} ${item.chapterName} ${item.record}页".i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   AppStyle.vGap4,
-                  Text("观看于${Utils.formatTimestamp(item.viewingTime ?? 0)}",
+                  Text("观看于${Utils.formatTimestamp(item.viewingTime ?? 0)}".i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 /// 动漫之家评论接口太TM混乱了
 /// 使用此类统一Model
@@ -27,7 +28,7 @@ class CommentItem {
     return CommentItem(
       id: 0,
       objId: 0,
-      content: "该评论不存在，可能已被删除",
+      content: "该评论不存在，可能已被删除".i18n,
       photo: "",
       createTime: 0,
       images: [],

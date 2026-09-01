@@ -4,6 +4,7 @@ import 'package:zai_x/modules/user/subscribe/comic/comic_subscribe_view.dart';
 import 'package:zai_x/modules/user/subscribe/novel/novel_subscribe_view.dart';
 import 'package:zai_x/modules/user/subscribe/user_subscribe_controller.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class UserSubscribePage extends StatelessWidget {
   final UserSubscribeController controller;
@@ -20,7 +21,7 @@ class UserSubscribePage extends StatelessWidget {
       appBar: AppBar(
         title: Container(
           alignment: Alignment.center,
-          padding: const EdgeInsets.only(right: 56),
+          padding: EdgeInsets.only(right: 56),
           child: TabBar(
             controller: controller.tabController,
             isScrollable: true,
@@ -31,9 +32,9 @@ class UserSubscribePage extends StatelessWidget {
             labelColor: Theme.of(context).colorScheme.primary,
             unselectedLabelColor:
                 Get.isDarkMode ? Colors.white70 : Colors.black87,
-            tabs: const [
-              Tab(text: "漫画"),
-              Tab(text: "小说"),
+            tabs: [
+              Tab(text: "漫画".i18n),
+              Tab(text: "小说".i18n),
               // Tab(text: "新闻"),
             ],
           ),

@@ -6,6 +6,7 @@ import 'package:zai_x/routes/app_navigator.dart';
 import 'package:zai_x/services/novel_download_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelSelectChapterController extends BaseController {
   final int novelId;
@@ -88,7 +89,7 @@ class NovelSelectChapterController extends BaseController {
       chapterIds.addAll(item);
     }
     if (chapterIds.isEmpty) {
-      SmartDialog.showToast("请选择需要下载的章节");
+      SmartDialog.showToast("请选择需要下载的章节".i18n);
       return;
     }
     for (var id in chapterIds) {
@@ -121,6 +122,6 @@ class NovelSelectChapterController extends BaseController {
       );
     }
     cleanAll();
-    SmartDialog.showToast("已添加到下载列表，下载过程中请保持APP在前台运行");
+    SmartDialog.showToast("已添加到下载列表，下载过程中请保持APP在前台运行".i18n);
   }
 }

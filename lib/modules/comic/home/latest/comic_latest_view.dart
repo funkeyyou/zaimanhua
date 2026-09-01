@@ -10,6 +10,7 @@ import 'package:zai_x/widgets/keep_alive_wrapper.dart';
 import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_list_view.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicLatestView extends StatelessWidget {
   final ComicLatestController controller;
@@ -87,7 +88,7 @@ class ComicLatestView extends StatelessWidget {
                   Text(item.lastUpdateChapterName ?? '',
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
-                  Text("更新于${Utils.formatTimestamp(item.lastUpdatetime ?? 0)}",
+                  Text("更新于${Utils.formatTimestamp(item.lastUpdatetime ?? 0)}".i18n,
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

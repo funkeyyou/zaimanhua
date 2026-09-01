@@ -7,6 +7,7 @@ import 'package:zai_x/services/comic_download_service.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicDownloadedDetailPage extends StatelessWidget {
   final ComicDownloadedItem info;
@@ -51,7 +52,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                             Remix.checkbox_line,
                             size: 20,
                           ),
-                          label: const Text("选择"),
+                          label: Text("选择".i18n),
                         ),
                       ),
                       Expanded(
@@ -64,7 +65,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                             Remix.information_line,
                             size: 20,
                           ),
-                          label: const Text("详情"),
+                          label: Text("详情".i18n),
                         ),
                       ),
                       Expanded(
@@ -77,7 +78,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                             Remix.add_line,
                             size: 20,
                           ),
-                          label: const Text("追加"),
+                          label: Text("追加".i18n),
                         ),
                       ),
                       Expanded(
@@ -90,7 +91,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                             Remix.play_line,
                             size: 20,
                           ),
-                          label: const Text("阅读"),
+                          label: Text("阅读".i18n),
                         ),
                       ),
                     ],
@@ -110,7 +111,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                             Remix.checkbox_line,
                             size: 20,
                           ),
-                          label: const Text("全选"),
+                          label: Text("全选".i18n),
                         ),
                       ),
                       Expanded(
@@ -123,7 +124,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                             Remix.delete_bin_line,
                             size: 20,
                           ),
-                          label: const Text("删除"),
+                          label: Text("删除".i18n),
                         ),
                       ),
                       Expanded(
@@ -136,7 +137,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                             Remix.close_line,
                             size: 20,
                           ),
-                          label: const Text("取消"),
+                          label: Text("取消".i18n),
                         ),
                       ),
                     ],
@@ -161,7 +162,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    "${item.title}(共${item.chapters.length}话)",
+                    "${item.title}(共${item.chapters.length}话)".i18n,
                     style: Get.textTheme.titleSmall,
                   ),
                 ),
@@ -179,7 +180,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                           Remix.sort_asc,
                           size: 20,
                         ),
-                        label: const Text("升序"),
+                        label: Text("升序".i18n),
                       )
                     : TextButton.icon(
                         style: TextButton.styleFrom(
@@ -194,7 +195,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                           Remix.sort_desc,
                           size: 20,
                         ),
-                        label: const Text("倒序"),
+                        label: Text("倒序".i18n),
                       ),
               ],
             ),
@@ -214,7 +215,7 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                 itemBuilder: (_, i) {
                   if (item.showMoreButton && !item.showAll.value && i == 14) {
                     return Tooltip(
-                      message: "展开全部章节",
+                      message: "展开全部章节".i18n,
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.grey,

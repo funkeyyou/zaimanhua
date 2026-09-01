@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zai_x/app/i18n.dart';
 import 'package:zai_x/services/local_storage_service.dart';
 import 'package:zai_x/services/novel_font_service.dart';
 import 'package:zai_x/services/reader_volume_key_service.dart';
@@ -12,6 +13,9 @@ class AppSettingsService extends GetxController {
   void onInit() {
     themeMode.value = LocalStorageService.instance
         .getValue(LocalStorageService.kThemeMode, 0);
+    appLanguage.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kAppLanguage, 0);
+    AppI18n.apply(appLanguage.value);
     firstRun = LocalStorageService.instance
         .getValue(LocalStorageService.kFirstRun, true);
     //漫画
@@ -109,10 +113,70 @@ class AppSettingsService extends GetxController {
     super.onInit();
   }
 
+  /// 界面语言
+  /// * [0] 跟随系统
+  /// * [1] 简体中文
+  /// * [2] 繁体中文
+  var appLanguage = 0.obs;
+
+  String get languageName {
+    switch (appLanguage.value) {
+      case 1:
+        return "简体中文".i18n;
+      case 2:
+        return "繁体中文".i18n;
+      default:
+        return "跟随系统".i18n;
+    }
+  }
+
+  void changeLanguage() {
+    Get.dialog(
+      SimpleDialog(
+        title: Text("界面语言".i18n),
+        children: [
+          RadioGroup<int>(
+            groupValue: appLanguage.value,
+            onChanged: (e) {
+              Get.back();
+              setLanguage(e ?? 0);
+            },
+            child: Column(
+              children: [
+                RadioListTile<int>(
+                  title: Text("跟随系统".i18n),
+                  value: 0,
+                ),
+                RadioListTile<int>(
+                  title: Text("简体中文".i18n),
+                  value: 1,
+                ),
+                RadioListTile<int>(
+                  title: Text("繁体中文".i18n),
+                  value: 2,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void setLanguage(int i) {
+    if (appLanguage.value == i) {
+      return;
+    }
+    appLanguage.value = i;
+    LocalStorageService.instance.setValue(LocalStorageService.kAppLanguage, i);
+    AppI18n.apply(i);
+    Get.forceAppUpdate();
+  }
+
   void changeTheme() {
     Get.dialog(
       SimpleDialog(
-        title: const Text("设置主题"),
+        title: Text("设置主题".i18n),
         children: [
           RadioGroup<int>(
             groupValue: themeMode.value,
@@ -120,18 +184,18 @@ class AppSettingsService extends GetxController {
               Get.back();
               setTheme(e ?? 0);
             },
-            child: const Column(
+            child: Column(
               children: [
                 RadioListTile<int>(
-                  title: Text("跟随系统"),
+                  title: Text("跟随系统".i18n),
                   value: 0,
                 ),
                 RadioListTile<int>(
-                  title: Text("浅色模式"),
+                  title: Text("浅色模式".i18n),
                   value: 1,
                 ),
                 RadioListTile<int>(
-                  title: Text("深色模式"),
+                  title: Text("深色模式".i18n),
                   value: 2,
                 ),
               ],
@@ -241,7 +305,7 @@ class AppSettingsService extends GetxController {
             fontName,
             novelReaderFontPaths,
           )) {
-        throw Exception('已添加同名字体：$fontName');
+        throw Exception('已添加同名字体：$fontName'.i18n);
       }
       await NovelFontService.instance.loadFont(path);
       if (!novelReaderFontPaths.contains(path)) {

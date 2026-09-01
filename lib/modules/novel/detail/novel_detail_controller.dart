@@ -14,6 +14,7 @@ import 'package:zai_x/services/db_service.dart';
 import 'package:zai_x/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelDetailControler extends BaseController {
   final int novelId;
@@ -107,7 +108,7 @@ class NovelDetailControler extends BaseController {
       detail.value.volume.value =
           result.map((e) => NovelDetailVolume.fromJson(e)).toList();
     } catch (e) {
-      SmartDialog.showToast("无法读取小说章节:$e");
+      SmartDialog.showToast("无法读取小说章节:$e".i18n);
     }
   }
 
@@ -161,11 +162,11 @@ class NovelDetailControler extends BaseController {
   /// 开始/继续阅读
   void read() {
     if (detail.value.volume.isEmpty) {
-      SmartDialog.showToast("没有可阅读的章节");
+      SmartDialog.showToast("没有可阅读的章节".i18n);
       return;
     }
     if (detail.value.volume.first.chapters.isEmpty) {
-      SmartDialog.showToast("没有可阅读的章节");
+      SmartDialog.showToast("没有可阅读的章节".i18n);
       return;
     }
     //查找记录
@@ -194,7 +195,7 @@ class NovelDetailControler extends BaseController {
           chapters: chapters,
         );
       } else {
-        SmartDialog.showToast("未找到历史记录对应章节，将从头开始阅读");
+        SmartDialog.showToast("未找到历史记录对应章节，将从头开始阅读".i18n);
         readStart();
       }
     } else {

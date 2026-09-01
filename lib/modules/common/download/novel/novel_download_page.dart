@@ -3,6 +3,7 @@ import 'package:zai_x/modules/common/download/novel/novel_downloaded_view.dart';
 import 'package:zai_x/modules/common/download/novel/novel_downloading_view.dart';
 import 'package:zai_x/services/novel_download_service.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelDownloadPage extends StatelessWidget {
   final int type;
@@ -26,12 +27,12 @@ class NovelDownloadPage extends StatelessWidget {
               unselectedLabelColor:
                   Get.isDarkMode ? Colors.white70 : Colors.black87,
               tabs: [
-                const Tab(text: "已完成"),
+                Tab(text: "已完成".i18n),
                 Obx(
                   () => Tab(
                       text: NovelDownloadService.instance.taskQueues.isEmpty
-                          ? "下载中"
-                          : "下载中(${NovelDownloadService.instance.taskQueues.length})"),
+                          ? "下载中".i18n
+                          : "下载中(${NovelDownloadService.instance.taskQueues.length})".i18n),
                 )
               ],
             ),

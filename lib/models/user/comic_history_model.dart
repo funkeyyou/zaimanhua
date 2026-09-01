@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:zai_x/app/i18n.dart';
 
 T? asT<T>(dynamic value) {
   if (value is T) {
@@ -30,7 +31,7 @@ class UserComicHistoryModel {
         viewingTime: _asInt(json['viewing_time']) ?? 0,
         comicName: asT<String?>(json['comic_name']) ??
             asT<String?>(json['title']) ??
-            "未知漫画",
+            "未知漫画".i18n,
         cover: asT<String?>(json['cover']) ?? "",
         chapterName: asT<String?>(json['chapter_name']) ?? "-",
       );

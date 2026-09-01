@@ -9,6 +9,7 @@ import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_grid_view.dart';
 import 'package:zai_x/widgets/shadow_card.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelSubscribeView extends StatelessWidget {
   final NovelSubscribeController controller;
@@ -77,12 +78,12 @@ class NovelSubscribeView extends StatelessWidget {
                       TextButton.icon(
                         onPressed: controller.cancelSub,
                         icon: const Icon(Icons.favorite_border),
-                        label: const Text("取消订阅"),
+                        label: Text("取消订阅".i18n),
                       ),
                       TextButton.icon(
                         onPressed: controller.cancelEdit,
                         icon: const Icon(Icons.cancel_outlined),
-                        label: const Text("取消"),
+                        label: Text("取消".i18n),
                       ),
                     ],
                   ),
@@ -167,8 +168,8 @@ class NovelSubscribeView extends StatelessWidget {
                           ),
                           padding:
                               AppStyle.edgeInsetsH8.copyWith(top: 2, bottom: 2),
-                          child: const Text(
-                            "新",
+                          child: Text(
+                            "新".i18n,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.white,
@@ -196,7 +197,7 @@ class NovelSubscribeView extends StatelessWidget {
               Padding(
                 padding: AppStyle.edgeInsetsH4,
                 child: Text(
-                  "更新 ${item.lastUpdateChapterName}",
+                  "更新 ${item.lastUpdateChapterName}".i18n,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(

@@ -7,6 +7,7 @@ import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_grid_view.dart';
 import 'package:zai_x/widgets/shadow_card.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class LocalFavoritePage extends StatelessWidget {
   final LocalFavoriteController controller;
@@ -16,7 +17,7 @@ class LocalFavoritePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("本机收藏"),
+        title: Text("本机收藏".i18n),
       ),
       body: LayoutBuilder(builder: (context, constraints) {
         var count = constraints.maxWidth ~/ 160;
@@ -46,13 +47,13 @@ class LocalFavoritePage extends StatelessWidget {
                   TextButton.icon(
                     onPressed: controller.cancelFavorite,
                     icon: const Icon(Icons.favorite_border),
-                    label: const Text("取消收藏"),
+                    label: Text("取消收藏".i18n),
                   ),
                   AppStyle.hGap8,
                   TextButton.icon(
                     onPressed: controller.cancelEdit,
                     icon: const Icon(Icons.cancel_outlined),
-                    label: const Text("取消"),
+                    label: Text("取消".i18n),
                   ),
                 ],
               ),

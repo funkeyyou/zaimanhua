@@ -6,13 +6,14 @@ import 'package:zai_x/services/db_service.dart';
 import 'package:zai_x/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicSubscribeController
     extends BasePageController<UserSubscribeComicItemModel> {
   ComicSubscribeController() {
     for (var item in List.generate(
         26, (index) => String.fromCharCode(index + 65).toLowerCase())) {
-      letters.addAll({item: "${item.toUpperCase()}开头"});
+      letters.addAll({item: "${item.toUpperCase()}开头".i18n});
     }
   }
   final UserRequest request = UserRequest();
@@ -20,14 +21,14 @@ class ComicSubscribeController
   var letter = "".obs;
 
   Map letters = {
-    "": "全部",
-    "number": "数字开头",
+    "": "全部".i18n,
+    "number": "数字开头".i18n,
   };
 
   Map<int, String> types = {
-    1: "全部订阅",
+    1: "全部订阅".i18n,
     2: "连载中",
-    3: "已完结",
+    3: "已完结".i18n,
   };
   var type = 1.obs;
 
@@ -72,6 +73,6 @@ class ComicSubscribeController
       );
     }
     cancelEdit();
-    SmartDialog.showToast("已添加至本机收藏");
+    SmartDialog.showToast("已添加至本机收藏".i18n);
   }
 }

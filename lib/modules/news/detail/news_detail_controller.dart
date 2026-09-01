@@ -20,6 +20,7 @@ import 'package:get/get.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:universal_html/parsing.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NewsDetailController extends BaseController {
   final String newsUrl;
@@ -49,7 +50,7 @@ class NewsDetailController extends BaseController {
 
   var newsId = 0;
 
-  var newsTitle = "资讯详情".obs;
+  var newsTitle = "资讯详情".i18n.obs;
 
   var htmlContent = "".obs;
   var author = "".obs;
@@ -190,7 +191,7 @@ getImgLinks();
       newsTitle.value = result.title;
     } catch (e) {
       SmartDialog.showToast(e.toString());
-      SmartDialog.showToast("读取新闻数据失败：$e");
+      SmartDialog.showToast("读取新闻数据失败：$e".i18n);
     }
   }
 
@@ -202,7 +203,7 @@ getImgLinks();
       collected.value = await request.checkCollect(newsId);
     } catch (e) {
       Log.logPrint(e);
-      SmartDialog.showToast("检查用户收藏状态失败：$e");
+      SmartDialog.showToast("检查用户收藏状态失败：$e".i18n);
     }
   }
 
@@ -287,7 +288,7 @@ getImgLinks();
 
       return true;
     } else {
-      SmartDialog.showToast("无法打开链接:$url");
+      SmartDialog.showToast("无法打开链接:$url".i18n);
       return true;
     }
   }
@@ -299,8 +300,8 @@ getImgLinks();
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const ListTile(
-              title: Text("设置"),
+            ListTile(
+              title: Text("设置".i18n),
               trailing: IconButton(
                 onPressed: AppNavigator.closePage,
                 icon: Icon(Icons.close),
@@ -313,7 +314,7 @@ getImgLinks();
             ),
             Obx(
               () => ListTile(
-                title: const Text("字体大小"),
+                title: Text("字体大小".i18n),
                 leading: const Icon(Icons.text_fields_rounded),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -351,7 +352,7 @@ getImgLinks();
             ),
             ListTile(
               leading: const Icon(Icons.photo),
-              title: const Text("进入看图模式"),
+              title: Text("进入看图模式".i18n),
               onTap: () {
                 AppNavigator.closePage();
                 photoView();

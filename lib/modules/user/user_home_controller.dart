@@ -7,6 +7,7 @@ import 'package:zai_x/routes/app_navigator.dart';
 import 'package:zai_x/services/user_service.dart';
 
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class UserHomeController extends GetxController {
   final AppSettingsService settings = AppSettingsService.instance;
@@ -25,8 +26,8 @@ class UserHomeController extends GetxController {
   /// 退出登录
   void logout() async {
     var result = await DialogUtils.showAlertDialog(
-      "确定要退出登录吗？",
-      title: "退出登录",
+      "确定要退出登录吗？".i18n,
+      title: "退出登录".i18n,
     );
     if (result) {
       UserService.instance.logout();

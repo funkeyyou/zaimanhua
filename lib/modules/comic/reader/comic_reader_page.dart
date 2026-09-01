@@ -19,6 +19,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicReaderPage extends GetView<ComicReaderController> {
   const ComicReaderPage({super.key});
@@ -455,7 +456,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         padding: EdgeInsets.zero,
         children: [
           ListTile(
-            title: Text("吐槽(${controller.viewPoints.length})"),
+            title: Text("吐槽(${controller.viewPoints.length})".i18n),
           ),
           Padding(
             padding: AppStyle.edgeInsetsH12,
@@ -512,7 +513,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
               onPressed: () {
                 controller.showComment();
               },
-              child: const Text("查看更多"),
+              child: Text("查看更多".i18n),
             ),
           ),
           AppStyle.vGap12,
@@ -528,15 +529,15 @@ class ComicReaderPage extends GetView<ComicReaderController> {
     switch (connectivityType) {
       case ConnectivityResult.bluetooth:
         icon = Remix.wifi_line;
-        name = "蓝牙";
+        name = "蓝牙".i18n;
         break;
       case ConnectivityResult.ethernet:
         icon = Remix.computer_line;
-        name = "有线";
+        name = "有线".i18n;
         break;
       case ConnectivityResult.mobile:
         icon = Remix.base_station_line;
-        name = "流量";
+        name = "流量".i18n;
         break;
       case ConnectivityResult.wifi:
         icon = Remix.wifi_line;
@@ -548,11 +549,11 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         break;
       case ConnectivityResult.none:
         icon = Remix.wifi_off_line;
-        name = "无网络";
+        name = "无网络".i18n;
         break;
       case ConnectivityResult.other:
         icon = Remix.question_line;
-        name = "未知";
+        name = "未知".i18n;
         break;
       default:
         break;
@@ -607,7 +608,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
           // ),
           // AppStyle.hGap4,
           Text(
-            "电量 $battery%",
+            "电量 $battery%".i18n,
             style: const TextStyle(fontSize: 12, height: 1.0),
           ),
           AppStyle.hGap8,

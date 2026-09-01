@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:zai_x/app/app_style.dart';
 import 'package:zai_x/modules/user/comment/user_comment_view.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class UserCommentPage extends StatelessWidget {
   final int userId;
-  const UserCommentPage(this.userId, {super.key});
+  UserCommentPage(this.userId, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class UserCommentPage extends StatelessWidget {
         appBar: AppBar(
           title: Container(
             alignment: Alignment.center,
-            padding: const EdgeInsets.only(right: 56),
+            padding: EdgeInsets.only(right: 56),
             child: TabBar(
               isScrollable: true,
               tabAlignment: TabAlignment.start,
@@ -24,10 +25,10 @@ class UserCommentPage extends StatelessWidget {
               labelColor: Theme.of(context).colorScheme.primary,
               unselectedLabelColor:
                   Get.isDarkMode ? Colors.white70 : Colors.black87,
-              tabs: const [
-                Tab(text: "漫画"),
-                Tab(text: "小说"),
-                Tab(text: "新闻"),
+              tabs: [
+                Tab(text: "漫画".i18n),
+                Tab(text: "小说".i18n),
+                Tab(text: "新闻".i18n),
               ],
             ),
           ),

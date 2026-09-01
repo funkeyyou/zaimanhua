@@ -6,6 +6,7 @@ import 'package:zai_x/modules/common/download/novel/novel_downloaded_detail_cont
 import 'package:zai_x/services/novel_download_service.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelDownloadedDetailPage extends StatelessWidget {
   final NovelDownloadedItem info;
@@ -50,7 +51,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                             Remix.checkbox_line,
                             size: 20,
                           ),
-                          label: const Text("选择"),
+                          label: Text("选择".i18n),
                         ),
                       ),
                       Expanded(
@@ -63,7 +64,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                             Remix.information_line,
                             size: 20,
                           ),
-                          label: const Text("详情"),
+                          label: Text("详情".i18n),
                         ),
                       ),
                       Expanded(
@@ -76,7 +77,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                             Remix.add_line,
                             size: 20,
                           ),
-                          label: const Text("追加"),
+                          label: Text("追加".i18n),
                         ),
                       ),
                       Expanded(
@@ -89,7 +90,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                             Remix.play_line,
                             size: 20,
                           ),
-                          label: const Text("阅读"),
+                          label: Text("阅读".i18n),
                         ),
                       ),
                     ],
@@ -109,7 +110,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                             Remix.checkbox_line,
                             size: 20,
                           ),
-                          label: const Text("全选"),
+                          label: Text("全选".i18n),
                         ),
                       ),
                       Expanded(
@@ -122,7 +123,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                             Remix.delete_bin_line,
                             size: 20,
                           ),
-                          label: const Text("删除"),
+                          label: Text("删除".i18n),
                         ),
                       ),
                       Expanded(
@@ -135,7 +136,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                             Remix.close_line,
                             size: 20,
                           ),
-                          label: const Text("取消"),
+                          label: Text("取消".i18n),
                         ),
                       ),
                     ],
@@ -158,7 +159,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
           child: Row(children: [
             Expanded(
               child: Text(
-                "${item.volumeName}(共${item.chapters.length}话)",
+                "${item.volumeName}(共${item.chapters.length}话)".i18n,
                 style: Get.textTheme.titleSmall,
               ),
             ),

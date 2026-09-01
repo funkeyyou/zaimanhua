@@ -3,26 +3,27 @@ import 'package:zai_x/models/comic/rank_item_model.dart';
 import 'package:zai_x/requests/comic_request.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicRankController extends BasePageController<ComicRankListItemModel> {
   final ComicRequest request = ComicRequest();
   RxMap<int, String> tags = {
-    0: "全部分类",
+    0: "全部分类".i18n,
   }.obs;
   var tag = 0.obs;
 
   Map<int, String> byTimes = {
-    0: "日排行",
-    1: "周排行",
-    2: "月排行",
-    3: "总排行",
+    0: "日排行".i18n,
+    1: "周排行".i18n,
+    2: "月排行".i18n,
+    3: "总排行".i18n,
   };
   var byTime = 0.obs;
 
   Map<int, String> rankTypes = {
-    0: "人气排行",
-    1: "吐槽排行",
-    2: "订阅排行",
+    0: "人气排行".i18n,
+    1: "吐槽排行".i18n,
+    2: "订阅排行".i18n,
   };
   var rankType = 0.obs;
 

@@ -18,6 +18,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as p;
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class Utils {
   static late PackageInfo packageInfo;
@@ -59,12 +60,12 @@ class Utils {
     if (dt.year == dtNow.year &&
         dt.month == dtNow.month &&
         dt.day == dtNow.day) {
-      return "今天${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
+      return "今天${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}".i18n;
     }
     if (dt.year == dtNow.year &&
         dt.month == dtNow.month &&
         dt.day == dtNow.day - 1) {
-      return "昨天${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
+      return "昨天${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}".i18n;
     }
 
     if (dt.year == dtNow.year) {
@@ -85,7 +86,7 @@ class Utils {
       if (status.isGranted) {
         return true;
       } else {
-        SmartDialog.showToast("请授予相册权限");
+        SmartDialog.showToast("请授予相册权限".i18n);
         return false;
       }
     } catch (e) {
@@ -108,7 +109,7 @@ class Utils {
       }
 
       if (data == null) {
-        SmartDialog.showToast("图片保存失败");
+        SmartDialog.showToast("图片保存失败".i18n);
         return;
       }
       if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
@@ -123,10 +124,10 @@ class Utils {
           isReturnPathOfIOS: true,
         );
         Log.d(result.toString());
-        SmartDialog.showToast("保存成功");
+        SmartDialog.showToast("保存成功".i18n);
       }
     } catch (e) {
-      SmartDialog.showToast("保存失败");
+      SmartDialog.showToast("保存失败".i18n);
     }
   }
 
@@ -161,7 +162,7 @@ class Utils {
         children: [
           ListTile(
             leading: const Icon(Icons.copy),
-            title: const Text("复制链接"),
+            title: Text("复制链接".i18n),
             onTap: () {
               Get.back();
               Utils.copyText(url);
@@ -171,7 +172,7 @@ class Utils {
             visible: content.isNotEmpty,
             child: ListTile(
               leading: const Icon(Icons.copy),
-              title: const Text("复制标题与链接"),
+              title: Text("复制标题与链接".i18n),
               onTap: () {
                 Get.back();
                 Utils.copyText("$content\n$url");
@@ -180,7 +181,7 @@ class Utils {
           ),
           ListTile(
             leading: const Icon(Icons.public),
-            title: const Text("浏览器打开"),
+            title: Text("浏览器打开".i18n),
             onTap: () {
               Get.back();
               launchUrlString(url, mode: LaunchMode.externalApplication);
@@ -188,7 +189,7 @@ class Utils {
           ),
           ListTile(
             leading: const Icon(Icons.share),
-            title: const Text("系统分享"),
+            title: Text("系统分享".i18n),
             onTap: () {
               Get.back();
               SharePlus.instance.share(
@@ -211,7 +212,7 @@ class Utils {
         Get.dialog(
           AlertDialog(
             title: Text(
-              "发现新版本 ${versionInfo.version}",
+              "发现新版本 ${versionInfo.version}".i18n,
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 18),
             ),
@@ -229,7 +230,7 @@ class Utils {
                       onPressed: () {
                         Get.back();
                       },
-                      child: const Text("取消"),
+                      child: Text("取消".i18n),
                     ),
                   ),
                   AppStyle.hGap12,
@@ -244,7 +245,7 @@ class Utils {
                           mode: LaunchMode.externalApplication,
                         );
                       },
-                      child: const Text("更新"),
+                      child: Text("更新".i18n),
                     ),
                   ),
                 ],
@@ -254,13 +255,13 @@ class Utils {
         );
       } else {
         if (showMsg) {
-          SmartDialog.showToast("当前已经是最新版本了");
+          SmartDialog.showToast("当前已经是最新版本了".i18n);
         }
       }
     } catch (e) {
       Log.logPrint(e);
       if (showMsg) {
-        SmartDialog.showToast("检查更新失败");
+        SmartDialog.showToast("检查更新失败".i18n);
       }
     }
   }
@@ -269,7 +270,7 @@ class Utils {
   static void copyText(String text) async {
     try {
       await Clipboard.setData(ClipboardData(text: text));
-      SmartDialog.showToast("已复制到剪切板");
+      SmartDialog.showToast("已复制到剪切板".i18n);
     } catch (e) {
       SmartDialog.showToast(e.toString());
     }

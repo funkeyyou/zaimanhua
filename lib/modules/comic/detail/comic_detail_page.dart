@@ -10,6 +10,7 @@ import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicDetailPage extends StatelessWidget {
   final int id;
@@ -27,7 +28,7 @@ class ComicDetailPage extends StatelessWidget {
         title: Obx(
           () => Text(
             controller.detail.value.title.isEmpty
-                ? "漫画详情"
+                ? "漫画详情".i18n
                 : controller.detail.value.title,
           ),
         ),
@@ -68,7 +69,7 @@ class ComicDetailPage extends StatelessWidget {
                             ListTile(
                               contentPadding: EdgeInsets.zero,
                               title: Text(
-                                "上次看到：${controller.history.value?.chapterName ?? ""}  第${controller.history.value?.page}页",
+                                "上次看到：${controller.history.value?.chapterName ?? ".i18n"}  第${controller.history.value?.page}页".i18n,
                                 style: Get.textTheme.titleSmall,
                               ),
                               trailing: const Icon(Icons.chevron_right),
@@ -130,7 +131,7 @@ class ComicDetailPage extends StatelessWidget {
                           : Remix.heart_line,
                       size: 20,
                     ),
-                    label: Text(controller.subscribeStatus.value ? "取消" : "订阅"),
+                    label: Text(controller.subscribeStatus.value ? "取消".i18n : "订阅".i18n),
                   ),
                 ),
               ),
@@ -144,7 +145,7 @@ class ComicDetailPage extends StatelessWidget {
                     Remix.chat_2_line,
                     size: 20,
                   ),
-                  label: const Text("评论"),
+                  label: Text("评论".i18n),
                 ),
               ),
               Expanded(
@@ -157,7 +158,7 @@ class ComicDetailPage extends StatelessWidget {
                     Remix.download_line,
                     size: 20,
                   ),
-                  label: const Text("下载"),
+                  label: Text("下载".i18n),
                 ),
               ),
               // Expanded(
@@ -321,10 +322,10 @@ class ComicDetailPage extends StatelessWidget {
     return Column(
       children: controller.detail.value.volumes.isEmpty
           ? [
-              const Padding(
+              Padding(
                 padding: AppStyle.edgeInsetsA24,
                 child: Text(
-                  "(～￣▽￣)～\n没有可阅读的章节\n漫画可能已下架或您没有阅读的权限",
+                  "(～￣▽￣)～\n没有可阅读的章节\n漫画可能已下架或您没有阅读的权限".i18n,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey, fontSize: 14),
                 ),
@@ -342,7 +343,7 @@ class ComicDetailPage extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                "${item.title}(共${item.chapters.length}话)",
+                                "${item.title}(共${item.chapters.length}话)".i18n,
                                 style: Get.textTheme.titleSmall,
                               ),
                             ),
@@ -361,7 +362,7 @@ class ComicDetailPage extends StatelessWidget {
                                       Remix.sort_asc,
                                       size: 20,
                                     ),
-                                    label: const Text("升序"),
+                                    label: Text("升序".i18n),
                                   )
                                 : TextButton.icon(
                                     style: TextButton.styleFrom(
@@ -377,7 +378,7 @@ class ComicDetailPage extends StatelessWidget {
                                       Remix.sort_desc,
                                       size: 20,
                                     ),
-                                    label: const Text("倒序"),
+                                    label: Text("倒序".i18n),
                                   ),
                           ],
                         ),
@@ -400,7 +401,7 @@ class ComicDetailPage extends StatelessWidget {
                                   !item.showAll.value &&
                                   i == 14) {
                                 return Tooltip(
-                                  message: "展开全部章节",
+                                  message: "展开全部章节".i18n,
                                   child: OutlinedButton(
                                     style: OutlinedButton.styleFrom(
                                       foregroundColor: Colors.grey,

@@ -9,6 +9,7 @@ import 'package:zai_x/widgets/status/app_error_widget.dart';
 import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelDetailPage extends StatelessWidget {
   final int id;
@@ -26,7 +27,7 @@ class NovelDetailPage extends StatelessWidget {
         title: Obx(
           () => Text(
             controller.detail.value.name.isEmpty
-                ? "小说详情"
+                ? "小说详情".i18n
                 : controller.detail.value.name,
           ),
         ),
@@ -57,7 +58,7 @@ class NovelDetailPage extends StatelessWidget {
                             ListTile(
                               contentPadding: EdgeInsets.zero,
                               title: Text(
-                                "上次看到：${controller.history.value?.volumeName ?? ""} ${controller.history.value?.chapterName ?? ""}",
+                                "上次看到：${controller.history.value?.volumeName ?? ".i18n"} ${controller.history.value?.chapterName ?? ""}",
                                 style: Get.textTheme.titleSmall,
                               ),
                               trailing: const Icon(Icons.chevron_right),
@@ -119,7 +120,7 @@ class NovelDetailPage extends StatelessWidget {
                           : Remix.heart_line,
                       size: 20,
                     ),
-                    label: Text(controller.subscribeStatus.value ? "取消" : "订阅"),
+                    label: Text(controller.subscribeStatus.value ? "取消".i18n : "订阅".i18n),
                   ),
                 ),
               ),
@@ -133,7 +134,7 @@ class NovelDetailPage extends StatelessWidget {
                     Remix.chat_2_line,
                     size: 20,
                   ),
-                  label: const Text("评论"),
+                  label: Text("评论".i18n),
                 ),
               ),
               Expanded(
@@ -146,7 +147,7 @@ class NovelDetailPage extends StatelessWidget {
                     Remix.download_line,
                     size: 20,
                   ),
-                  label: const Text("下载"),
+                  label: Text("下载".i18n),
                 ),
               ),
             ],
@@ -211,11 +212,11 @@ class NovelDetailPage extends StatelessWidget {
                     iconData: Remix.hashtag,
                   ),
                   _buildInfo(
-                    title: "人气 ${controller.detail.value.hotHits}",
+                    title: "人气 ${controller.detail.value.hotHits}".i18n,
                     iconData: Remix.fire_line,
                   ),
                   _buildInfo(
-                    title: "订阅 ${controller.detail.value.subscribeNum}",
+                    title: "订阅 ${controller.detail.value.subscribeNum}".i18n,
                     iconData: Remix.heart_line,
                   ),
                   _buildInfo(
@@ -260,7 +261,7 @@ class NovelDetailPage extends StatelessWidget {
             .map(
               (item) => ExpansionTile(
                 title: Text(
-                  "${item.volumeName}(共${item.chapters.length}章)",
+                  "${item.volumeName}(共${item.chapters.length}章)".i18n,
                   style: Get.textTheme.titleSmall,
                 ),
                 tilePadding: AppStyle.edgeInsetsH4,

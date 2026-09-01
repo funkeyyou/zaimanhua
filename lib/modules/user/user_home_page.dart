@@ -12,6 +12,7 @@ import 'package:zai_x/widgets/user_photo.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class UserHomePage extends GetView<UserHomeController> {
   const UserHomePage({super.key});
@@ -118,12 +119,12 @@ class UserHomePage extends GetView<UserHomeController> {
                         url: "",
                         size: 48,
                       ),
-                      title: const Text(
-                        "未登录",
+                      title: Text(
+                        "未登录".i18n,
                         style: TextStyle(height: 1.0),
                       ),
-                      subtitle: const Text(
-                        "点击前往登录",
+                      subtitle: Text(
+                        "点击前往登录".i18n,
                       ),
                       trailing: const Icon(
                         Icons.chevron_right,
@@ -141,7 +142,7 @@ class UserHomePage extends GetView<UserHomeController> {
                         visible: UserService.instance.logined.value,
                         child: ListTile(
                           leading: const Icon(Remix.heart_line),
-                          title: const Text("我的订阅"),
+                          title: Text("我的订阅".i18n),
                           trailing: const Icon(
                             Icons.chevron_right,
                             color: Colors.grey,
@@ -153,7 +154,7 @@ class UserHomePage extends GetView<UserHomeController> {
                         visible: UserService.instance.logined.value,
                         child: ListTile(
                           leading: const Icon(Remix.history_line),
-                          title: const Text("浏览记录"),
+                          title: Text("浏览记录".i18n),
                           trailing: const Icon(
                             Icons.chevron_right,
                             color: Colors.grey,
@@ -181,7 +182,7 @@ class UserHomePage extends GetView<UserHomeController> {
                   children: [
                     ListTile(
                       leading: const Icon(Remix.star_line),
-                      title: const Text("本机收藏"),
+                      title: Text("本机收藏".i18n),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
@@ -190,7 +191,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                     ListTile(
                       leading: const Icon(Remix.download_line),
-                      title: const Text("漫画下载"),
+                      title: Text("漫画下载".i18n),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -227,7 +228,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                     ListTile(
                       leading: const Icon(Remix.download_line),
-                      title: const Text("小说下载"),
+                      title: Text("小说下载".i18n),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -270,7 +271,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ListTile(
                       leading: Icon(
                           Get.isDarkMode ? Remix.moon_line : Remix.sun_line),
-                      title: const Text("显示主题"),
+                      title: Text("显示主题".i18n),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
@@ -279,7 +280,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                     ListTile(
                       leading: const Icon(Remix.settings_line),
-                      title: const Text("更多设置"),
+                      title: Text("更多设置".i18n),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
@@ -291,9 +292,9 @@ class UserHomePage extends GetView<UserHomeController> {
                 _buildCard(
                   context,
                   children: [
-                    const ListTile(
+                    ListTile(
                       leading: Icon(Remix.error_warning_line),
-                      title: Text("免责声明"),
+                      title: Text("免责声明".i18n),
                       trailing: Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
@@ -302,7 +303,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                     ListTile(
                       leading: const Icon(Remix.github_fill),
-                      title: const Text("开源主页"),
+                      title: Text("开源主页".i18n),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
@@ -316,7 +317,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                     ListTile(
                       leading: const Icon(Remix.upload_2_line),
-                      title: const Text("检查更新"),
+                      title: Text("检查更新".i18n),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
@@ -325,7 +326,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                     ListTile(
                       leading: const Icon(Remix.information_line),
-                      title: const Text("关于APP"),
+                      title: Text("关于APP".i18n),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,

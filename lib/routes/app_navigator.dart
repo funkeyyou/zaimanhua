@@ -12,6 +12,7 @@ import 'package:zai_x/services/novel_download_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class AppNavigator {
   /// 当前内容路由的名称
@@ -59,7 +60,7 @@ class AppNavigator {
   }) {
     final resolvedUrl = NewsLinkResolver.resolve(url: url, newsId: newsId);
     if (resolvedUrl == null) {
-      SmartDialog.showToast("无法打开此链接：$url");
+      SmartDialog.showToast("无法打开此链接：$url".i18n);
       return;
     }
     //https://news.dmzj.com/article/77288.html
@@ -81,7 +82,7 @@ class AppNavigator {
 
   /// 打开小说详情
   static void toNovelDetail(int id) {
-    Log.w("打开小说:$id");
+    Log.w("打开小说:$id".i18n);
     toContentPage(RoutePath.kNovelDetail, arg: id);
   }
 

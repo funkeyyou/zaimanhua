@@ -14,6 +14,7 @@ import 'package:zai_x/modules/user/user_home_page.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:multi_split_view/multi_split_view.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class IndexController extends GetxController {
   final index = 0.obs;
@@ -33,7 +34,7 @@ class IndexController extends GetxController {
   Timer? doubleClickTimer;
 
   final List<Widget> pages = [
-    const ComicHomePage(),
+    ComicHomePage(),
     const SizedBox(),
     const SizedBox(),
     const UserHomePage(),
@@ -53,7 +54,7 @@ class IndexController extends GetxController {
       pages[i] = const NewsHomePage();
     } else if (i == 2 && pages[i] is SizedBox) {
       Get.put(NovelHomeController());
-      pages[i] = const NovelHomePage();
+      pages[i] = NovelHomePage();
     }
     if (index.value == i) {
       EventBus.instance.emit<int>(EventBus.kBottomNavigationBarClicked, i);
@@ -78,7 +79,7 @@ class IndexController extends GetxController {
       return;
     }
     doubleClickExit = true;
-    SmartDialog.showToast("再按一次退出应用");
+    SmartDialog.showToast("再按一次退出应用".i18n);
     doubleClickTimer = Timer(const Duration(seconds: 2), () {
       doubleClickExit = false;
       doubleClickTimer!.cancel();

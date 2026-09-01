@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:zai_x/app/log.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelHorizontalReader extends StatefulWidget {
   final String text;
@@ -102,7 +103,7 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
     var fontSize = (textStyle.fontSize ?? 16).toDouble();
     var lineHeight = textStyle.height ?? 1.5;
     // 计算出出各个类型的大小
-    Size chineseCharSize = calcFontSize("中",
+    Size chineseCharSize = calcFontSize("中".i18n,
         fontSize: fontSize.toDouble(), lineHeight: lineHeight);
     fontHieght = chineseCharSize.height;
     Size englishCharSize = calcFontSize("z",
@@ -129,8 +130,8 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
         spaceWidth: spaceCharSize.width,
       ),
     );
-    Log.d("耗时:${DateTime.now().millisecondsSinceEpoch - startTime}ms");
-    Log.d("页数:${pages.length}");
+    Log.d("耗时:${DateTime.now().millisecondsSinceEpoch - startTime}ms".i18n);
+    Log.d("页数:${pages.length}".i18n);
     widget.onPageChanged?.call(index, pages.length);
     setState(() {
       textPages = pages;
@@ -146,7 +147,7 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
   ) {
     var str = parameter.content;
 
-    Log.w("字数:${str.length}");
+    Log.w("字数:${str.length}".i18n);
 
     // 定义正则表达式（匹配中文字符、英文单词、符号、全角符号、数字串）
     //RegExp reg = RegExp(r"([\u4e00-\u9fa5]|\b\w+\b|\x20|　|\S|\p{Han}|\n)");
@@ -281,7 +282,7 @@ class _NovelHorizontalReaderState extends State<NovelHorizontalReader>
     return textPages.isEmpty
         ? Center(
             child: Text(
-              "加载中...",
+              "加载中...".i18n,
               style: widget.style,
             ),
           )
@@ -342,7 +343,7 @@ class NovelTextPainter extends CustomPainter {
 
       i++;
     }
-    Log.d("绘制单页耗时:${DateTime.now().millisecondsSinceEpoch - startTime}ms");
+    Log.d("绘制单页耗时:${DateTime.now().millisecondsSinceEpoch - startTime}ms".i18n);
   }
 
   @override

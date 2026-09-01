@@ -8,6 +8,7 @@ import 'package:zai_x/widgets/status/app_error_widget.dart';
 import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelSelectChapterPage extends StatelessWidget {
   final int novelId;
@@ -22,11 +23,11 @@ class NovelSelectChapterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("选择下载章节"),
+        title: Text("选择下载章节".i18n),
         actions: [
           TextButton(
             onPressed: controller.toDownloadManage,
-            child: const Text("下载管理"),
+            child: Text("下载管理".i18n),
           ),
         ],
       ),
@@ -69,7 +70,7 @@ class NovelSelectChapterPage extends StatelessWidget {
                     Remix.checkbox_line,
                     size: 20,
                   ),
-                  label: const Text("全选"),
+                  label: Text("全选".i18n),
                 ),
               ),
               Expanded(
@@ -82,7 +83,7 @@ class NovelSelectChapterPage extends StatelessWidget {
                     Remix.checkbox_blank_line,
                     size: 20,
                   ),
-                  label: const Text("取消选中"),
+                  label: Text("取消选中".i18n),
                 ),
               ),
               Expanded(
@@ -95,7 +96,7 @@ class NovelSelectChapterPage extends StatelessWidget {
                     Remix.download_line,
                     size: 20,
                   ),
-                  label: const Text("下载选中"),
+                  label: Text("下载选中".i18n),
                 ),
               ),
             ],
@@ -123,7 +124,7 @@ class NovelSelectChapterPage extends StatelessWidget {
       () {
         var volume = controller.selectIds[item.volumeId]!;
         return ExpansionTile(
-          title: Text("${item.volumeName}(共${item.chapters.length}话)"),
+          title: Text("${item.volumeName}(共${item.chapters.length}话)".i18n),
           leading: SizedBox(
             width: 40,
             child: Checkbox(
@@ -156,7 +157,7 @@ class NovelSelectChapterPage extends StatelessWidget {
                       "${novelId}_${chapter.volumeId}_${chapter.chapterId}"),
                   subtitle: NovelDownloadService.instance.downloadIds.contains(
                           "${novelId}_${chapter.volumeId}_${chapter.chapterId}")
-                      ? const Text("已下载")
+                      ? Text("已下载".i18n)
                       : null,
                   onChanged: (e) {
                     if (e!) {

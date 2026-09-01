@@ -10,6 +10,7 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NewsDetailPage extends StatelessWidget {
   final String newsUrl;
@@ -85,7 +86,7 @@ class NewsDetailPage extends StatelessWidget {
                     ),
                     label: Text(controller.commentAmount > 0
                         ? "${controller.commentAmount}"
-                        : "评论"),
+                        : "评论".i18n),
                   ),
                 ),
               ),
@@ -116,7 +117,7 @@ class NewsDetailPage extends StatelessWidget {
                     Remix.settings_line,
                     size: 20,
                   ),
-                  label: const Text("设置"),
+                  label: Text("设置".i18n),
                 ),
               ),
             ],

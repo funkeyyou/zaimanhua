@@ -11,6 +11,7 @@ import 'package:zai_x/models/novel/volume_detail_model.dart';
 import 'package:zai_x/requests/common/api.dart';
 import 'package:zai_x/requests/common/http_client.dart';
 import 'package:zai_x/services/local_storage_service.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelRequest {
   /// 轻小说-推荐
@@ -73,7 +74,7 @@ class NovelRequest {
       list.add(NovelCategoryFilterItemModel.fromJson(item));
     }
     return [
-      NovelCategoryFilterModel(title: "题材", items: list),
+      NovelCategoryFilterModel(title: "题材".i18n, items: list),
     ];
   }
 

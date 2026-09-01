@@ -1,6 +1,6 @@
 name: build-release
 # 手動觸發（workflow_dispatch）出測試包；推 v* tag 時自動建立 GitHub Release
-# 矩陣同時產出簡體（sc）與繁體（tc）兩種語言版本；繁體為建置期 OpenCC s2twp 轉換
+# 單一產物內建簡/繁切換（設定→界面语言；預設跟隨系統）
 # Flutter 版本依 pubspec.lock（3.38.x）；勿改回 3.22
 on:
   workflow_dispatch:
@@ -13,9 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    strategy:
-      matrix:
-        lang: [sc, tc]
     env:
       HAS_KEYSTORE: ${{ secrets.ZAI_KEYSTORE_BASE64 != '' }}
     steps:
@@ -30,11 +27,6 @@ jobs:
         with:
           flutter-version: "3.38.10"
           cache: true
-      - name: Convert UI to Traditional Chinese
-        if: ${{ matrix.lang == 'tc' }}
-        run: |
-          pip install --quiet opencc-python-reimplemented
-          python tools/s2twp/convert.py
       - name: Restore packages
         run: flutter pub get
       # 設定了 ZAI_KEYSTORE_BASE64 等 secrets 時使用正式簽名；否則 gradle 自動退回 debug 簽名
@@ -52,17 +44,17 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
       - name: Rename APK
-        run: cp build/app/outputs/flutter-apk/app-release.apk ZAI-X-android-${{ matrix.lang }}.apk
+        run: cp build/app/outputs/flutter-apk/app-release.apk ZAI-X-android.apk
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: android-apk-${{ matrix.lang }}
-          path: ZAI-X-android-${{ matrix.lang }}.apk
+          name: android-apk
+          path: ZAI-X-android.apk
       - name: Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: ZAI-X-android-${{ matrix.lang }}.apk
+          files: ZAI-X-android.apk
 
   build-windows:
     # windows-latest 已是 VS2026，其 STL 對 <experimental/coroutine> 直接報錯（STL1011），
@@ -70,9 +62,6 @@ jobs:
     runs-on: windows-2022
     permissions:
       contents: write
-    strategy:
-      matrix:
-        lang: [sc, tc]
     steps:
       - uses: actions/checkout@v4
       - name: Setup Flutter
@@ -80,24 +69,19 @@ jobs:
         with:
           flutter-version: "3.38.10"
           cache: true
-      - name: Convert UI to Traditional Chinese
-        if: ${{ matrix.lang == 'tc' }}
-        run: |
-          pip install --quiet opencc-python-reimplemented
-          python tools/s2twp/convert.py
       - name: Restore packages
         run: flutter pub get
       - name: Build Windows
         run: flutter build windows --release
       - name: Zip
-        run: Compress-Archive -Path "build/windows/x64/runner/Release/*" -DestinationPath "ZAI-X-windows-x64-${{ matrix.lang }}.zip"
+        run: Compress-Archive -Path "build/windows/x64/runner/Release/*" -DestinationPath "ZAI-X-windows-x64.zip"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: windows-zip-${{ matrix.lang }}
-          path: ZAI-X-windows-x64-${{ matrix.lang }}.zip
+          name: windows-zip
+          path: ZAI-X-windows-x64.zip
       - name: Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: ZAI-X-windows-x64-${{ matrix.lang }}.zip
+          files: ZAI-X-windows-x64.zip

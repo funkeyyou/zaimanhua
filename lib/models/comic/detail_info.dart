@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:zai_x/models/comic/detail_model.dart';
 import 'package:zai_x/models/comic/detail_v1_model.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 T? asT<T>(dynamic value) {
   if (value is T) {
@@ -137,13 +138,13 @@ class ComicDetailInfo {
     }
     volumes.add(
       ComicDetailVolume(
-          title: isHide ? "神隐" : "连载",
+          title: isHide ? "神隐".i18n : "连载".i18n,
           chapters: RxList<ComicDetailChapterItem>(serialItems)),
     );
     if (aloneItems.isNotEmpty) {
       volumes.add(
         ComicDetailVolume(
-            title: isHide ? "神隐-单行本" : "单行本",
+            title: isHide ? "神隐-单行本".i18n : "单行本".i18n,
             chapters: RxList<ComicDetailChapterItem>(aloneItems)),
       );
     }

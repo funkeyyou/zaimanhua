@@ -9,6 +9,7 @@ import 'package:zai_x/routes/app_navigator.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelRecommendController extends BasePageController<NovelRecommendModel> {
   final NovelRequest request = NovelRequest();
@@ -55,7 +56,7 @@ class NovelRecommendController extends BasePageController<NovelRecommendModel> {
       launchUrlString(
           "http://m.forum.idmzj.com/thread/detail?tid=${item.objId}");
     } else {
-      SmartDialog.showToast("未知类型，无法跳转");
+      SmartDialog.showToast("未知类型，无法跳转".i18n);
     }
   }
 

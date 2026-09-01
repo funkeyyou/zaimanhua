@@ -6,6 +6,7 @@ import 'package:zai_x/models/comic/search_item.dart';
 import 'package:zai_x/requests/comic_request.dart';
 import 'package:zai_x/routes/app_navigator.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicSearchController extends BasePageController<SearchComicItem> {
   final String keyword;
@@ -64,8 +65,8 @@ class ComicSearchController extends BasePageController<SearchComicItem> {
 
   Future numberJumpComic() async {
     if (!await DialogUtils.showAlertDialog(
-      "你输入了纯数字，是否跳转至对应的漫画?",
-      title: "漫画ID跳转",
+      "你输入了纯数字，是否跳转至对应的漫画?".i18n,
+      title: "漫画ID跳转".i18n,
     )) {
       return false;
     }

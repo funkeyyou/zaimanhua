@@ -6,6 +6,7 @@ import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/shadow_card.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicDetailRelatedPage extends StatelessWidget {
   final ComicRelatedModel related;
@@ -18,7 +19,7 @@ class ComicDetailRelatedPage extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            title: const Text("作品相关"),
+            title: Text("作品相关".i18n),
             trailing: IconButton(
               onPressed: () {
                 AppNavigator.closePage();
@@ -35,12 +36,12 @@ class ComicDetailRelatedPage extends StatelessWidget {
               padding: AppStyle.edgeInsetsA12.copyWith(top: 0),
               children: [
                 ...related.authorComics.map(
-                  (e) => buildCard("${e.authorName}的其他作品", e.data, onTap: () {
+                  (e) => buildCard("${e.authorName}的其他作品".i18n, e.data, onTap: () {
                     AppNavigator.toComicAuthorDetail(e.authorId);
                   }),
                 ),
-                buildCard("同类题材作品", related.themeComics),
-                buildCard("轻小说", related.novels, isComic: false),
+                buildCard("同类题材作品".i18n, related.themeComics),
+                buildCard("轻小说".i18n, related.novels, isComic: false),
               ],
             ),
           ),

@@ -7,6 +7,7 @@ import 'package:crypto/crypto.dart';
 import 'package:crypton/crypton.dart';
 import 'package:zai_x/app/app_error.dart';
 import 'package:zai_x/services/user_service.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class Api {
   static const String DMZJ_DOMAIN_NAME = "dmzj.com";
@@ -37,7 +38,7 @@ class Api {
       var decrypted = rsaKeypair.privateKey.decryptData(base64.decode(text));
       return decrypted;
     } catch (e) {
-      throw AppError('返回数据解密失败');
+      throw AppError('返回数据解密失败'.i18n);
     }
   }
 

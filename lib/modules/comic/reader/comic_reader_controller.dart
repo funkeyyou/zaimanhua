@@ -25,6 +25,7 @@ import 'package:get/get.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicReaderController extends BaseController {
   /// 是否为条漫
@@ -168,7 +169,7 @@ class ComicReaderController extends BaseController {
       //提醒
       if (connectivityType.value != result &&
           result == ConnectivityResult.mobile) {
-        SmartDialog.showToast("您已切换至数据网络，请注意流量消耗");
+        SmartDialog.showToast("您已切换至数据网络，请注意流量消耗".i18n);
       }
       connectivityType.value = result;
     });
@@ -222,7 +223,7 @@ class ComicReaderController extends BaseController {
       var chapterId = chapters[chapterIndex.value].chapterId;
       if (chapters[chapterIndex.value].isVip) {
         //禁止观看VIP章节
-        throw AppError("请使用动漫之家官方APP观看VIP章节");
+        throw AppError("请使用动漫之家官方APP观看VIP章节".i18n);
       }
       loadViewPoints();
 
@@ -311,7 +312,7 @@ class ComicReaderController extends BaseController {
         child: Column(
           children: [
             ListTile(
-              title: Text("目录(${chapters.length})"),
+              title: Text("目录(${chapters.length})".i18n),
               trailing: IconButton(
                 onPressed: Get.back,
                 icon: const Icon(Icons.close),
@@ -339,7 +340,7 @@ class ComicReaderController extends BaseController {
                     title: Text(item.chapterTitle),
                     subtitle: item.updateTime != 0
                         ? Text(
-                            "更新于${Utils.formatTimestampToDate(item.updateTime)}")
+                            "更新于${Utils.formatTimestampToDate(item.updateTime)}".i18n)
                         : null,
                     onTap: () {
                       chapterIndex.value = i;
@@ -360,7 +361,7 @@ class ComicReaderController extends BaseController {
   /// 下一章
   void nextChapter() {
     if (chapterIndex.value == chapters.length - 1) {
-      SmartDialog.showToast("后面没有了");
+      SmartDialog.showToast("后面没有了".i18n);
       return;
     }
 
@@ -371,7 +372,7 @@ class ComicReaderController extends BaseController {
   /// 上一章
   void forwardChapter() {
     if (chapterIndex.value == 0) {
-      SmartDialog.showToast("前面没有了");
+      SmartDialog.showToast("前面没有了".i18n);
       return;
     }
 
@@ -382,7 +383,7 @@ class ComicReaderController extends BaseController {
   /// 下一页
   void nextPage() {
     var value = currentIndex.value;
-    Log.w("下一页$value");
+    Log.w("下一页$value".i18n);
     var max = detail.value.pageUrls.length;
     if (value >= max - 1) {
       nextChapter();
@@ -394,7 +395,7 @@ class ComicReaderController extends BaseController {
   /// 上一页
   void forwardPage() {
     var value = currentIndex.value;
-    Log.w("上一页$value");
+    Log.w("上一页$value".i18n);
     if (value == 0) {
       forwardChapter();
     } else {
@@ -438,7 +439,7 @@ class ComicReaderController extends BaseController {
         child: Column(
           children: [
             ListTile(
-              title: Text("吐槽(${viewPoints.length})"),
+              title: Text("吐槽(${viewPoints.length})".i18n),
               trailing: IconButton(
                 onPressed: Get.back,
                 icon: const Icon(Icons.close),
@@ -546,14 +547,14 @@ class ComicReaderController extends BaseController {
                   sendViewPoint(e);
                 },
                 decoration: InputDecoration(
-                  hintText: "发表吐槽",
+                  hintText: "发表吐槽".i18n,
                   contentPadding: AppStyle.edgeInsetsH12,
                   border: const OutlineInputBorder(),
                   suffixIcon: TextButton(
                     onPressed: () {
                       sendViewPoint(tucaoController.text);
                     },
-                    child: const Text("发布"),
+                    child: Text("发布".i18n),
                   ),
                 ),
               ),
@@ -586,7 +587,7 @@ class ComicReaderController extends BaseController {
         child: Column(
           children: [
             ListTile(
-              title: const Text("设置"),
+              title: Text("设置".i18n),
               trailing: IconButton(
                 onPressed: Get.back,
                 icon: const Icon(Icons.close),
@@ -605,8 +606,8 @@ class ComicReaderController extends BaseController {
                           settings.setComicReaderHD(e);
                           loadDetail();
                         },
-                        title: const Text("优先加载高清图"),
-                        subtitle: const Text("部分单行本可能未分页"),
+                        title: Text("优先加载高清图".i18n),
+                        subtitle: Text("部分单行本可能未分页".i18n),
                       ),
                     ),
                     //AppStyle.vGap12,
@@ -617,7 +618,7 @@ class ComicReaderController extends BaseController {
                         padding: AppStyle.edgeInsetsT12,
                         child: buildBGItem(
                           child: ListTile(
-                            title: const Text("阅读方向"),
+                            title: Text("阅读方向".i18n),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -663,8 +664,8 @@ class ComicReaderController extends BaseController {
                         onChanged: (e) {
                           settings.setComicReaderLeftHandMode(e);
                         },
-                        title: const Text("操作反转"),
-                        subtitle: const Text("点击左侧下一页，右侧上一页"),
+                        title: Text("操作反转".i18n),
+                        subtitle: Text("点击左侧下一页，右侧上一页".i18n),
                       ),
                     ),
                     AppStyle.vGap12,
@@ -679,7 +680,7 @@ class ComicReaderController extends BaseController {
                             exitFull();
                           }
                         },
-                        title: const Text("全屏阅读"),
+                        title: Text("全屏阅读".i18n),
                       ),
                     ),
                     AppStyle.vGap12,
@@ -689,7 +690,7 @@ class ComicReaderController extends BaseController {
                         onChanged: (e) {
                           settings.setComicReaderShowStatus(e);
                         },
-                        title: const Text("显示状态信息"),
+                        title: Text("显示状态信息".i18n),
                       ),
                     ),
                     AppStyle.vGap12,
@@ -700,7 +701,7 @@ class ComicReaderController extends BaseController {
                           settings.setComicReaderShowViewPoint(e);
                           setShowViewPoint(e);
                         },
-                        title: const Text("显示吐槽"),
+                        title: Text("显示吐槽".i18n),
                       ),
                     ),
                     // AppStyle.vGap12,
@@ -720,7 +721,7 @@ class ComicReaderController extends BaseController {
                         onChanged: (e) {
                           settings.setComicReaderPageAnimation(e);
                         },
-                        title: const Text("翻页动画"),
+                        title: Text("翻页动画".i18n),
                       ),
                     ),
                   ],
@@ -838,11 +839,11 @@ class ComicReaderController extends BaseController {
 
   void sendViewPoint(String content) async {
     if (!await UserService.instance.login()) {
-      SmartDialog.showToast("请先登录");
+      SmartDialog.showToast("请先登录".i18n);
       return;
     }
     if (content.isEmpty) {
-      SmartDialog.showToast("内容不能为空");
+      SmartDialog.showToast("内容不能为空".i18n);
       return;
     }
     Get.back();

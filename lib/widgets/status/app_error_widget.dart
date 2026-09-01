@@ -5,6 +5,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
 import 'package:lottie/lottie.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class AppErrorWidget extends StatelessWidget {
   final Function()? onRefresh;
@@ -31,7 +32,7 @@ class AppErrorWidget extends StatelessWidget {
                 repeat: false,
               ),
               Text(
-                "$errorMsg\r\n点击刷新",
+                "$errorMsg\r\n点击刷新".i18n,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
@@ -47,9 +48,9 @@ class AppErrorWidget extends StatelessWidget {
                     onPressed: () {
                       Utils.copyText(
                           "$errorMsg\n${error?.stackTrace?.toString()}");
-                      SmartDialog.showToast("已复制详细信息");
+                      SmartDialog.showToast("已复制详细信息".i18n);
                     },
-                    child: const Text("复制详细信息"),
+                    child: Text("复制详细信息".i18n),
                   ),
                 ),
               ),

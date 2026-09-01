@@ -17,6 +17,7 @@ import 'package:zai_x/services/local_storage_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class UserService extends GetxService {
   static StreamController loginedStreamController =
@@ -44,11 +45,11 @@ class UserService extends GetxService {
   bool get isVip => (userProfile.value?.userfeeinfo?.isVip ?? false);
 
   String get sign => (userProfile.value?.description ?? "").isEmpty
-      ? "无个性签名"
+      ? "无个性签名".i18n
       : userProfile.value?.description ?? "";
 
   String get vipInfo =>
-      "会员有效期至${Utils.dateFormat.format(userProfile.value?.userfeeinfo?.expiresTime ?? DateTime.now())}";
+      "会员有效期至${Utils.dateFormat.format(userProfile.value?.userfeeinfo?.expiresTime ?? DateTime.now())}".i18n;
 
   /// 是否已经绑定手机号
   var bindTel = true.obs;
@@ -115,7 +116,7 @@ class UserService extends GetxService {
     if (logined.value) {
       logout();
     }
-    SmartDialog.showToast("登录已过期，请重新登录");
+    SmartDialog.showToast("登录已过期，请重新登录".i18n);
     await login();
   }
 
@@ -130,7 +131,7 @@ class UserService extends GetxService {
       if (userProfile.value?.isSign == false) {
         try {
           await request.userSignIn();
-          SmartDialog.showToast("签到成功");
+          SmartDialog.showToast("签到成功".i18n);
         } catch (e) {
           SmartDialog.showToast(e.toString());
         }
@@ -181,7 +182,7 @@ class UserService extends GetxService {
         subscribedNovelIds.addAll(ids);
       }
 
-      SmartDialog.showToast("订阅成功");
+      SmartDialog.showToast("订阅成功".i18n);
       return true;
     } catch (e) {
       SmartDialog.showToast(e.toString());
@@ -204,7 +205,7 @@ class UserService extends GetxService {
       } else if (type == AppConstant.kTypeNovel) {
         subscribedNovelIds.removeAll(ids);
       }
-      SmartDialog.showToast("已取消订阅");
+      SmartDialog.showToast("已取消订阅".i18n);
       return true;
     } catch (e) {
       SmartDialog.showToast(e.toString());

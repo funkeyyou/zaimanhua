@@ -3,11 +3,12 @@ import 'package:zai_x/app/app_style.dart';
 import 'package:zai_x/modules/common/comment/comment_list_view.dart';
 import 'package:zai_x/routes/app_navigator.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class CommentPage extends StatelessWidget {
   final int objId;
   final int type;
-  const CommentPage({required this.objId, required this.type, super.key});
+  CommentPage({required this.objId, required this.type, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +27,9 @@ class CommentPage extends StatelessWidget {
               labelColor: Theme.of(context).colorScheme.primary,
               unselectedLabelColor:
                   Get.isDarkMode ? Colors.white70 : Colors.black87,
-              tabs: const [
-                Tab(text: "最新评论"),
-                Tab(text: "热门评论"),
+              tabs: [
+                Tab(text: "最新评论".i18n),
+                Tab(text: "热门评论".i18n),
               ],
             ),
           ),

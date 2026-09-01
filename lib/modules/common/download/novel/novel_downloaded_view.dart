@@ -7,6 +7,7 @@ import 'package:zai_x/services/novel_download_service.dart';
 import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/status/app_empty_widget.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class NovelDownloadedView extends StatelessWidget {
   const NovelDownloadedView({super.key});
@@ -75,7 +76,7 @@ class NovelDownloadedView extends StatelessWidget {
                   ),
                   AppStyle.vGap4,
                   Text(
-                    "已下载${item.chapterCount}章",
+                    "已下载${item.chapterCount}章".i18n,
                     style: const TextStyle(color: Colors.grey, fontSize: 14),
                   ),
                 ],

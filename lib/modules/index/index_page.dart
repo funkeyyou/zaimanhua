@@ -7,6 +7,7 @@ import 'package:zai_x/routes/app_navigator.dart';
 import 'package:zai_x/routes/app_pages.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class IndexPage extends GetView<IndexController> {
   const IndexPage({super.key});
@@ -41,26 +42,26 @@ class IndexPage extends GetView<IndexController> {
                 showSelectedLabels: false,
                 showUnselectedLabels: false,
                 backgroundColor: Theme.of(context).cardColor,
-                items: const [
+                items: [
                   BottomNavigationBarItem(
                     icon: Icon(Remix.bear_smile_line),
                     activeIcon: Icon(Remix.bear_smile_fill),
-                    label: "漫画",
+                    label: "漫画".i18n,
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Remix.article_line),
                     activeIcon: Icon(Remix.article_fill),
-                    label: "资讯",
+                    label: "资讯".i18n,
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Remix.book_open_line),
                     activeIcon: Icon(Remix.book_open_fill),
-                    label: "轻小说",
+                    label: "轻小说".i18n,
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Remix.user_smile_line),
                     activeIcon: Icon(Remix.user_smile_fill),
-                    label: "我的",
+                    label: "我的".i18n,
                   ),
                 ],
               ),
@@ -83,7 +84,7 @@ class IndexPage extends GetView<IndexController> {
         children: [
           Obx(
             () => Padding(
-              padding: const EdgeInsets.only(right: 2),
+              padding: EdgeInsets.only(right: 2),
               child: NavigationRail(
                 elevation: 2,
                 labelType: NavigationRailLabelType.all,
@@ -100,22 +101,22 @@ class IndexPage extends GetView<IndexController> {
                   fontSize: 10,
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
-                destinations: const [
+                destinations: [
                   NavigationRailDestination(
                     icon: Icon(Remix.bear_smile_line),
-                    label: Text("漫画"),
+                    label: Text("漫画".i18n),
                   ),
                   NavigationRailDestination(
                     icon: Icon(Remix.article_line),
-                    label: Text("资讯"),
+                    label: Text("资讯".i18n),
                   ),
                   NavigationRailDestination(
                     icon: Icon(Remix.book_open_line),
-                    label: Text("轻小说"),
+                    label: Text("轻小说".i18n),
                   ),
                   NavigationRailDestination(
                     icon: Icon(Remix.user_smile_line),
-                    label: Text("我的"),
+                    label: Text("我的".i18n),
                   ),
                 ],
               ),

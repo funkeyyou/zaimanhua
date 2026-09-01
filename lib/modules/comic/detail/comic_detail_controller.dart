@@ -16,6 +16,7 @@ import 'package:zai_x/services/db_service.dart';
 import 'package:zai_x/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:zai_x/app/i18n.dart';
 
 class ComicDetailControler extends BaseController {
   final int comicId;
@@ -105,7 +106,7 @@ class ComicDetailControler extends BaseController {
         val!.volumes = result.volumes;
       });
     } catch (e) {
-      SmartDialog.showToast("无法获取章节");
+      SmartDialog.showToast("无法获取章节".i18n);
     }
   }
 
@@ -183,11 +184,11 @@ class ComicDetailControler extends BaseController {
   /// 开始/继续阅读
   void read() {
     if (detail.value.volumes.isEmpty) {
-      SmartDialog.showToast("没有可阅读的章节");
+      SmartDialog.showToast("没有可阅读的章节".i18n);
       return;
     }
     if (detail.value.volumes.first.chapters.isEmpty) {
-      SmartDialog.showToast("没有可阅读的章节");
+      SmartDialog.showToast("没有可阅读的章节".i18n);
       return;
     }
     //查找记录
@@ -217,7 +218,7 @@ class ComicDetailControler extends BaseController {
           isLongComic: detail.value.isLong,
         );
       } else {
-        SmartDialog.showToast("未找到历史记录对应章节，将从头开始阅读");
+        SmartDialog.showToast("未找到历史记录对应章节，将从头开始阅读".i18n);
         readStart();
       }
     } else {
@@ -245,7 +246,7 @@ class ComicDetailControler extends BaseController {
   void readChapter(ComicDetailVolume volume, ComicDetailChapterItem item) {
     //禁止观看VIP章节
     if (item.isVip) {
-      SmartDialog.showToast("请使用动漫之家官方APP观看VIP章节");
+      SmartDialog.showToast("请使用动漫之家官方APP观看VIP章节".i18n);
       return;
     }
     var chapters = List<ComicDetailChapterItem>.from(volume.chapters);
@@ -306,13 +307,13 @@ class ComicDetailControler extends BaseController {
         cover: detail.value.cover,
       );
       favorited.value = true;
-      SmartDialog.showToast("已将漫画添加至本地收藏");
+      SmartDialog.showToast("已将漫画添加至本地收藏".i18n);
     }
   }
 
   void cancelFavorite() {
     DBService.instance.removeComicFavorite(comicId: comicId);
     favorited.value = false;
-    SmartDialog.showToast("已从本地收藏删除漫画");
+    SmartDialog.showToast("已从本地收藏删除漫画".i18n);
   }
 }
