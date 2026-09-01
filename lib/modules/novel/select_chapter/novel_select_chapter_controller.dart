@@ -26,7 +26,7 @@ class NovelSelectChapterController extends BaseController {
     super.onInit();
   }
 
-  /// 載入資訊
+  /// 加载信息
   void loadDetail() async {
     try {
       pageLoadding.value = true;
@@ -88,11 +88,11 @@ class NovelSelectChapterController extends BaseController {
       chapterIds.addAll(item);
     }
     if (chapterIds.isEmpty) {
-      SmartDialog.showToast("請選擇需要下載的章節");
+      SmartDialog.showToast("请选择需要下载的章节");
       return;
     }
     for (var id in chapterIds) {
-      //搜尋章節
+      //搜索章节
       NovelDetailVolume? volume;
       NovelDetailChapter? chapter;
       for (var item in volumes) {
@@ -121,6 +121,6 @@ class NovelSelectChapterController extends BaseController {
       );
     }
     cleanAll();
-    SmartDialog.showToast("已新增到下載列表，下載過程中請保持APP在前臺執行");
+    SmartDialog.showToast("已添加到下载列表，下载过程中请保持APP在前台运行");
   }
 }

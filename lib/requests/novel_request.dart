@@ -13,7 +13,7 @@ import 'package:zai_x/requests/common/http_client.dart';
 import 'package:zai_x/services/local_storage_service.dart';
 
 class NovelRequest {
-  /// 輕小說-推薦
+  /// 轻小说-推荐
   Future<List<NovelRecommendModel>> recommend() async {
     var list = <NovelRecommendModel>[];
     var result =
@@ -24,8 +24,8 @@ class NovelRequest {
     return list;
   }
 
-  /// 輕小說-更新
-  /// - [page] 頁數從0開始
+  /// 轻小说-更新
+  /// - [page] 页数从0开始
   Future<List<NovelLatestModel>> latest({int page = 1}) async {
     var list = <NovelLatestModel>[];
     var result = await HttpClient.instance.getJson(
@@ -45,7 +45,7 @@ class NovelRequest {
     return list;
   }
 
-  /// 輕小說-分類
+  /// 轻小说-分类
   Future<List<NovelCategoryModel>> categores() async {
     var list = <NovelCategoryModel>[];
     var result = await HttpClient.instance.getJson(
@@ -61,7 +61,7 @@ class NovelRequest {
     return list;
   }
 
-  /// 分類-篩選
+  /// 分类-筛选
   Future<List<NovelCategoryFilterModel>> categoryFilter() async {
     var result = await HttpClient.instance.getJson(
       '/comic/filter/category',
@@ -73,14 +73,14 @@ class NovelRequest {
       list.add(NovelCategoryFilterItemModel.fromJson(item));
     }
     return [
-      NovelCategoryFilterModel(title: "題材", items: list),
+      NovelCategoryFilterModel(title: "题材", items: list),
     ];
   }
 
-  /// 分類下漫畫
-  /// - [cateId] 分類
-  /// - [sort] 排序,0=人氣,1=更新
-  /// - [page] 頁數，從0開始
+  /// 分类下漫画
+  /// - [cateId] 分类
+  /// - [sort] 排序,0=人气,1=更新
+  /// - [page] 页数，从0开始
   Future<List<NovelCategoryNovelModel>> categoryNovel({
     int cateId = 0,
     int status = 0,
@@ -128,7 +128,7 @@ class NovelRequest {
     return list;
   }
 
-  /// 排行榜-分類
+  /// 排行榜-分类
   Future<Map<int, String>> rankFilter() async {
     var result = await HttpClient.instance.getJson(
       '/comic/filter/category',
@@ -146,9 +146,9 @@ class NovelRequest {
     return map;
   }
 
-  /// 輕小說搜尋
-  /// - [page] 頁數從0開始
-  /// - [keyword] 關鍵字
+  /// 轻小说搜索
+  /// - [page] 页数从0开始
+  /// - [keyword] 关键字
   Future<List<NovelSearchModel>> search(
       {required String keyword, int page = 1}) async {
     var list = <NovelSearchModel>[];
@@ -168,7 +168,7 @@ class NovelRequest {
     return list;
   }
 
-  /// 小說搜尋熱詞
+  /// 小说搜索热词
   Future<Map<int, String>> searchHotWord() async {
     var result = await HttpClient.instance.getJson(
       '/search/hot/1.json',
@@ -182,7 +182,7 @@ class NovelRequest {
     return map;
   }
 
-  /// 小說詳情
+  /// 小说详情
   Future<NovelDetailModel> novelDetail({
     required int novelId,
   }) async {
@@ -196,7 +196,7 @@ class NovelRequest {
     return data;
   }
 
-  /// 小說章節
+  /// 小说章节
   Future<List<NovelVolumeDetailModel>> novelChapter({
     required int novelId,
   }) async {
@@ -212,11 +212,11 @@ class NovelRequest {
     return list;
   }
 
-  /// 小說正文內容
+  /// 小说正文内容
   /// - [volumeId] 卷ID
-  /// - [chapterId] 章節ID
+  /// - [chapterId] 章节ID
   /// - [cancel] 取消Token
-  /// - [cache] 是否快取
+  /// - [cache] 是否缓存
   Future<String> novelContent({
     required int volumeId,
     required int chapterId,

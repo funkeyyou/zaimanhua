@@ -44,7 +44,7 @@ class ComicAuthorDetailPage extends StatelessWidget {
           TextButton.icon(
             onPressed: controller.subscribeAll,
             icon: const Icon(Remix.heart_line),
-            label: const Text("全部訂閱"),
+            label: const Text("全部订阅"),
           ),
         ],
       ),

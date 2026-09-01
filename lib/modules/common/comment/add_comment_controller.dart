@@ -20,7 +20,7 @@ class AddCommentController extends BaseController {
 
   void submit() async {
     if (textEditingController.text.isEmpty) {
-      SmartDialog.showToast("內容不能為空");
+      SmartDialog.showToast("内容不能为空");
       return;
     }
     try {
@@ -42,7 +42,7 @@ class AddCommentController extends BaseController {
         );
       }
 
-      SmartDialog.showToast("發表成功");
+      SmartDialog.showToast("发表成功");
       EventBus.instance.emit(EventBus.kRefreshComment, objId);
       AppNavigator.closePage();
     } catch (e) {

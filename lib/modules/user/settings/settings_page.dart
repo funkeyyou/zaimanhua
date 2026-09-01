@@ -29,10 +29,10 @@ class SettingsPage extends StatelessWidget {
               unselectedLabelColor:
                   Get.isDarkMode ? Colors.white70 : Colors.black87,
               tabs: const [
-                Tab(text: "常規"),
-                Tab(text: "漫畫"),
-                Tab(text: "小說"),
-                Tab(text: "下載"),
+                Tab(text: "常规"),
+                Tab(text: "漫画"),
+                Tab(text: "小说"),
+                Tab(text: "下载"),
               ],
             ),
           ),
@@ -55,7 +55,7 @@ class SettingsPage extends StatelessWidget {
         padding: AppStyle.edgeInsetsA12,
         children: [
           ListTile(
-            title: const Text("清除圖片快取"),
+            title: const Text("清除图片缓存"),
             subtitle: Text(controller.imageCacheSize.value),
             trailing: OutlinedButton(
               onPressed: () {
@@ -65,7 +65,7 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text("清除小說快取"),
+            title: const Text("清除小说缓存"),
             subtitle: Text(controller.novelCacheSize.value),
             trailing: OutlinedButton(
               onPressed: () {},
@@ -77,8 +77,8 @@ class SettingsPage extends StatelessWidget {
           //   onChanged: (e) {
           //     controller.settings.setComicSearchUseWebApi(e);
           //   },
-          //   title: const Text("使用Web介面搜尋漫畫"),
-          //   subtitle: const Text("開啟後可以搜尋到更多漫畫"),
+          //   title: const Text("使用Web接口搜索漫画"),
+          //   subtitle: const Text("开启后可以搜索到更多漫画"),
           // ),
           SwitchListTile(
             value: controller.settings.eInkMode.value,
@@ -86,30 +86,30 @@ class SettingsPage extends StatelessWidget {
               controller.settings.setEInkMode(e);
             },
             title: const Text("E-Ink 模式"),
-            subtitle: const Text("關閉翻頁動畫和首頁輪播，開啟音量鍵翻頁"),
+            subtitle: const Text("关闭翻页动画和首页轮播，开启音量键翻页"),
           ),
           SwitchListTile(
             value: controller.settings.useSystemFontSize.value,
             onChanged: (e) {
               controller.settings.setUseSystemFontSize(e);
             },
-            title: const Text("字型大小跟隨系統"),
-            subtitle: const Text("開啟可能會有佈局錯亂"),
+            title: const Text("字体大小跟随系统"),
+            subtitle: const Text("开启可能会有布局错乱"),
           ),
           SwitchListTile(
             value: controller.settings.collectHideComic.value,
             onChanged: (e) {
               controller.settings.setCollectHideComic(e);
             },
-            title: const Text("自動收藏神隱漫畫"),
-            subtitle: const Text("瀏覽神隱漫畫時自動新增到本機收藏"),
+            title: const Text("自动收藏神隐漫画"),
+            subtitle: const Text("浏览神隐漫画时自动添加到本机收藏"),
           ),
           SwitchListTile(
             value: controller.settings.readerVolumeKeyTurnPage.value,
             onChanged: (e) {
               controller.settings.setReaderVolumeKeyTurnPage(e);
             },
-            title: const Text("音量鍵翻頁"),
+            title: const Text("音量键翻页"),
           ),
         ],
       ),
@@ -126,11 +126,11 @@ class SettingsPage extends StatelessWidget {
             onChanged: (e) {
               controller.settings.setComicReaderHD(e);
             },
-            title: const Text("優先載入高畫質圖"),
-            subtitle: const Text("部分單行本可能未分頁"),
+            title: const Text("优先加载高清图"),
+            subtitle: const Text("部分单行本可能未分页"),
           ),
           ListTile(
-            title: const Text("閱讀方向"),
+            title: const Text("阅读方向"),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -165,43 +165,43 @@ class SettingsPage extends StatelessWidget {
             onChanged: (e) {
               controller.settings.setComicReaderLeftHandMode(e);
             },
-            title: const Text("操作反轉"),
-            subtitle: const Text("點選左側下一頁，右側上一頁"),
+            title: const Text("操作反转"),
+            subtitle: const Text("点击左侧下一页，右侧上一页"),
           ),
           SwitchListTile(
             value: controller.settings.comicReaderFullScreen.value,
             onChanged: (e) {
               controller.settings.setComicReaderFullScreen(e);
             },
-            title: const Text("全屏閱讀"),
+            title: const Text("全屏阅读"),
           ),
           SwitchListTile(
             value: controller.settings.comicReaderShowStatus.value,
             onChanged: (e) {
               controller.settings.setComicReaderShowStatus(e);
             },
-            title: const Text("顯示狀態資訊"),
+            title: const Text("显示状态信息"),
           ),
           SwitchListTile(
             value: controller.settings.comicReaderShowViewPoint.value,
             onChanged: (e) {
               controller.settings.setComicReaderShowViewPoint(e);
             },
-            title: const Text("顯示吐槽"),
+            title: const Text("显示吐槽"),
           ),
           SwitchListTile(
             value: controller.settings.comicReaderOldViewPoint.value,
             onChanged: (e) {
               controller.settings.setComicReaderOldViewPoint(e);
             },
-            title: const Text("舊版吐槽"),
+            title: const Text("旧版吐槽"),
           ),
           SwitchListTile(
             value: controller.settings.comicReaderPageAnimation.value,
             onChanged: (e) {
               controller.settings.setComicReaderPageAnimation(e);
             },
-            title: const Text("翻頁動畫"),
+            title: const Text("翻页动画"),
           ),
         ],
       ),
@@ -214,7 +214,7 @@ class SettingsPage extends StatelessWidget {
         padding: AppStyle.edgeInsetsA12,
         children: [
           ListTile(
-            title: const Text("閱讀方向"),
+            title: const Text("阅读方向"),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -249,32 +249,32 @@ class SettingsPage extends StatelessWidget {
             onChanged: (e) {
               controller.settings.setNovelReaderLeftHandMode(e);
             },
-            title: const Text("操作反轉"),
-            subtitle: const Text("點選左側下一頁，右側上一頁"),
+            title: const Text("操作反转"),
+            subtitle: const Text("点击左侧下一页，右侧上一页"),
           ),
           // SwitchListTile(
           //   value: settings.novelReaderFullScreen.value,
           //   onChanged: (e) {
           //     settings.setNovelReaderFullScreen(e);
           //   },
-          //   title: const Text("全屏閱讀"),
+          //   title: const Text("全屏阅读"),
           // ),
           SwitchListTile(
             value: controller.settings.novelReaderShowStatus.value,
             onChanged: (e) {
               controller.settings.setNovelReaderShowStatus(e);
             },
-            title: const Text("顯示狀態資訊"),
+            title: const Text("显示状态信息"),
           ),
           SwitchListTile(
             value: controller.settings.novelReaderPageAnimation.value,
             onChanged: (e) {
               controller.settings.setNovelReaderPageAnimation(e);
             },
-            title: const Text("翻頁動畫"),
+            title: const Text("翻页动画"),
           ),
           ListTile(
-            title: const Text("字型大小"),
+            title: const Text("字体大小"),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -307,7 +307,7 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text("字型"),
+            title: const Text("字体"),
             subtitle: Text(controller.settings.novelReaderFontName),
             onTap: controller.showNovelReaderFontDialog,
             trailing: const Icon(
@@ -350,7 +350,7 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text("閱讀主題"),
+            title: const Text("阅读主题"),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: AppColor.novelThemes.keys
@@ -392,11 +392,11 @@ class SettingsPage extends StatelessWidget {
                   .first,
             ),
             child: Text(
-              """這是一段測試文字，可以預覽上面的設定效果。
+              """这是一段测试文字，可以预览上面的设置效果。
 
-　　晉太元中，武陵人捕魚為業。緣溪行，忘路之遠近。忽逢桃花林，夾岸數百步，中無雜樹，芳草鮮美，落英繽紛。漁人甚異之，復前行，欲窮其林。
-　　林盡水源，便得一山，山有小口，彷彿若有光。便舍船，從口入。初極狹，才通人。復行數十步，豁然開朗。土地平曠，屋舍儼然，有良田、美池、桑竹之屬。阡陌交通，雞犬相聞。其中往來種作，男女衣著，悉如外人。黃髮垂髫，並怡然自樂……""",
-              //不需要跟隨系統
+　　晋太元中，武陵人捕鱼为业。缘溪行，忘路之远近。忽逢桃花林，夹岸数百步，中无杂树，芳草鲜美，落英缤纷。渔人甚异之，复前行，欲穷其林。
+　　林尽水源，便得一山，山有小口，仿佛若有光。便舍船，从口入。初极狭，才通人。复行数十步，豁然开朗。土地平旷，屋舍俨然，有良田、美池、桑竹之属。阡陌交通，鸡犬相闻。其中往来种作，男女衣着，悉如外人。黄发垂髫，并怡然自乐……""",
+              //不需要跟随系统
               textScaler: const TextScaler.linear(1.0),
               style: TextStyle(
                 fontFamily: controller.settings.novelReaderFontFamily,
@@ -424,10 +424,10 @@ class SettingsPage extends StatelessWidget {
             onChanged: (e) {
               controller.settings.setDownloadAllowCellular(e);
             },
-            title: const Text("允許使用流量下載"),
+            title: const Text("允许使用流量下载"),
           ),
           ListTile(
-            title: const Text("漫畫最大任務數"),
+            title: const Text("漫画最大任务数"),
             onTap: () {
               controller.setDownloadComicTask();
             },
@@ -436,7 +436,7 @@ class SettingsPage extends StatelessWidget {
               children: [
                 Text(
                   controller.settings.downloadComicTaskCount.value == 0
-                      ? "無限制"
+                      ? "无限制"
                       : controller.settings.downloadComicTaskCount.toString(),
                 ),
                 AppStyle.hGap4,
@@ -448,7 +448,7 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text("小說最大任務數"),
+            title: const Text("小说最大任务数"),
             onTap: () {
               controller.setDownloadNovelTask();
             },
@@ -457,7 +457,7 @@ class SettingsPage extends StatelessWidget {
               children: [
                 Text(
                   controller.settings.downloadNovelTaskCount.value == 0
-                      ? "無限制"
+                      ? "无限制"
                       : controller.settings.downloadNovelTaskCount.toString(),
                 ),
                 AppStyle.hGap4,

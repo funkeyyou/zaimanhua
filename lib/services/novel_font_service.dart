@@ -23,7 +23,7 @@ class NovelFontService extends GetxService {
 
   String getFontName(String fontPath) {
     if (fontPath.isEmpty) {
-      return '系統預設';
+      return '系统默认';
     }
     return getFontNameFromFileName(p.basename(fontPath));
   }
@@ -87,12 +87,12 @@ class NovelFontService extends GetxService {
 
     final extension = p.extension(file.name).toLowerCase();
     if (!['.ttf', '.otf', '.ttc'].contains(extension)) {
-      throw Exception('請選擇 ttf、otf 或 ttc 字型檔案');
+      throw Exception('请选择 ttf、otf 或 ttc 字体文件');
     }
 
     final fontName = getFontNameFromFileName(file.name);
     if (hasSameFontName(fontName, existingFontPaths)) {
-      throw Exception('已新增同名字型：$fontName');
+      throw Exception('已添加同名字体：$fontName');
     }
 
     final dir = await _fontDirectory();
@@ -129,7 +129,7 @@ class NovelFontService extends GetxService {
     }
     final file = File(fontPath);
     if (!await file.exists()) {
-      throw Exception('字型檔案不存在');
+      throw Exception('字体文件不存在');
     }
     try {
       final bytes = await file.readAsBytes();

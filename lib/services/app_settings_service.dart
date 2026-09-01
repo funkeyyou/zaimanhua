@@ -14,7 +14,7 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kThemeMode, 0);
     firstRun = LocalStorageService.instance
         .getValue(LocalStorageService.kFirstRun, true);
-    //漫畫
+    //漫画
     comicReaderDirection.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderDirection, 0);
     comicReaderFullScreen.value = LocalStorageService.instance
@@ -33,7 +33,7 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kComicReaderPageAnimation, true);
     comicReaderOldViewPoint.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderOldViewPoint, false);
-    //小說
+    //小说
     novelReaderDirection.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderDirection, 0);
     novelReaderFontSize.value = LocalStorageService.instance
@@ -80,23 +80,23 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kNovelReaderLeftHandMode, false);
     novelReaderPageAnimation.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderPageAnimation, true);
-    //下載
+    //下载
     downloadAllowCellular.value = LocalStorageService.instance
         .getValue(LocalStorageService.kDownloadAllowCellular, true);
     downloadComicTaskCount.value = LocalStorageService.instance
         .getValue(LocalStorageService.kDownloadComicTaskCount, 5);
     downloadNovelTaskCount.value = LocalStorageService.instance
         .getValue(LocalStorageService.kDownloadNovelTaskCount, 5);
-    //搜尋API
+    //搜索API
     comicSearchUseWebApi.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicSearchUseWebApi, false);
-    //字型大小
+    //字体大小
     useSystemFontSize.value = LocalStorageService.instance
         .getValue(LocalStorageService.kUseSystemFontSize, false);
-    //新聞字型
+    //新闻字体
     newsFontSize.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNewsFontSize, 15);
-    //自動新增神隱漫畫至收藏夾
+    //自动添加神隐漫画至收藏夹
     collectHideComic.value = LocalStorageService.instance
         .getValue(LocalStorageService.kCollectHideComic, false);
     readerVolumeKeyTurnPage.value = LocalStorageService.instance
@@ -112,7 +112,7 @@ class AppSettingsService extends GetxController {
   void changeTheme() {
     Get.dialog(
       SimpleDialog(
-        title: const Text("設定主題"),
+        title: const Text("设置主题"),
         children: [
           RadioGroup<int>(
             groupValue: themeMode.value,
@@ -123,11 +123,11 @@ class AppSettingsService extends GetxController {
             child: const Column(
               children: [
                 RadioListTile<int>(
-                  title: Text("跟隨系統"),
+                  title: Text("跟随系统"),
                   value: 0,
                 ),
                 RadioListTile<int>(
-                  title: Text("淺色模式"),
+                  title: Text("浅色模式"),
                   value: 1,
                 ),
                 RadioListTile<int>(
@@ -150,7 +150,7 @@ class AppSettingsService extends GetxController {
     Get.changeThemeMode(mode);
   }
 
-  /// 漫畫閱讀方向
+  /// 漫画阅读方向
   /// * [0] 左右
   /// * [1] 上下
   /// * [2] 右左
@@ -164,7 +164,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kComicReaderDirection, direction);
   }
 
-  /// 漫畫全屏閱讀
+  /// 漫画全屏阅读
   RxBool comicReaderFullScreen = true.obs;
   void setComicReaderFullScreen(bool value) {
     comicReaderFullScreen.value = value;
@@ -172,7 +172,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kComicReaderFullScreen, value);
   }
 
-  /// 漫畫閱讀顯示狀態資訊
+  /// 漫画阅读显示状态信息
   RxBool comicReaderShowStatus = true.obs;
   void setComicReaderShowStatus(bool value) {
     comicReaderShowStatus.value = value;
@@ -180,7 +180,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kComicReaderShowStatus, value);
   }
 
-  /// 漫畫閱讀尾頁顯示觀點/吐槽
+  /// 漫画阅读尾页显示观点/吐槽
   RxBool comicReaderShowViewPoint = true.obs;
   void setComicReaderShowViewPoint(bool value) {
     comicReaderShowViewPoint.value = value;
@@ -188,7 +188,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kComicReaderShowViewPoint, value);
   }
 
-  /// 啟用舊板吐槽
+  /// 启用旧板吐槽
   RxBool comicReaderOldViewPoint = false.obs;
   void setComicReaderOldViewPoint(bool value) {
     comicReaderOldViewPoint.value = value;
@@ -196,7 +196,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kComicReaderOldViewPoint, value);
   }
 
-  /// 小說閱讀方向
+  /// 小说阅读方向
   /// * [0] 左右
   /// * [1] 上下
   /// * [2] 右左
@@ -210,13 +210,13 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kNovelReaderDirection, direction);
   }
 
-  /// 小說字型
+  /// 小说字体
   var novelReaderFontSize = 16.obs;
   void setNovelReaderFontSize(int size) {
     if (size < 5) {
       size = 5;
     }
-    //應該沒人需要這麼大的字型吧...
+    //应该没人需要这么大的字体吧...
     if (size > 56) {
       size = 56;
     }
@@ -241,7 +241,7 @@ class AppSettingsService extends GetxController {
             fontName,
             novelReaderFontPaths,
           )) {
-        throw Exception('已新增同名字型：$fontName');
+        throw Exception('已添加同名字体：$fontName');
       }
       await NovelFontService.instance.loadFont(path);
       if (!novelReaderFontPaths.contains(path)) {
@@ -279,13 +279,13 @@ class AppSettingsService extends GetxController {
     );
   }
 
-  /// 小說行距
+  /// 小说行距
   var novelReaderLineSpacing = 1.5.obs;
   void setNovelReaderLineSpacing(double spacing) {
     if (spacing < 1) {
       spacing = 1;
     }
-    //應該沒人需要這麼大的字型吧...
+    //应该没人需要这么大的字体吧...
     if (spacing > 5) {
       spacing = 5;
     }
@@ -294,7 +294,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kNovelReaderLineSpacing, spacing);
   }
 
-  /// 小說閱讀主題
+  /// 小说阅读主题
   var novelReaderTheme = 0.obs;
   void setNovelReaderTheme(int theme) {
     novelReaderTheme.value = theme;
@@ -302,7 +302,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kNovelReaderTheme, theme);
   }
 
-  /// 漫畫全屏閱讀
+  /// 漫画全屏阅读
   RxBool novelReaderFullScreen = true.obs;
   void setNovelReaderFullScreen(bool value) {
     novelReaderFullScreen.value = value;
@@ -310,7 +310,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kNovelReaderFullScreen, value);
   }
 
-  /// 漫畫閱讀顯示狀態資訊
+  /// 漫画阅读显示状态信息
   RxBool novelReaderShowStatus = true.obs;
   void setNovelReaderShowStatus(bool value) {
     novelReaderShowStatus.value = value;
@@ -318,7 +318,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kNovelReaderShowStatus, value);
   }
 
-  /// 下載是否允許使用流量
+  /// 下载是否允许使用流量
   RxBool downloadAllowCellular = true.obs;
   void setDownloadAllowCellular(bool value) {
     downloadAllowCellular.value = value;
@@ -326,7 +326,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kDownloadAllowCellular, value);
   }
 
-  /// 下載漫畫最大任務數
+  /// 下载漫画最大任务数
   var downloadComicTaskCount = 5.obs;
   void setDownloadComicTaskCount(int task) {
     downloadComicTaskCount.value = task;
@@ -334,7 +334,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kDownloadComicTaskCount, task);
   }
 
-  /// 下載漫畫最大任務數
+  /// 下载漫画最大任务数
   var downloadNovelTaskCount = 5.obs;
   void setDownloadNovelTaskCount(int task) {
     downloadNovelTaskCount.value = task;
@@ -342,7 +342,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kDownloadNovelTaskCount, task);
   }
 
-  /// 漫畫搜尋使用Web介面
+  /// 漫画搜索使用Web接口
   var comicSearchUseWebApi = false.obs;
   void setComicSearchUseWebApi(bool e) {
     comicSearchUseWebApi.value = e;
@@ -350,7 +350,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kComicSearchUseWebApi, e);
   }
 
-  /// 顯示字型大小跟隨系統
+  /// 显示字体大小跟随系统
   var useSystemFontSize = false.obs;
   void setUseSystemFontSize(bool e) {
     useSystemFontSize.value = e;
@@ -358,7 +358,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kUseSystemFontSize, e);
   }
 
-  /// 漫畫閱讀左手模式
+  /// 漫画阅读左手模式
   RxBool comicReaderLeftHandMode = false.obs;
   void setComicReaderLeftHandMode(bool value) {
     comicReaderLeftHandMode.value = value;
@@ -366,7 +366,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kComicReaderLeftHandMode, value);
   }
 
-  /// 小說閱讀左手模式
+  /// 小说阅读左手模式
   RxBool novelReaderLeftHandMode = false.obs;
   void setNovelReaderLeftHandMode(bool value) {
     novelReaderLeftHandMode.value = value;
@@ -374,7 +374,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kNovelReaderLeftHandMode, value);
   }
 
-  /// 漫畫閱讀優先載入高畫質圖
+  /// 漫画阅读优先加载高清图
   RxBool comicReaderHD = false.obs;
   void setComicReaderHD(bool value) {
     comicReaderHD.value = value;
@@ -382,7 +382,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kComicReaderHD, value);
   }
 
-  /// 漫畫閱讀翻頁動畫
+  /// 漫画阅读翻页动画
   RxBool comicReaderPageAnimation = true.obs;
   void setComicReaderPageAnimation(bool value) {
     if (eInkMode.value && value) {
@@ -393,7 +393,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kComicReaderPageAnimation, value);
   }
 
-  /// 小說閱讀翻頁動畫
+  /// 小说阅读翻页动画
   RxBool novelReaderPageAnimation = true.obs;
   void setNovelReaderPageAnimation(bool value) {
     if (eInkMode.value && value) {
@@ -404,7 +404,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kNovelReaderPageAnimation, value);
   }
 
-  /// 下載漫畫最大任務數
+  /// 下载漫画最大任务数
   var newsFontSize = 15.obs;
   void setNewsFontSize(int size) {
     newsFontSize.value = size;
@@ -412,7 +412,7 @@ class AppSettingsService extends GetxController {
         .setValue(LocalStorageService.kNewsFontSize, size);
   }
 
-  /// 自動新增神隱漫畫至收藏夾
+  /// 自动添加神隐漫画至收藏夹
   RxBool collectHideComic = false.obs;
   void setCollectHideComic(bool value) {
     collectHideComic.value = value;

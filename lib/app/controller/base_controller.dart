@@ -8,30 +8,30 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
 class BaseController extends GetxController {
-  /// 載入中，更新頁面
+  /// 加载中，更新页面
   var pageLoadding = false.obs;
 
-  /// 載入中,不會更新頁面
+  /// 加载中,不会更新页面
   var loadding = false;
 
-  /// 空白頁面
+  /// 空白页面
   var pageEmpty = false.obs;
 
-  /// 頁面錯誤
+  /// 页面错误
   var pageError = false.obs;
 
-  /// 未登入
+  /// 未登录
   var notLogin = false.obs;
 
-  /// 錯誤資訊
+  /// 错误信息
   var errorMsg = "".obs;
 
   Error? error;
 
-  /// 顯示錯誤
-  /// * [msg] 錯誤資訊
-  /// * [showPageError] 顯示頁面錯誤
-  /// * 只在第一頁載入錯誤時showPageError=true，後續頁載入錯誤時使用Toast彈出通知
+  /// 显示错误
+  /// * [msg] 错误信息
+  /// * [showPageError] 显示页面错误
+  /// * 只在第一页加载错误时showPageError=true，后续页加载错误时使用Toast弹出通知
   void handleError(Object exception, {bool showPageError = false}) {
     Log.logPrint(exception);
     var msg = exceptionToString(exception);
@@ -105,7 +105,7 @@ class BasePageController<T> extends BaseController {
       pageLoadding.value = currentPage == 1;
 
       var result = await getData(currentPage, pageSize);
-      //是否可以載入更多
+      //是否可以加载更多
       if (result.isNotEmpty) {
         currentPage++;
         canLoadMore.value = true;
@@ -116,7 +116,7 @@ class BasePageController<T> extends BaseController {
           pageEmpty.value = true;
         }
       }
-      // 賦值資料
+      // 赋值数据
       if (currentPage == 1) {
         list.value = result;
       } else {

@@ -6,9 +6,9 @@ import 'package:get/get.dart';
 class ComicLatestController extends BasePageController<ComicUpdateItemModel> {
   final ComicRequest request = ComicRequest();
   Map types = {
-    "全部漫畫": 100,
-    "原創漫畫": 1,
-    "譯製漫畫": 0,
+    "全部漫画": 100,
+    "原创漫画": 1,
+    "译制漫画": 0,
   };
   var type = 100.obs;
 

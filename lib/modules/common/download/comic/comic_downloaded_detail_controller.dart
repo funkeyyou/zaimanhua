@@ -13,13 +13,13 @@ class ComicDownloadedDetailController extends GetxController {
   final ComicDownloadedItem info;
   ComicDownloadedDetailController(this.info);
 
-  /// 閱讀記錄
+  /// 阅读记录
   Rx<ComicHistory?> history = Rx<ComicHistory?>(null);
 
-  /// 更新漫畫記錄
+  /// 更新漫画记录
   StreamSubscription<dynamic>? updateComicSubscription;
 
-  /// 編輯模式
+  /// 编辑模式
   var editMode = false.obs;
 
   RxSet<ComicDetailChapterItem> selectItems = RxSet<ComicDetailChapterItem>();
@@ -54,17 +54,17 @@ class ComicDownloadedDetailController extends GetxController {
     }
   }
 
-  /// 開始/繼續閱讀
+  /// 开始/继续阅读
   void read() {
     if (info.volumes.isEmpty) {
-      SmartDialog.showToast("沒有可閱讀的章節");
+      SmartDialog.showToast("没有可阅读的章节");
       return;
     }
     if (info.volumes.first.chapters.isEmpty) {
-      SmartDialog.showToast("沒有可閱讀的章節");
+      SmartDialog.showToast("没有可阅读的章节");
       return;
     }
-    //查詢記錄
+    //查找记录
     if (history.value != null && history.value!.chapterId != 0) {
       ComicDetailVolume? volume;
       ComicDetailChapterItem? chapter;
@@ -91,7 +91,7 @@ class ComicDownloadedDetailController extends GetxController {
           isLongComic: info.isLongComic,
         );
       } else {
-        SmartDialog.showToast("未找到歷史記錄對應章節，將從頭開始閱讀");
+        SmartDialog.showToast("未找到历史记录对应章节，将从头开始阅读");
         readStart();
       }
     } else {
@@ -100,7 +100,7 @@ class ComicDownloadedDetailController extends GetxController {
   }
 
   void readStart() {
-    //從頭開始
+    //从头开始
     var volume = info.volumes.first;
     var chapters = List<ComicDetailChapterItem>.from(volume.chapters);
     //正序
@@ -168,7 +168,7 @@ class ComicDownloadedDetailController extends GetxController {
       ComicDownloadService.instance.deleteChapter(info.comicId, item.chapterId);
     }
     exitEditMode();
-    SmartDialog.showToast("刪除成功");
+    SmartDialog.showToast("删除成功");
     AppNavigator.closePage();
   }
 

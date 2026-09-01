@@ -36,7 +36,7 @@ class UserHomePage extends GetView<UserHomeController> {
               padding: AppStyle.edgeInsetsA4,
               children: [
                 AppStyle.vGap12,
-                // 使用者名稱、頭像
+                // 用户名、头像
                 Obx(
                   () => Visibility(
                     visible: UserService.instance.logined.value,
@@ -119,11 +119,11 @@ class UserHomePage extends GetView<UserHomeController> {
                         size: 48,
                       ),
                       title: const Text(
-                        "未登入",
+                        "未登录",
                         style: TextStyle(height: 1.0),
                       ),
                       subtitle: const Text(
-                        "點選前往登入",
+                        "点击前往登录",
                       ),
                       trailing: const Icon(
                         Icons.chevron_right,
@@ -141,7 +141,7 @@ class UserHomePage extends GetView<UserHomeController> {
                         visible: UserService.instance.logined.value,
                         child: ListTile(
                           leading: const Icon(Remix.heart_line),
-                          title: const Text("我的訂閱"),
+                          title: const Text("我的订阅"),
                           trailing: const Icon(
                             Icons.chevron_right,
                             color: Colors.grey,
@@ -153,7 +153,7 @@ class UserHomePage extends GetView<UserHomeController> {
                         visible: UserService.instance.logined.value,
                         child: ListTile(
                           leading: const Icon(Remix.history_line),
-                          title: const Text("瀏覽記錄"),
+                          title: const Text("浏览记录"),
                           trailing: const Icon(
                             Icons.chevron_right,
                             color: Colors.grey,
@@ -165,7 +165,7 @@ class UserHomePage extends GetView<UserHomeController> {
                       //   visible: UserService.instance.logined.value,
                       //   child: ListTile(
                       //     leading: const Icon(Remix.chat_smile_2_line),
-                      //     title: const Text("我的評論"),
+                      //     title: const Text("我的评论"),
                       //     trailing: const Icon(
                       //       Icons.chevron_right,
                       //       color: Colors.grey,
@@ -181,7 +181,7 @@ class UserHomePage extends GetView<UserHomeController> {
                   children: [
                     ListTile(
                       leading: const Icon(Remix.star_line),
-                      title: const Text("本機收藏"),
+                      title: const Text("本机收藏"),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
@@ -190,7 +190,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                     ListTile(
                       leading: const Icon(Remix.download_line),
-                      title: const Text("漫畫下載"),
+                      title: const Text("漫画下载"),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -227,7 +227,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                     ListTile(
                       leading: const Icon(Remix.download_line),
-                      title: const Text("小說下載"),
+                      title: const Text("小说下载"),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -270,7 +270,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ListTile(
                       leading: Icon(
                           Get.isDarkMode ? Remix.moon_line : Remix.sun_line),
-                      title: const Text("顯示主題"),
+                      title: const Text("显示主题"),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
@@ -279,7 +279,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                     ListTile(
                       leading: const Icon(Remix.settings_line),
-                      title: const Text("更多設定"),
+                      title: const Text("更多设置"),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
@@ -293,7 +293,7 @@ class UserHomePage extends GetView<UserHomeController> {
                   children: [
                     const ListTile(
                       leading: Icon(Remix.error_warning_line),
-                      title: Text("免責宣告"),
+                      title: Text("免责声明"),
                       trailing: Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
@@ -302,7 +302,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                     ListTile(
                       leading: const Icon(Remix.github_fill),
-                      title: const Text("開源主頁"),
+                      title: const Text("开源主页"),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
@@ -316,7 +316,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                     ListTile(
                       leading: const Icon(Remix.upload_2_line),
-                      title: const Text("檢查更新"),
+                      title: const Text("检查更新"),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
@@ -325,7 +325,7 @@ class UserHomePage extends GetView<UserHomeController> {
                     ),
                     ListTile(
                       leading: const Icon(Remix.information_line),
-                      title: const Text("關於APP"),
+                      title: const Text("关于APP"),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,

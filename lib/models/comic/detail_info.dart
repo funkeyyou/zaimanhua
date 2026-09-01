@@ -137,13 +137,13 @@ class ComicDetailInfo {
     }
     volumes.add(
       ComicDetailVolume(
-          title: isHide ? "神隱" : "連載",
+          title: isHide ? "神隐" : "连载",
           chapters: RxList<ComicDetailChapterItem>(serialItems)),
     );
     if (aloneItems.isNotEmpty) {
       volumes.add(
         ComicDetailVolume(
-            title: isHide ? "神隱-單行本" : "單行本",
+            title: isHide ? "神隐-单行本" : "单行本",
             chapters: RxList<ComicDetailChapterItem>(aloneItems)),
       );
     }
@@ -212,7 +212,7 @@ class ComicDetailInfo {
 
   bool isVip;
 
-  /// 是否神隱
+  /// 是否神隐
   bool isHide;
 
   @override

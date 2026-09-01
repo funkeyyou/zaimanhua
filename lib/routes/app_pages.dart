@@ -87,7 +87,7 @@ class AppPages {
     ),
   ];
 
-  /// 定義子路由
+  /// 定义子路由
   static Route<dynamic>? generateSubRoute(RouteSettings settings) {
     switch (settings.name) {
       case "/":

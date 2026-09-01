@@ -24,30 +24,30 @@ class ComicDownloadInfo {
     required this.isLongComic,
   });
 
-  ///TaskID 任務，由漫畫ID_章節ID組成
+  ///TaskID 任务，由漫画ID_章节ID组成
   @HiveField(0)
   String taskId;
 
-  ///ComicID 漫畫ID
+  ///ComicID 漫画ID
   @HiveField(1)
   int comicId;
 
-  ///ComicName 漫畫名稱
+  ///ComicName 漫画名称
   @HiveField(2)
   String comicName;
 
-  ///ComicCover 漫畫封面
+  ///ComicCover 漫画封面
   @HiveField(3)
   String comicCover;
 
-  ///ChapterID 章節ID
+  ///ChapterID 章节ID
   @HiveField(4)
   int chapterId;
 
   @HiveField(5)
   String chapterName;
 
-  ///VoulmeName 分卷名稱
+  ///VoulmeName 分卷名称
   @HiveField(6)
   String volumeName;
 
@@ -55,40 +55,40 @@ class ComicDownloadInfo {
   @HiveField(7)
   int chapterSort;
 
-  ///SavePath 儲存路徑
+  ///SavePath 存储路径
   @HiveField(8)
   String savePath;
 
-  ///Files 檔案列表
+  ///Files 文件列表
   @HiveField(9)
   List<String> files;
 
-  ///Index 當前下載頁數
+  ///Index 当前下载页数
   @HiveField(10)
   int index;
 
-  ///Total 總計頁數
+  ///Total 总计页数
   @HiveField(11)
   int total;
 
-  ///Status 當前狀態
+  ///Status 当前状态
   @HiveField(12)
   DownloadStatus status;
 
-  ///AddTime 任務時間
+  ///AddTime 任务时间
   @HiveField(13)
   DateTime addTime;
 
-  /// 下載圖片連結
+  /// 下载图片链接
   @HiveField(14)
   List<String> urls;
 
-  /// 是否VIP章節
-  /// * 暫時沒啥用，總之先加上
+  /// 是否VIP章节
+  /// * 暂时没啥用，总之先加上
   @HiveField(15)
   bool isVip;
 
-  /// 是否為條漫
+  /// 是否为条漫
   @HiveField(16)
   bool isLongComic;
 }

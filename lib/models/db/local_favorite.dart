@@ -27,13 +27,13 @@ class LocalFavorite {
   @HiveField(3)
   String cover;
 
-  /// 型別，對應app_constant，漫畫或小說
+  /// 类型，对应app_constant，漫画或小说
   @HiveField(4)
   int type;
 
   @HiveField(5)
   DateTime updateTime;
 
-  //是否被選中
+  //是否被选中
   Rx<bool> isChecked = false.obs;
 }

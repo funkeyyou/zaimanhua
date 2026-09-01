@@ -31,7 +31,7 @@ class AppErrorWidget extends StatelessWidget {
                 repeat: false,
               ),
               Text(
-                "$errorMsg\r\n點選重新整理",
+                "$errorMsg\r\n点击刷新",
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
@@ -47,9 +47,9 @@ class AppErrorWidget extends StatelessWidget {
                     onPressed: () {
                       Utils.copyText(
                           "$errorMsg\n${error?.stackTrace?.toString()}");
-                      SmartDialog.showToast("已複製詳細資訊");
+                      SmartDialog.showToast("已复制详细信息");
                     },
-                    child: const Text("複製詳細資訊"),
+                    child: const Text("复制详细信息"),
                   ),
                 ),
               ),

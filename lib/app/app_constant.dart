@@ -1,17 +1,17 @@
 class AppConstant {
-  /// 定義平板寬度，當大於此寬度時APP進入雙欄模式
+  /// 定义平板宽度，当大于此宽度时APP进入双栏模式
   static const double kTabletWidth = 1000;
 
-  /// 型別ID-漫畫
+  /// 类型ID-漫画
   static const int kTypeComic = 4;
 
-  /// 型別ID-新聞
+  /// 类型ID-新闻
   static const int kTypeNews = 6;
 
-  /// 型別ID-專題
+  /// 类型ID-专题
   static const int kTypeSpecial = 2;
 
-  /// 型別ID-輕小說
+  /// 类型ID-轻小说
   static const int kTypeNovel = 1;
 }
 

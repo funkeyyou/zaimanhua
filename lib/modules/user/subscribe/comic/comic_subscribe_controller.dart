@@ -12,7 +12,7 @@ class ComicSubscribeController
   ComicSubscribeController() {
     for (var item in List.generate(
         26, (index) => String.fromCharCode(index + 65).toLowerCase())) {
-      letters.addAll({item: "${item.toUpperCase()}開頭"});
+      letters.addAll({item: "${item.toUpperCase()}开头"});
     }
   }
   final UserRequest request = UserRequest();
@@ -21,13 +21,13 @@ class ComicSubscribeController
 
   Map letters = {
     "": "全部",
-    "number": "數字開頭",
+    "number": "数字开头",
   };
 
   Map<int, String> types = {
-    1: "全部訂閱",
+    1: "全部订阅",
     2: "连载中",
-    3: "已完結",
+    3: "已完结",
   };
   var type = 1.obs;
 
@@ -72,6 +72,6 @@ class ComicSubscribeController
       );
     }
     cancelEdit();
-    SmartDialog.showToast("已新增至本機收藏");
+    SmartDialog.showToast("已添加至本机收藏");
   }
 }

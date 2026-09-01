@@ -17,9 +17,9 @@ import 'package:zai_x/services/db_service.dart';
 import 'package:zai_x/services/user_service.dart';
 
 class UserRequest {
-  /// 登入
-  /// - [nickname] 使用者名稱
-  /// - [password] 密碼
+  /// 登录
+  /// - [nickname] 用户名
+  /// - [password] 密码
   Future<LoginResultModel> login(
       {required String nickname, required String password}) async {
     var pwd = md5.convert(utf8.encode(password)).toString().toLowerCase();
@@ -40,7 +40,7 @@ class UserRequest {
     return LoginResultModel.fromJson(result["user"]);
   }
 
-  /// 使用者資料
+  /// 用户资料
   Future<UserProfileModel> userProfile() async {
     var result = await HttpClient.instance.getJson(
       "/u_center/personal/info/get",
@@ -135,8 +135,8 @@ class UserRequest {
     return true;
   }
 
-  /// 使用者簽到
-  /// 返回 true 表示簽到成功，errno==1 時丟擲含 errmsg 的異常
+  /// 用户签到
+  /// 返回 true 表示签到成功，errno==1 时抛出含 errmsg 的异常
   Future<bool> userSignIn() async {
     var result = await HttpClient.instance.postJson(
       "/task/sign_in",
@@ -145,14 +145,14 @@ class UserRequest {
     );
 
     if (result is Map && result['errno'] == 1) {
-      throw result['errmsg']?.toString() ?? '今天已簽到過~';
+      throw result['errmsg']?.toString() ?? '今天已签到过~';
     }
     return true;
   }
 
-  /// 我的漫畫訂閱
-  /// - [page] 頁數從0開始
-  /// - [subType] 全部=1，未讀=2，已讀=3，完結=4
+  /// 我的漫画订阅
+  /// - [page] 页数从0开始
+  /// - [subType] 全部=1，未读=2，已读=3，完结=4
   /// - [letter] all=全部
   Future<List<UserSubscribeComicItemModel>> comicSubscribes(
       {required int subType, int page = 1, String letter = ""}) async {
@@ -175,9 +175,9 @@ class UserRequest {
     return list;
   }
 
-  /// 我的小說訂閱
-  /// - [page] 頁數從0開始
-  /// - [subType] 全部=1，未讀=2，已讀=3，完結=4
+  /// 我的小说订阅
+  /// - [page] 页数从0开始
+  /// - [subType] 全部=1，未读=2，已读=3，完结=4
   /// - [letter] all=全部
   Future<List<UserSubscribeNovelModel>> novelSubscribes(
       {required int subType, int page = 0, String letter = "all"}) async {
@@ -200,8 +200,8 @@ class UserRequest {
     return list;
   }
 
-  /// 我的新聞收藏
-  /// - [page] 頁數從0開始
+  /// 我的新闻收藏
+  /// - [page] 页数从0开始
   Future<List<UserSubscribeNewsModel>> newsSubscribes({int page = 1}) async {
     var uid = UserService.instance.userId;
     var par = {"uid": int.parse(uid), "page": page};
@@ -227,8 +227,8 @@ class UserRequest {
     return list;
   }
 
-  /// 新增訂閱
-  /// - [type] 型別，對應AppConstant
+  /// 添加订阅
+  /// - [type] 类型，对应AppConstant
   Future<bool> addSubscribe({required List<int> ids, required int type}) async {
     var requestUrl = "/comic/sub/add";
     var requestQuery = <String, dynamic>{};
@@ -253,8 +253,8 @@ class UserRequest {
     return true;
   }
 
-  /// 更新訂閱的閱讀狀態
-  /// - [type] 型別，對應AppConstant
+  /// 更新订阅的阅读状态
+  /// - [type] 类型，对应AppConstant
   Future<bool> subscribeRead({required int id, required int type}) async {
     var typeStr = "mh";
     if (type == AppConstant.kTypeComic) {
@@ -275,8 +275,8 @@ class UserRequest {
     return true;
   }
 
-  /// 取消訂閱
-  /// - [type] 型別，對應AppConstant
+  /// 取消订阅
+  /// - [type] 类型，对应AppConstant
   Future<bool> removeSubscribe(
       {required List<int> ids, required int type}) async {
     var requestUrl = "/comic/sub/del";
@@ -302,9 +302,9 @@ class UserRequest {
     return true;
   }
 
-  /// 查詢訂閱狀態
-  /// - [objId] 漫畫ID或小說ID
-  /// - [type] 型別，對應AppConstant
+  /// 查询订阅状态
+  /// - [objId] 漫画ID或小说ID
+  /// - [type] 类型，对应AppConstant
   Future<bool> checkSubscribeStatus(
       {required int objId, required int type}) async {
     var typeId = 1;
@@ -326,8 +326,8 @@ class UserRequest {
     return result["isSub"];
   }
 
-  /// 漫畫閱讀記錄
-  /// - [page] 頁數從0開始，介面並沒有分頁
+  /// 漫画阅读记录
+  /// - [page] 页数从0开始，接口并没有分页
   Future<List<UserComicHistoryModel>> comicHistory({int page = 1}) async {
     var list = <UserComicHistoryModel>[];
     var result = await HttpClient.instance.getJson(
@@ -343,13 +343,13 @@ class UserRequest {
     for (var item in (result["recordList"] ?? const [])) {
       list.add(UserComicHistoryModel.fromJson(item));
     }
-    //遠端與本地同步
+    //远程与本地同步
     DBService.instance.syncRemoteComicHistory(list);
     return list;
   }
 
-  /// 小說閱讀記錄
-  /// - [page] 頁數從0開始，介面並沒有分頁
+  /// 小说阅读记录
+  /// - [page] 页数从0开始，接口并没有分页
   Future<List<UserNovelHistoryModel>> novelHistory({int page = 1}) async {
     var list = <UserNovelHistoryModel>[];
     var result = await HttpClient.instance.getJson(
@@ -365,12 +365,12 @@ class UserRequest {
     for (var item in (result["recordList"] ?? const [])) {
       list.add(UserNovelHistoryModel.fromJson(item));
     }
-    //遠端與本地同步
+    //远程与本地同步
     DBService.instance.syncRemoteNovelHistory(list);
     return list;
   }
 
-  /// 上傳漫畫記錄
+  /// 上传漫画记录
   Future<bool> uploadComicHistory({
     required int comicId,
     required int chapterId,
@@ -397,7 +397,7 @@ class UserRequest {
     return true;
   }
 
-  /// 上傳小說記錄
+  /// 上传小说记录
   Future<bool> uploadNovelHistory({
     required int novelId,
     required int chapterId,

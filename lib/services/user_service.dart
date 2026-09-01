@@ -23,10 +23,10 @@ class UserService extends GetxService {
       StreamController.broadcast();
   static StreamController logoutStreamController = StreamController.broadcast();
 
-  ///登入事件流
+  ///登录事件流
   static Stream get loginedStream => loginedStreamController.stream;
 
-  ///退出登入事件流
+  ///退出登录事件流
   static Stream get logoutStream => logoutStreamController.stream;
 
   static UserService get instance => Get.find<UserService>();
@@ -44,25 +44,25 @@ class UserService extends GetxService {
   bool get isVip => (userProfile.value?.userfeeinfo?.isVip ?? false);
 
   String get sign => (userProfile.value?.description ?? "").isEmpty
-      ? "無個性簽名"
+      ? "无个性签名"
       : userProfile.value?.description ?? "";
 
   String get vipInfo =>
-      "會員有效期至${Utils.dateFormat.format(userProfile.value?.userfeeinfo?.expiresTime ?? DateTime.now())}";
+      "会员有效期至${Utils.dateFormat.format(userProfile.value?.userfeeinfo?.expiresTime ?? DateTime.now())}";
 
-  /// 是否已經繫結手機號
+  /// 是否已经绑定手机号
   var bindTel = true.obs;
 
-  /// 是否已經設定密碼
+  /// 是否已经设置密码
   var setPwd = true.obs;
 
-  /// 是否已經登入
+  /// 是否已经登录
   var logined = false.obs;
 
-  /// 已經訂閱的漫畫ID
+  /// 已经订阅的漫画ID
   var subscribedComicIds = RxSet<int>();
 
-  /// 已經訂閱的小說ID
+  /// 已经订阅的小说ID
   var subscribedNovelIds = RxSet<int>();
 
   void init() {
@@ -84,7 +84,7 @@ class UserService extends GetxService {
     }
   }
 
-  /// 設定登入資訊
+  /// 设置登录信息
   void setAuthInfo(LoginResultModel info) {
     userAuthInfo = info;
     storage.setValue(LocalStorageService.kUserAuthInfo, info.toString());
@@ -110,27 +110,27 @@ class UserService extends GetxService {
     return (result != null && result == true);
   }
 
-  /// 登入失效處理：清除登入狀態並提示重新登入
+  /// 登录失效处理：清除登录状态并提示重新登录
   Future<void> onLoginRequired() async {
     if (logined.value) {
       logout();
     }
-    SmartDialog.showToast("登入已過期，請重新登入");
+    SmartDialog.showToast("登录已过期，请重新登录");
     await login();
   }
 
-  /// 重新整理個人資料
+  /// 刷新个人资料
   Future refreshProfile() async {
     try {
       if (!logined.value) {
         return;
       }
       userProfile.value = await request.userProfile();
-      // 未簽到時才呼叫簽到介面
+      // 未签到时才调用签到接口
       if (userProfile.value?.isSign == false) {
         try {
           await request.userSignIn();
-          SmartDialog.showToast("簽到成功");
+          SmartDialog.showToast("签到成功");
         } catch (e) {
           SmartDialog.showToast(e.toString());
         }
@@ -140,7 +140,7 @@ class UserService extends GetxService {
     }
   }
 
-  /// 更新一下使用者的歷史記錄
+  /// 更新一下用户的历史记录
   void syncRemoteHistory() {
     if (!logined.value) {
       return;
@@ -165,7 +165,7 @@ class UserService extends GetxService {
     }
   }
 
-  /// 新增訂閱
+  /// 添加订阅
   Future<bool> addSubscribe(List<int> ids, int type) async {
     try {
       if (!await login()) {
@@ -181,7 +181,7 @@ class UserService extends GetxService {
         subscribedNovelIds.addAll(ids);
       }
 
-      SmartDialog.showToast("訂閱成功");
+      SmartDialog.showToast("订阅成功");
       return true;
     } catch (e) {
       SmartDialog.showToast(e.toString());
@@ -189,7 +189,7 @@ class UserService extends GetxService {
     }
   }
 
-  /// 取消訂閱
+  /// 取消订阅
   Future<bool> cancelSubscribe(List<int> ids, int type) async {
     try {
       if (!await login()) {
@@ -204,7 +204,7 @@ class UserService extends GetxService {
       } else if (type == AppConstant.kTypeNovel) {
         subscribedNovelIds.removeAll(ids);
       }
-      SmartDialog.showToast("已取消訂閱");
+      SmartDialog.showToast("已取消订阅");
       return true;
     } catch (e) {
       SmartDialog.showToast(e.toString());
@@ -212,7 +212,7 @@ class UserService extends GetxService {
     }
   }
 
-  /// 更新漫畫記錄
+  /// 更新漫画记录
   Future updateComicHistory({
     required int comicId,
     required int chapterId,
@@ -249,7 +249,7 @@ class UserService extends GetxService {
     }
   }
 
-  /// 更新漫畫記錄
+  /// 更新漫画记录
   Future updateNovelHistory({
     required int novelId,
     required int chapterId,

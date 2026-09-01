@@ -22,11 +22,11 @@ class NovelSelectChapterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("選擇下載章節"),
+        title: const Text("选择下载章节"),
         actions: [
           TextButton(
             onPressed: controller.toDownloadManage,
-            child: const Text("下載管理"),
+            child: const Text("下载管理"),
           ),
         ],
       ),
@@ -69,7 +69,7 @@ class NovelSelectChapterPage extends StatelessWidget {
                     Remix.checkbox_line,
                     size: 20,
                   ),
-                  label: const Text("全選"),
+                  label: const Text("全选"),
                 ),
               ),
               Expanded(
@@ -82,7 +82,7 @@ class NovelSelectChapterPage extends StatelessWidget {
                     Remix.checkbox_blank_line,
                     size: 20,
                   ),
-                  label: const Text("取消選中"),
+                  label: const Text("取消选中"),
                 ),
               ),
               Expanded(
@@ -95,7 +95,7 @@ class NovelSelectChapterPage extends StatelessWidget {
                     Remix.download_line,
                     size: 20,
                   ),
-                  label: const Text("下載選中"),
+                  label: const Text("下载选中"),
                 ),
               ),
             ],
@@ -123,7 +123,7 @@ class NovelSelectChapterPage extends StatelessWidget {
       () {
         var volume = controller.selectIds[item.volumeId]!;
         return ExpansionTile(
-          title: Text("${item.volumeName}(共${item.chapters.length}話)"),
+          title: Text("${item.volumeName}(共${item.chapters.length}话)"),
           leading: SizedBox(
             width: 40,
             child: Checkbox(
@@ -156,7 +156,7 @@ class NovelSelectChapterPage extends StatelessWidget {
                       "${novelId}_${chapter.volumeId}_${chapter.chapterId}"),
                   subtitle: NovelDownloadService.instance.downloadIds.contains(
                           "${novelId}_${chapter.volumeId}_${chapter.chapterId}")
-                      ? const Text("已下載")
+                      ? const Text("已下载")
                       : null,
                   onChanged: (e) {
                     if (e!) {

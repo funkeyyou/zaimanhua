@@ -22,7 +22,7 @@ class NovelCategoryDetailController
     var items = filters.where((x) => x.selectId.value != 0 && x.title != "排序");
 
     if (items.isEmpty) {
-      return "全部小說";
+      return "全部小说";
     } else {
       return items
           .map((e) =>
@@ -46,18 +46,18 @@ class NovelCategoryDetailController
           title: "排序",
           items: [
             NovelCategoryFilterItemModel(tagId: 1, tagName: "更新排序"),
-            NovelCategoryFilterItemModel(tagId: 2, tagName: "熱度排序"),
+            NovelCategoryFilterItemModel(tagId: 2, tagName: "热度排序"),
           ],
         )..selectId.value = 1,
       );
       filters.insert(
         1,
         NovelCategoryFilterModel(
-          title: "狀態",
+          title: "状态",
           items: [
             NovelCategoryFilterItemModel(tagId: 0, tagName: "全部"),
             NovelCategoryFilterItemModel(tagId: 1, tagName: "连载中"),
-            NovelCategoryFilterItemModel(tagId: 2, tagName: "已完結"),
+            NovelCategoryFilterItemModel(tagId: 2, tagName: "已完结"),
           ],
         ),
       );
@@ -74,7 +74,7 @@ class NovelCategoryDetailController
       var sort = filters.first.selectId.value;
       var status = filters[1].selectId.value;
       var cateId =
-          filters.firstWhereOrNull((x) => x.title == "題材")?.selectId.value ?? 0;
+          filters.firstWhereOrNull((x) => x.title == "题材")?.selectId.value ?? 0;
 
       return await request.categoryNovel(
           cateId: cateId, status: status, sort: sort, page: page - 1);

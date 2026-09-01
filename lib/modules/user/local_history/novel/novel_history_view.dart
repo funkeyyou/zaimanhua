@@ -66,7 +66,7 @@ class LocalNovelHistoryView extends StatelessWidget {
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   AppStyle.vGap4,
                   Text(
-                      "觀看於${Utils.formatTimestampMS(item.updateTime.millisecondsSinceEpoch)}",
+                      "观看于${Utils.formatTimestampMS(item.updateTime.millisecondsSinceEpoch)}",
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

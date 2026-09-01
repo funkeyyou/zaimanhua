@@ -29,7 +29,7 @@ import 'package:zai_x/services/user_service.dart';
 import '../models/comic/special_detail_model.dart';
 
 class ComicRequest {
-  /// 漫畫-推薦
+  /// 漫画-推荐
   Future<List<ComicRecommendModel>> recommend() async {
     var list = <ComicRecommendModel>[];
     var result = await HttpClient.instance.getJson('/comic/recommend/index');
@@ -40,7 +40,7 @@ class ComicRequest {
     return list;
   }
 
-  /// 猜你喜歡
+  /// 猜你喜欢
   Future<List<ComicRecommendItemModel>> refreshRecommend(int categoryId,
       {int page = 1, int size = 3}) async {
     var result = await HttpClient.instance.getJson(
@@ -55,7 +55,7 @@ class ComicRequest {
     return list;
   }
 
-  /// 首頁-我的訂閱
+  /// 首页-我的订阅
   Future<ComicRecommendModel> recommendSubscribe() async {
     var result = await HttpClient.instance.getJson(
       '/comic/sub/list',
@@ -70,7 +70,7 @@ class ComicRequest {
     }
     return ComicRecommendModel(
       categoryId: 49,
-      title: "我的訂閱",
+      title: "我的订阅",
       sort: 0,
       data: list,
     );
@@ -90,7 +90,7 @@ class ComicRequest {
     return list;
   }
 
-  /// 分類
+  /// 分类
   Future<List<ComicCategoryItemModel>> categores() async {
     var list = <ComicCategoryItemModel>[];
     var result = await HttpClient.instance.getJson(
@@ -104,7 +104,7 @@ class ComicRequest {
     return list;
   }
 
-  /// 分類-篩選
+  /// 分类-筛选
   Future<List<ComicCategoryFilterModel>> categoryFilter() async {
     var result = await HttpClient.instance.getJson(
       '/comic/filter/category',
@@ -119,14 +119,14 @@ class ComicRequest {
       list.add(ComicCategoryFilterItemModel.fromJson(item));
     }
     return [
-      ComicCategoryFilterModel(title: "全部分類", items: list),
+      ComicCategoryFilterModel(title: "全部分类", items: list),
     ];
   }
 
-  /// 分類下漫畫
-  /// - [ids] 標籤
-  /// - [sort] 排序,0=人氣,1=更新
-  /// - [page] 頁數，從0開始
+  /// 分类下漫画
+  /// - [ids] 标签
+  /// - [sort] 排序,0=人气,1=更新
+  /// - [page] 页数，从0开始
   Future<List<ComicCategoryComicModel>> categoryComic({
     required int id,
     int sort = 1,
@@ -143,7 +143,7 @@ class ComicRequest {
           "size": 20,
         },
         checkCode: true,
-        needLogin: true // 登入可以更多內容
+        needLogin: true // 登录可以更多内容
         );
     for (var item in result["comicList"]) {
       list.add(ComicCategoryComicModel.fromJson(item));
@@ -165,7 +165,7 @@ class ComicRequest {
           'rank_type': rankType,
           'page': page
         },
-        needLogin: true // 登入可以更多內容
+        needLogin: true // 登录可以更多内容
         );
     var list = <ComicRankListItemModel>[];
     for (var item in result["data"] ?? []) {
@@ -174,18 +174,18 @@ class ComicRequest {
     return list;
   }
 
-  /// 排行榜-分類
+  /// 排行榜-分类
   Future<Map<int, String>> rankFilter() async {
     // var result = await HttpClient.instance.getJson(
     //   '/comic/filter/category',
     //   queryParameters: {"source": 1},
     //   checkCode: true,
     // );
-    Map<int, String> map = {0: "全部分類"};
+    Map<int, String> map = {0: "全部分类"};
     return map;
   }
 
-  /// 專題
+  /// 专题
   Future<List<ComicSpecialModel>> special({int page = 1}) async {
     var list = <ComicSpecialModel>[];
     var result = await HttpClient.instance.getJson(
@@ -198,7 +198,7 @@ class ComicRequest {
     return list;
   }
 
-  /// 專題
+  /// 专题
   Future<ComicSpecialDetailModel> specialDetail({required int id}) async {
     var result = await HttpClient.instance.getJson(
       '/subject/$id.json',
@@ -208,7 +208,7 @@ class ComicRequest {
     return ComicSpecialDetailModel.fromJson(result);
   }
 
-  /// 作者詳情
+  /// 作者详情
   Future<ComicAuthorModel> authorDetail({required int id}) async {
     var result = await HttpClient.instance.getJson(
       '/comic/list_by_author',
@@ -222,7 +222,7 @@ class ComicRequest {
     return ComicAuthorModel.fromJson(result);
   }
 
-  /// 作品相關
+  /// 作品相关
   Future<ComicRelatedModel> related({required int id}) async {
     var result = await HttpClient.instance.getJson(
       '/v3/comic/related/$id.json',
@@ -253,13 +253,13 @@ class ComicRequest {
         }
       } catch (e) {
         errorMsg += "\n${priorityV1 ? "V4" : "V1"}：$e";
-        throw AppError("ComicID:$comicId\n無法讀取漫畫資訊，可能需要登入或有等級限制\n$errorMsg");
+        throw AppError("ComicID:$comicId\n无法读取漫画信息，可能需要登录或有等级限制\n$errorMsg");
       }
     }
     return info;
   }
 
-  /// 漫畫詳情
+  /// 漫画详情
   Future<ComicDetailModel> comicDetailV4({
     required int comicId,
   }) async {
@@ -272,7 +272,7 @@ class ComicRequest {
     return ComicDetailModel.fromJson(result);
   }
 
-  /// 漫畫詳情
+  /// 漫画详情
   Future<ComicDetailV1Model> comicDetailV1({
     required int comicId,
   }) async {
@@ -286,14 +286,14 @@ class ComicRequest {
       throw AppError(data["msg"]);
     }
     if (data["data"]?["info"]?["id"] == null) {
-      throw AppError("無法讀取漫畫資訊");
+      throw AppError("无法读取漫画信息");
     }
     return ComicDetailV1Model.fromJson(data["data"]);
   }
 
-  /// 漫畫搜尋
-  /// - [page] 頁數從0開始
-  /// - [keyword] 關鍵字
+  /// 漫画搜索
+  /// - [page] 页数从0开始
+  /// - [keyword] 关键字
   Future<List<SearchComicItem>> search(
       {required String keyword, int page = 1}) async {
     var list = <ComicSearchModel>[];
@@ -312,7 +312,7 @@ class ComicRequest {
     return list.map((e) => SearchComicItem.fromApi(e)).toList();
   }
 
-  /// 漫畫搜尋熱詞
+  /// 漫画搜索热词
   Future<Map<int, String>> searchHotWord() async {
     var result = await HttpClient.instance.getJson(
       '/search/hot/0.json',
@@ -326,7 +326,7 @@ class ComicRequest {
     return map;
   }
 
-  /// 章節詳情
+  /// 章节详情
   Future<ComicChapterDetail> chapterDetail(
       {required int comicId,
       required int chapterId,
@@ -334,7 +334,7 @@ class ComicRequest {
     ComicChapterDetail info;
 
     try {
-      //查詢本地是否存在
+      //查询本地是否存在
       var localInfo =
           ComicDownloadService.instance.box.get("${comicId}_$chapterId");
       if (localInfo != null && localInfo.status == DownloadStatus.complete) {
@@ -351,13 +351,13 @@ class ComicRequest {
       } catch (e) {
         Log.logPrint(e);
 
-        throw AppError("ComicID:$comicId ChapterID:$chapterId\n無法讀取章節資訊");
+        throw AppError("ComicID:$comicId ChapterID:$chapterId\n无法读取章节信息");
       }
     }
     return info;
   }
 
-  /// 章節詳情-V4
+  /// 章节详情-V4
   Future<ComicChapterDetailModel> chapterDetailV4(
       {required int comicId, required int chapterId}) async {
     var result = await HttpClient.instance.getJson(
@@ -371,7 +371,7 @@ class ComicRequest {
     return data;
   }
 
-  /// 章節詳情-WebAPI
+  /// 章节详情-WebAPI
   Future<ComicChapterDetailWebModel> chapterDetailWeb(
       {required int comicId, required int chapterId}) async {
     var result = await HttpClient.instance.getJson(
@@ -387,7 +387,7 @@ class ComicRequest {
     }
   }
 
-  /// 觀點、吐槽
+  /// 观点、吐槽
   Future<List<ComicViewPointModel>> viewPoints(
       {required int comicId, required int chapterId}) async {
     var list = <ComicViewPointModel>[];
@@ -406,7 +406,7 @@ class ComicRequest {
     return list;
   }
 
-  /// 點贊觀點、吐槽
+  /// 点赞观点、吐槽
   Future<bool> likeViewPoint({required int comicId, required int id}) async {
     await HttpClient.instance.postJson(
       '/viewpoint/praise',
@@ -420,7 +420,7 @@ class ComicRequest {
     return true;
   }
 
-  /// 點贊觀點、吐槽
+  /// 点赞观点、吐槽
   Future<bool> sendViewPoint(
       {required int comicId,
       required int chapterId,
@@ -441,8 +441,8 @@ class ComicRequest {
     return true;
   }
 
-  /// 漫畫搜尋-Web介面
-  /// - [keyword] 關鍵字
+  /// 漫画搜索-Web接口
+  /// - [keyword] 关键字
   Future<List<SearchComicItem>> searchWeb({required String keyword}) async {
     var list = <ComicWebSearchModel>[];
     var result = await HttpClient.instance.getText(

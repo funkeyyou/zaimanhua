@@ -89,7 +89,7 @@ class NovelRecommendView extends StatelessWidget {
       child: const Row(
         children: [
           Text(
-            "檢視更多",
+            "查看更多",
             style: TextStyle(fontSize: 14, color: Colors.grey),
           ),
           Icon(Icons.chevron_right, size: 18, color: Colors.grey),
@@ -99,7 +99,7 @@ class NovelRecommendView extends StatelessWidget {
   }
 
   Widget buildRefresh({required Future Function() onRefresh}) {
-    return RefreshUntilWidget(onRefresh: onRefresh, text: "換一批");
+    return RefreshUntilWidget(onRefresh: onRefresh, text: "换一批");
   }
 
   Widget buildBanner(NovelRecommendModel item) {

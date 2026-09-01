@@ -47,16 +47,16 @@ class NovelReaderController extends BaseController {
     chapterIndex.value = chapters.indexOf(chapter);
   }
 
-  /// 當前章節索引
+  /// 当前章节索引
   var chapterIndex = 0.obs;
 
-  /// 當前頁面
+  /// 当前页面
   var currentIndex = 0.obs;
 
-  /// 最大頁面
+  /// 最大页面
   var maxPage = 0.obs;
 
-  /// 閱讀進度，百分比
+  /// 阅读进度，百分比
   var progress = 0.0.obs;
 
   final AppSettingsService settings = AppSettingsService.instance;
@@ -65,47 +65,47 @@ class NovelReaderController extends BaseController {
   final PageController pageController = PageController();
   final ScrollController scrollController = ScrollController();
 
-  /// 連線資訊監聽
+  /// 连接信息监听
   StreamSubscription<List<ConnectivityResult>>? connectivitySubscription;
 
-  /// 電量資訊監聽
+  /// 电量信息监听
   StreamSubscription<BatteryState>? batterySubscription;
 
-  /// 連線型別
+  /// 连接类型
   Rx<ConnectivityResult> connectivityType =
       Rx<ConnectivityResult>(ConnectivityResult.other);
 
-  /// 電量資訊
+  /// 电量信息
   Rx<int> batteryLevel = 0.obs;
 
-  /// 顯示電量
+  /// 显示电量
   RxBool showBattery = true.obs;
 
-  /// 文字內容
+  /// 文本内容
   var content = "".obs;
 
-  /// 是否是圖片
+  /// 是否是图片
   var isPicture = false.obs;
 
-  /// 是否為本地快取
+  /// 是否为本地缓存
   var isLocal = false;
 
-  /// 圖片列表
+  /// 图片列表
   RxList<String> pictures = RxList<String>();
 
   var contentLength = 0;
   int _restoreIndex = 0;
 
-  /// 是否顯示控制器
+  /// 是否显示控制器
   var showControls = false.obs;
 
-  /// 閱讀方向
+  /// 阅读方向
   var direction = 0.obs;
 
   /// 左手模式
   bool get leftHandMode => settings.novelReaderLeftHandMode.value;
 
-  /// 翻頁動畫
+  /// 翻页动画
   bool get pageAnimation => settings.novelReaderPageAnimation.value;
 
   @override
@@ -126,10 +126,10 @@ class NovelReaderController extends BaseController {
     super.onInit();
   }
 
-  /// 初始化電池資訊
+  /// 初始化电池信息
   void initBattery() async {
     try {
-      //沒有電池的Mac似乎會閃退,暫時遮蔽Mac
+      //没有电池的Mac似乎会闪退,暂时屏蔽Mac
       //https://github.com/xiaoyaocz/zai_x/discussions/146
       if (Platform.isMacOS) {
         showBattery.value = false;
@@ -153,7 +153,7 @@ class NovelReaderController extends BaseController {
     }
   }
 
-  /// 初始化連線狀態
+  /// 初始化连接状态
   void initConnectivity() async {
     var connectivity = Connectivity();
     connectivitySubscription =
@@ -162,7 +162,7 @@ class NovelReaderController extends BaseController {
       //提醒
       if (connectivityType.value != result &&
           result == ConnectivityResult.mobile) {
-        SmartDialog.showToast("您已切換至資料網路，請注意流量消耗");
+        SmartDialog.showToast("您已切换至数据网络，请注意流量消耗");
       }
       connectivityType.value = result;
     });
@@ -179,7 +179,7 @@ class NovelReaderController extends BaseController {
     return ConnectivityResult.none;
   }
 
-  /// 監聽豎向模式時滾動百分比
+  /// 监听竖向模式时滚动百分比
   void listenVertical() {
     if (scrollController.position.maxScrollExtent > 0) {
       progress.value = scrollController.position.pixels /
@@ -198,7 +198,7 @@ class NovelReaderController extends BaseController {
     super.onClose();
   }
 
-  /// 載入內容
+  /// 加载内容
   Future loadContent() async {
     try {
       pageLoadding.value = true;
@@ -209,7 +209,7 @@ class NovelReaderController extends BaseController {
       chapter = chapters[chapterIndex.value];
       _restoreIndex = _historyIndexForCurrentChapter();
 
-      //查詢本地是否存在
+      //查询本地是否存在
       var localInfo = NovelDownloadService.instance.box
           .get("${novelId}_${chapter.volumeId}_${chapter.chapterId}");
       if (localInfo != null && localInfo.status == DownloadStatus.complete) {
@@ -224,7 +224,7 @@ class NovelReaderController extends BaseController {
       contentLength = text.length;
 
       var subStr = text.substring(0, text.length < 200 ? text.length : 200);
-      //檢查是否是插畫
+      //检查是否是插画
       if (subStr.contains(RegExp('<img.*?>'))) {
         List<String> imgs = [];
         for (var item
@@ -241,7 +241,7 @@ class NovelReaderController extends BaseController {
         content.value = text;
         maxPage.value = pictures.length;
 
-        SmartDialog.showToast("雙擊插畫可放大、儲存哦~");
+        SmartDialog.showToast("双击插画可放大、保存哦~");
       } else {
         isPicture.value = false;
 
@@ -262,8 +262,8 @@ class NovelReaderController extends BaseController {
         progress.value = 0.0;
       }
       preloadContent();
-      //TODO 閱讀記錄跳轉
-      //上傳記錄
+      //TODO 阅读记录跳转
+      //上传记录
       restoreHistoryPosition();
     } catch (e) {
       pageError.value = true;
@@ -283,7 +283,7 @@ class NovelReaderController extends BaseController {
 
       var text = await file.readAsString();
 
-      //檢查是否是插畫
+      //检查是否是插画
       if (local.isImage) {
         List<String> imgs = local.imageFiles
             .map((e) =>
@@ -297,7 +297,7 @@ class NovelReaderController extends BaseController {
         content.value = text;
         maxPage.value = pictures.length;
 
-        SmartDialog.showToast("雙擊插畫可放大、儲存哦~");
+        SmartDialog.showToast("双击插画可放大、保存哦~");
       } else {
         isPicture.value = false;
 
@@ -318,8 +318,8 @@ class NovelReaderController extends BaseController {
         progress.value = 0.0;
       }
       preloadContent();
-      //TODO 閱讀記錄跳轉
-      //上傳記錄
+      //TODO 阅读记录跳转
+      //上传记录
       restoreHistoryPosition();
     } catch (e) {
       pageError.value = true;
@@ -329,7 +329,7 @@ class NovelReaderController extends BaseController {
     }
   }
 
-  /// 預載入下一話
+  /// 预加载下一话
   void preloadContent() async {
     try {
       if (chapterIndex.value == chapters.length - 1) {
@@ -345,7 +345,7 @@ class NovelReaderController extends BaseController {
     }
   }
 
-  /// 上傳歷史記錄
+  /// 上传历史记录
   void uploadHistory() {
     var chapter = chapters[chapterIndex.value];
     var ratio = currentProgressRatio();
@@ -366,7 +366,7 @@ class NovelReaderController extends BaseController {
   /// 下一章
   void nextChapter() {
     if (chapterIndex.value == chapters.length - 1) {
-      SmartDialog.showToast("後面沒有了");
+      SmartDialog.showToast("后面没有了");
       return;
     }
 
@@ -378,7 +378,7 @@ class NovelReaderController extends BaseController {
   /// 上一章
   void forwardChapter() {
     if (chapterIndex.value == 0) {
-      SmartDialog.showToast("前面沒有了");
+      SmartDialog.showToast("前面没有了");
       return;
     }
 
@@ -387,7 +387,7 @@ class NovelReaderController extends BaseController {
     loadContent();
   }
 
-  /// 下一頁
+  /// 下一页
   void nextPage() {
     if (direction.value == ReaderDirection.kUpToDown) {
       return;
@@ -401,7 +401,7 @@ class NovelReaderController extends BaseController {
     }
   }
 
-  /// 上一頁
+  /// 上一页
   void forwardPage() {
     if (direction.value == ReaderDirection.kUpToDown) {
       return;
@@ -415,9 +415,9 @@ class NovelReaderController extends BaseController {
     }
   }
 
-  /// 跳轉頁數
+  /// 跳转页数
   void jumpToPage(int page, {bool anime = false}) {
-    //豎向
+    //竖向
     if (direction.value == ReaderDirection.kUpToDown) {
       final viewportHeight = scrollController.position.viewportDimension;
       scrollController.jumpTo(viewportHeight * page);
@@ -429,7 +429,7 @@ class NovelReaderController extends BaseController {
     }
   }
 
-  /// 顯示設定
+  /// 显示设置
   void showSettings() {
     setShowControls();
 
@@ -450,7 +450,7 @@ class NovelReaderController extends BaseController {
         child: Column(
           children: [
             ListTile(
-              title: const Text("設定"),
+              title: const Text("设置"),
               trailing: IconButton(
                 onPressed: Get.back,
                 icon: const Icon(Icons.close),
@@ -464,7 +464,7 @@ class NovelReaderController extends BaseController {
                   children: [
                     buildBGItem(
                       child: ListTile(
-                        title: const Text("閱讀方向"),
+                        title: const Text("阅读方向"),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -501,7 +501,7 @@ class NovelReaderController extends BaseController {
                     AppStyle.vGap12,
                     buildBGItem(
                       child: ListTile(
-                        title: const Text("閱讀主題"),
+                        title: const Text("阅读主题"),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: AppColor.novelThemes.keys
@@ -542,8 +542,8 @@ class NovelReaderController extends BaseController {
                         onChanged: (e) {
                           settings.setNovelReaderLeftHandMode(e);
                         },
-                        title: const Text("操作反轉"),
-                        subtitle: const Text("點選左側下一頁，右側上一頁"),
+                        title: const Text("操作反转"),
+                        subtitle: const Text("点击左侧下一页，右侧上一页"),
                       ),
                     ),
                     AppStyle.vGap12,
@@ -553,7 +553,7 @@ class NovelReaderController extends BaseController {
                         onChanged: (e) {
                           settings.setNovelReaderShowStatus(e);
                         },
-                        title: const Text("顯示狀態資訊"),
+                        title: const Text("显示状态信息"),
                       ),
                     ),
                     AppStyle.vGap12,
@@ -563,13 +563,13 @@ class NovelReaderController extends BaseController {
                         onChanged: (e) {
                           settings.setNovelReaderPageAnimation(e);
                         },
-                        title: const Text("翻頁動畫"),
+                        title: const Text("翻页动画"),
                       ),
                     ),
                     AppStyle.vGap12,
                     buildBGItem(
                       child: ListTile(
-                        title: const Text("字型大小"),
+                        title: const Text("字体大小"),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -605,7 +605,7 @@ class NovelReaderController extends BaseController {
                     AppStyle.vGap12,
                     buildBGItem(
                       child: ListTile(
-                        title: const Text("字型"),
+                        title: const Text("字体"),
                         subtitle: Text(settings.novelReaderFontName),
                         onTap: showFontDialog,
                         trailing: const Icon(
@@ -661,7 +661,7 @@ class NovelReaderController extends BaseController {
     );
   }
 
-  /// 設定閱讀方向
+  /// 设置阅读方向
   void setDirection(int value) {
     settings.setNovelReaderDirection(value);
     direction.value = value;
@@ -671,10 +671,10 @@ class NovelReaderController extends BaseController {
     Get.dialog(
       Obx(
         () => SimpleDialog(
-          title: const Text("選擇字型"),
+          title: const Text("选择字体"),
           children: [
             RadioListTile<String>(
-              title: const Text("系統預設"),
+              title: const Text("系统默认"),
               value: '',
               groupValue: settings.novelReaderFontPath.value,
               onChanged: (value) async {
@@ -687,7 +687,7 @@ class NovelReaderController extends BaseController {
                 title: Text(NovelFontService.instance.getFontName(path)),
                 controlAffinity: ListTileControlAffinity.leading,
                 secondary: IconButton(
-                  tooltip: "刪除字型",
+                  tooltip: "删除字体",
                   icon: const Icon(Icons.delete_outline),
                   onPressed: () => deleteFont(path),
                 ),
@@ -701,7 +701,7 @@ class NovelReaderController extends BaseController {
             ),
             ListTile(
               leading: const Icon(Icons.add),
-              title: const Text("匯入字型"),
+              title: const Text("导入字体"),
               onTap: () async {
                 Get.back();
                 try {
@@ -725,16 +725,16 @@ class NovelReaderController extends BaseController {
   Future<void> deleteFont(String path) async {
     final fontName = NovelFontService.instance.getFontName(path);
     final result = await DialogUtils.showAlertDialog(
-      "刪除後需要重新匯入才能再次使用。",
-      title: "刪除字型「$fontName」？",
-      confirm: "刪除",
+      "删除后需要重新导入才能再次使用。",
+      title: "删除字体「$fontName」？",
+      confirm: "删除",
     );
     if (!result) {
       return;
     }
     try {
       await settings.deleteNovelReaderFontPath(path);
-      SmartDialog.showToast("刪除成功");
+      SmartDialog.showToast("删除成功");
     } catch (e) {
       SmartDialog.showToast(e.toString());
     }
@@ -764,7 +764,7 @@ class NovelReaderController extends BaseController {
     );
   }
 
-  /// 顯示目錄
+  /// 显示目录
   void showMenu() {
     setShowControls();
     showModalBottomSheet(
@@ -784,7 +784,7 @@ class NovelReaderController extends BaseController {
         child: Column(
           children: [
             ListTile(
-              title: Text("目錄(${chapters.length})"),
+              title: Text("目录(${chapters.length})"),
               trailing: IconButton(
                 onPressed: Get.back,
                 icon: const Icon(Icons.close),
@@ -828,7 +828,7 @@ class NovelReaderController extends BaseController {
     );
   }
 
-  /// 設定顯示/隱藏控制按鈕
+  /// 设置显示/隐藏控制按钮
   void setShowControls() {
     if (settings.novelReaderFullScreen.value) {
       if (showControls.value) {
@@ -842,7 +842,7 @@ class NovelReaderController extends BaseController {
     });
   }
 
-  /// 進入全屏
+  /// 进入全屏
   void setFull() {
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
@@ -850,7 +850,7 @@ class NovelReaderController extends BaseController {
     );
   }
 
-  /// 進入全屏edgeToEdge模式
+  /// 进入全屏edgeToEdge模式
   void setFullEdge() {
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.edgeToEdge,

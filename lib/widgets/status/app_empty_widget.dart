@@ -25,7 +25,7 @@ class AppEmptyWidget extends StatelessWidget {
                 repeat: false,
               ),
               const Text(
-                "這裡什麼都沒有",
+                "这里什么都没有",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               ),

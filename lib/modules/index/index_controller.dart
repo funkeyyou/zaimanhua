@@ -26,10 +26,10 @@ class IndexController extends GetxController {
     Area(min: 400, size: 500),
   ]);
 
-  /// 雙擊退出Flag
+  /// 双击退出Flag
   bool doubleClickExit = false;
 
-  /// 雙擊退出Timer
+  /// 双击退出Timer
   Timer? doubleClickTimer;
 
   final List<Widget> pages = [
@@ -78,7 +78,7 @@ class IndexController extends GetxController {
       return;
     }
     doubleClickExit = true;
-    SmartDialog.showToast("再按一次退出應用");
+    SmartDialog.showToast("再按一次退出应用");
     doubleClickTimer = Timer(const Duration(seconds: 2), () {
       doubleClickExit = false;
       doubleClickTimer!.cancel();

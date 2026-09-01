@@ -18,8 +18,8 @@ import 'package:collection/collection.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
 
-/// 小說下載管理
-// TODO 整理程式碼
+/// 小说下载管理
+// TODO 整理代码
 class NovelDownloadService extends GetxService {
   static NovelDownloadService get instance => Get.find<NovelDownloadService>();
 
@@ -28,13 +28,13 @@ class NovelDownloadService extends GetxService {
   late Box<NovelDownloadInfo> box;
   String savePath = "";
 
-  /// 連線資訊監聽
+  /// 连接信息监听
   StreamSubscription<List<ConnectivityResult>>? connectivitySubscription;
 
-  /// 當前連線型別
+  /// 当前连接类型
   ConnectivityResult? connectivityType;
 
-  /// 當前正在下載的數量
+  /// 当前正在下载的数量
   var currentNum = 0;
 
   Future init() async {
@@ -44,7 +44,7 @@ class NovelDownloadService extends GetxService {
       path: dir.path,
     );
     savePath = await getSavePath();
-    //監聽網路狀態
+    //监听网络状态
     initConnectivity();
     //更新ID
     updateAllIds();
@@ -52,7 +52,7 @@ class NovelDownloadService extends GetxService {
     updateDownlaoded();
   }
 
-  /// 初始化連線狀態
+  /// 初始化连接状态
   void initConnectivity() async {
     try {
       var connectivity = Connectivity();
@@ -69,13 +69,13 @@ class NovelDownloadService extends GetxService {
     }
   }
 
-  /// 網路變更
+  /// 网络变更
   void networkChanged(ConnectivityResult type) {
     if (connectivityType != type && type == ConnectivityResult.mobile) {
-      //切換至流量
+      //切换至流量
       switchCellular();
     } else if (connectivityType != type && type == ConnectivityResult.none) {
-      //網路斷開
+      //网络断开
       switchNoNetwork();
     } else {
       switchToWiFi();
@@ -92,14 +92,14 @@ class NovelDownloadService extends GetxService {
     return ConnectivityResult.none;
   }
 
-  /// 切換至流量
+  /// 切换至流量
   void switchCellular() {
     if (settings.downloadAllowCellular.value) {
-      //允許使用流量,當成WiFi處理
+      //允许使用流量,当成WiFi处理
       switchToWiFi();
       return;
     }
-    //把任務狀態改為pauseCellular
+    //把任务状态改为pauseCellular
     for (var item in taskQueues) {
       if (item.status == DownloadStatus.wait ||
           item.status == DownloadStatus.loadding ||
@@ -112,9 +112,9 @@ class NovelDownloadService extends GetxService {
     updateQueue();
   }
 
-  /// 無網路
+  /// 无网络
   void switchNoNetwork() {
-    //把任務狀態改為pauseCellular
+    //把任务状态改为pauseCellular
     for (var item in taskQueues) {
       if (item.status == DownloadStatus.wait ||
           item.status == DownloadStatus.loadding ||
@@ -137,38 +137,38 @@ class NovelDownloadService extends GetxService {
     updateQueue();
   }
 
-  /// 任務列表
+  /// 任务列表
   RxList<NovelDownloader> taskQueues = RxList<NovelDownloader>();
 
-  /// 已下載完成的
+  /// 已下载完成的
   RxList<NovelDownloadedItem> downloaded = RxList<NovelDownloadedItem>();
 
-  /// 已下載、下載中的ID
+  /// 已下载、下载中的ID
   RxSet<String> downloadIds = RxSet<String>();
 
-  /// 開始下載任務
+  /// 开始下载任务
   void initTasks() async {
     var tasks = getDownloadingTask();
     for (var item in tasks) {
-      //任務已被取消
+      //任务已被取消
       if (item.status == DownloadStatus.cancel) {
         box.delete(item.taskId);
         continue;
       }
-      //無網路
+      //无网络
       if (connectivityType == ConnectivityResult.none) {
         if (item.status != DownloadStatus.pause) {
           item.status = DownloadStatus.waitNetwork;
         }
       } else if (connectivityType == ConnectivityResult.mobile) {
-        //不允許使用資料下載
+        //不允许使用数据下载
         if (!settings.downloadAllowCellular.value) {
           if (item.status != DownloadStatus.pause) {
             item.status = DownloadStatus.pauseCellular;
           }
         }
       } else {
-        //只要不是手動暫停的，全部改為等待，新增到下載佇列
+        //只要不是手动暂停的，全部改为等待，添加到下载队列
         if (item.status != DownloadStatus.pause) {
           item.status = DownloadStatus.wait;
         }
@@ -181,12 +181,12 @@ class NovelDownloadService extends GetxService {
     updateQueue();
   }
 
-  /// 更新佇列
+  /// 更新队列
   void updateQueue() {
-    //如果下載中任務數小於設定值，新增一個任務
-    //如果任務取消或完成，移除佇列
+    //如果下载中任务数小于设定值，添加一个任务
+    //如果任务取消或完成，移除队列
     for (var task in List<NovelDownloader>.from(taskQueues)) {
-      //下載完成或取消，移除佇列
+      //下载完成或取消，移除队列
       if (task.status == DownloadStatus.complete ||
           task.status == DownloadStatus.cancel) {
         taskQueues.remove(task);
@@ -226,7 +226,7 @@ class NovelDownloadService extends GetxService {
     downloadIds.addAll(box.keys.map((e) => e.toString()));
   }
 
-  ///讀取未完成的任務
+  ///读取未完成的任务
   List<NovelDownloadInfo> getDownloadingTask() {
     return box.values
         .toList()
@@ -234,7 +234,7 @@ class NovelDownloadService extends GetxService {
         .toList();
   }
 
-  /// 更新下載完成
+  /// 更新下载完成
   void updateDownlaoded() {
     var downlaodedList = box.values
         .toList()
@@ -286,9 +286,9 @@ class NovelDownloadService extends GetxService {
     downloaded.value = novelList;
   }
 
-  /// 繼續
+  /// 继续
   void resumeAll() {
-    //更新狀態至等待
+    //更新状态至等待
     for (var task in taskQueues) {
       if (task.status == DownloadStatus.pause) {
         task.stopTask();
@@ -298,7 +298,7 @@ class NovelDownloadService extends GetxService {
     updateQueue();
   }
 
-  /// 暫停
+  /// 暂停
   void pauseAll() {
     for (var task in taskQueues) {
       if (task.status != DownloadStatus.pause &&
@@ -311,7 +311,7 @@ class NovelDownloadService extends GetxService {
     updateQueue();
   }
 
-  /// 新增一個任務
+  /// 添加一个任务
   void addTask({
     required int novelId,
     required int chapterId,
@@ -361,7 +361,7 @@ class NovelDownloadService extends GetxService {
     updateQueue();
   }
 
-  /// 讀取儲存目錄
+  /// 读取保存目录
   Future<String> getSavePath() async {
     var dir = await getApplicationSupportDirectory();
 
@@ -372,7 +372,7 @@ class NovelDownloadService extends GetxService {
     return novelDir.path;
   }
 
-  ///刪除
+  ///删除
   void delete(NovelDownloadInfo info) async {
     try {
       var dir = Directory(p.join(savePath, info.taskId));
@@ -386,7 +386,7 @@ class NovelDownloadService extends GetxService {
     updateAllIds();
   }
 
-  ///刪除
+  ///删除
   void deleteChapter(int novelId, int volumeId, int chapterId) async {
     var info = box.get("${novelId}_${volumeId}_$chapterId");
     if (info != null) {

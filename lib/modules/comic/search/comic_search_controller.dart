@@ -64,8 +64,8 @@ class ComicSearchController extends BasePageController<SearchComicItem> {
 
   Future numberJumpComic() async {
     if (!await DialogUtils.showAlertDialog(
-      "你輸入了純數字，是否跳轉至對應的漫畫?",
-      title: "漫畫ID跳轉",
+      "你输入了纯数字，是否跳转至对应的漫画?",
+      title: "漫画ID跳转",
     )) {
       return false;
     }
@@ -78,7 +78,7 @@ class ComicSearchController extends BasePageController<SearchComicItem> {
       return [];
     }
     // if (AppSettingsService.instance.comicSearchUseWebApi.value) {
-    //   //WEB介面不能分頁
+    //   //WEB接口不能分页
     //   if (page > 1) {
     //     return [];
     //   }

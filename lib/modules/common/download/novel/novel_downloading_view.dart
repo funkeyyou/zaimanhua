@@ -51,7 +51,7 @@ class NovelDownloadingView extends StatelessWidget {
                       Remix.pause_line,
                       size: 20,
                     ),
-                    label: const Text("暫停全部"),
+                    label: const Text("暂停全部"),
                   ),
                 ),
                 Expanded(
@@ -64,7 +64,7 @@ class NovelDownloadingView extends StatelessWidget {
                       Remix.download_line,
                       size: 20,
                     ),
-                    label: const Text("開始全部"),
+                    label: const Text("开始全部"),
                   ),
                 ),
               ],
@@ -102,7 +102,7 @@ class NovelDownloadingView extends StatelessWidget {
                   children: [
                     buildButton(
                       icon: Icons.refresh_rounded,
-                      text: "重試",
+                      text: "重试",
                       visible: task.status == DownloadStatus.error ||
                           task.status == DownloadStatus.errorLoad,
                       onPressed: () {
@@ -113,7 +113,7 @@ class NovelDownloadingView extends StatelessWidget {
                       icon: Icons.play_arrow_rounded,
                       visible: task.status == DownloadStatus.wait ||
                           task.status == DownloadStatus.pauseCellular,
-                      text: "開始",
+                      text: "开始",
                       onPressed: () {
                         task.start();
                       },
@@ -121,7 +121,7 @@ class NovelDownloadingView extends StatelessWidget {
                     buildButton(
                       icon: Icons.play_arrow_rounded,
                       visible: task.status == DownloadStatus.pause,
-                      text: "繼續",
+                      text: "继续",
                       onPressed: () {
                         task.resume();
                       },
@@ -129,7 +129,7 @@ class NovelDownloadingView extends StatelessWidget {
                     buildButton(
                       icon: Icons.pause_rounded,
                       visible: task.status == DownloadStatus.downloading,
-                      text: "暫停",
+                      text: "暂停",
                       onPressed: () {
                         task.pause();
                       },
@@ -158,21 +158,21 @@ class NovelDownloadingView extends StatelessWidget {
       case DownloadStatus.complete:
         return "已完成";
       case DownloadStatus.downloading:
-        return "下載中";
+        return "下载中";
       case DownloadStatus.error:
-        return "下載失敗";
+        return "下载失败";
       case DownloadStatus.errorLoad:
-        return "無法讀取資訊";
+        return "无法读取信息";
       case DownloadStatus.loadding:
-        return "讀取資訊中";
+        return "读取信息中";
       case DownloadStatus.pause:
-        return "暫停中";
+        return "暂停中";
       case DownloadStatus.pauseCellular:
         return "等待Wi-Fi";
       case DownloadStatus.wait:
-        return "等待下載";
+        return "等待下载";
       case DownloadStatus.waitNetwork:
-        return "等待網路連線";
+        return "等待网络连接";
       default:
         return status.toString();
     }

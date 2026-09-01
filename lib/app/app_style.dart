@@ -149,10 +149,10 @@ class AppStyle {
   static BorderRadius radius32 = BorderRadius.circular(32);
   static BorderRadius radius48 = BorderRadius.circular(48);
 
-  /// 頂部狀態列的高度
+  /// 顶部状态栏的高度
   static double get statusBarHeight => MediaQuery.of(Get.context!).padding.top;
 
-  /// 底部導航條的高度
+  /// 底部导航条的高度
   static double get bottomBarHeight =>
       MediaQuery.of(Get.context!).padding.bottom;
 }

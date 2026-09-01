@@ -30,7 +30,7 @@ class UserComicHistoryModel {
         viewingTime: _asInt(json['viewing_time']) ?? 0,
         comicName: asT<String?>(json['comic_name']) ??
             asT<String?>(json['title']) ??
-            "未知漫畫",
+            "未知漫画",
         cover: asT<String?>(json['cover']) ?? "",
         chapterName: asT<String?>(json['chapter_name']) ?? "-",
       );

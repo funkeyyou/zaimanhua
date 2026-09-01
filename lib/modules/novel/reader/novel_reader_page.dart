@@ -124,7 +124,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                   ),
                 ),
                 buildBottomStatus(),
-                //頂部
+                //顶部
                 Obx(
                   () => AnimatedPositioned(
                     top: controller.showControls.value
@@ -575,11 +575,11 @@ class NovelReaderPage extends GetView<NovelReaderController> {
     switch (connectivityType) {
       case ConnectivityResult.bluetooth:
         icon = Remix.wifi_line;
-        name = "藍芽";
+        name = "蓝牙";
         break;
       case ConnectivityResult.ethernet:
         icon = Remix.computer_line;
-        name = "有線";
+        name = "有线";
         break;
       case ConnectivityResult.mobile:
         icon = Remix.base_station_line;
@@ -595,7 +595,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
         break;
       case ConnectivityResult.none:
         icon = Remix.wifi_off_line;
-        name = "無網路";
+        name = "无网络";
         break;
       case ConnectivityResult.other:
         icon = Remix.question_line;
@@ -647,7 +647,7 @@ class NovelReaderPage extends GetView<NovelReaderController> {
         children: [
           //Icon(icon, size: 12, color: color.withValues(alpha: .6)),
           Text(
-            "電量 $battery%",
+            "电量 $battery%",
             style: TextStyle(
                 fontSize: 12, height: 1.0, color: color.withValues(alpha: .6)),
           ),

@@ -12,7 +12,7 @@ class CustomInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) {
     var time =
         DateTime.now().millisecondsSinceEpoch - err.requestOptions.extra["ts"];
-    Log.e('''【HTTP請求錯誤】 耗時:${time}ms
+    Log.e('''【HTTP请求错误】 耗时:${time}ms
 Request Method：${err.requestOptions.method}
 Response Code：${err.response?.statusCode}
 Request URL：${err.requestOptions.uri}
@@ -30,7 +30,7 @@ Response Data：${err.response?.data}''', err.stackTrace);
         response.requestOptions.extra["ts"];
     if (response.requestOptions.uri.toString().contains(".txt")) {
       Log.i(
-        '''【HTTP請求響應】 耗時:${time}ms
+        '''【HTTP请求响应】 耗时:${time}ms
 Request Method：${response.requestOptions.method}
 Request Code：${response.statusCode}
 Request URL：${response.requestOptions.uri}''',
@@ -38,7 +38,7 @@ Request URL：${response.requestOptions.uri}''',
       return super.onResponse(response, handler);
     }
     Log.i(
-      '''【HTTP請求響應】 耗時:${time}ms
+      '''【HTTP请求响应】 耗时:${time}ms
 Request Method：${response.requestOptions.method}
 Request Code：${response.statusCode}
 Request URL：${response.requestOptions.uri}

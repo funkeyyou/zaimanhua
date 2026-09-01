@@ -62,16 +62,16 @@ class DBService extends GetxService {
     return ls;
   }
 
-  /// 同步遠端的漫畫記錄
+  /// 同步远程的漫画记录
   void syncRemoteComicHistory(List<UserComicHistoryModel> items) {
     try {
       for (var item in items) {
         var remoteTime =
             DateTime.fromMillisecondsSinceEpoch((item.viewingTime ?? 0) * 1000);
-        //本地是否存在記錄
+        //本地是否存在记录
         var local = comicHistoryBox.get(item.comicId);
         if (local != null && local.chapterId != 0) {
-          //與本地記錄時間做比對，如果較新則覆蓋，否則直接跳過處理
+          //与本地记录时间做比对，如果较新则覆盖，否则直接跳过处理
           if ((local.updateTime.millisecondsSinceEpoch ~/ 1000) <
               remoteTime.millisecondsSinceEpoch) {
             putComicHistory(
@@ -87,7 +87,7 @@ class DBService extends GetxService {
             );
           }
         } else {
-          //不存在，直接新增一條
+          //不存在，直接添加一条
           putComicHistory(
             ComicHistory(
               comicId: item.comicId,
@@ -136,16 +136,16 @@ class DBService extends GetxService {
     return ls;
   }
 
-  /// 同步遠端的小說記錄
+  /// 同步远程的小说记录
   void syncRemoteNovelHistory(List<UserNovelHistoryModel> items) {
     try {
       for (var item in items) {
         var remoteTime =
             DateTime.fromMillisecondsSinceEpoch((item.viewingTime ?? 0) * 1000);
-        //本地是否存在記錄
+        //本地是否存在记录
         var local = novelHistoryBox.get(item.lnovelId);
         if (local != null && local.chapterId != 0) {
-          //與本地記錄時間做比對，如果較新則覆蓋，否則直接跳過處理
+          //与本地记录时间做比对，如果较新则覆盖，否则直接跳过处理
           if ((local.updateTime.millisecondsSinceEpoch ~/ 1000) <
               remoteTime.millisecondsSinceEpoch) {
             putNovelHistory(
@@ -164,7 +164,7 @@ class DBService extends GetxService {
             );
           }
         } else {
-          //不存在，直接新增一條
+          //不存在，直接添加一条
           putNovelHistory(
             NovelHistory(
               novelId: item.lnovelId,

@@ -36,7 +36,7 @@ class UserCenterPage extends StatelessWidget {
               AppStyle.hGap8,
               Flexible(
                 child: Text(
-                  controller.info.value?.nickname ?? "使用者評論",
+                  controller.info.value?.nickname ?? "用户评论",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -55,7 +55,7 @@ class UserCenterPage extends StatelessWidget {
                     ? Icons.check
                     : Icons.person_add_alt_1_outlined,
               ),
-              label: Text(controller.isFocus.value ? "已關注" : "關注"),
+              label: Text(controller.isFocus.value ? "已关注" : "关注"),
             ),
           ),
         ],

@@ -50,7 +50,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                             Remix.checkbox_line,
                             size: 20,
                           ),
-                          label: const Text("選擇"),
+                          label: const Text("选择"),
                         ),
                       ),
                       Expanded(
@@ -63,7 +63,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                             Remix.information_line,
                             size: 20,
                           ),
-                          label: const Text("詳情"),
+                          label: const Text("详情"),
                         ),
                       ),
                       Expanded(
@@ -89,7 +89,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                             Remix.play_line,
                             size: 20,
                           ),
-                          label: const Text("閱讀"),
+                          label: const Text("阅读"),
                         ),
                       ),
                     ],
@@ -109,7 +109,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                             Remix.checkbox_line,
                             size: 20,
                           ),
-                          label: const Text("全選"),
+                          label: const Text("全选"),
                         ),
                       ),
                       Expanded(
@@ -122,7 +122,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
                             Remix.delete_bin_line,
                             size: 20,
                           ),
-                          label: const Text("刪除"),
+                          label: const Text("删除"),
                         ),
                       ),
                       Expanded(
@@ -158,7 +158,7 @@ class NovelDownloadedDetailPage extends StatelessWidget {
           child: Row(children: [
             Expanded(
               child: Text(
-                "${item.volumeName}(共${item.chapters.length}話)",
+                "${item.volumeName}(共${item.chapters.length}话)",
                 style: Get.textTheme.titleSmall,
               ),
             ),

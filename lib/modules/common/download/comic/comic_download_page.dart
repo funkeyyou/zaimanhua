@@ -30,8 +30,8 @@ class ComicDownloadPage extends StatelessWidget {
                 Obx(
                   () => Tab(
                       text: ComicDownloadService.instance.taskQueues.isEmpty
-                          ? "下載中"
-                          : "下載中(${ComicDownloadService.instance.taskQueues.length})"),
+                          ? "下载中"
+                          : "下载中(${ComicDownloadService.instance.taskQueues.length})"),
                 )
               ],
             ),

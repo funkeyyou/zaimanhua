@@ -16,7 +16,7 @@ class LocalFavoritePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("本機收藏"),
+        title: const Text("本机收藏"),
       ),
       body: LayoutBuilder(builder: (context, constraints) {
         var count = constraints.maxWidth ~/ 160;

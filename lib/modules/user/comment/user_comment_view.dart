@@ -40,7 +40,7 @@ class UserCommentView extends StatelessWidget {
         ),
         itemBuilder: (context, i) {
           var item = controller.list[i];
-          //TODO 跳轉評論詳情
+          //TODO 跳转评论详情
           return Container(
             padding: AppStyle.edgeInsetsA12,
             child: Row(
@@ -149,7 +149,7 @@ class UserCommentView extends StatelessWidget {
   }
 
   void toDetail(UserCommentItem item) {
-    //漫畫
+    //漫画
     if (type == 0) {
       AppNavigator.toComicDetail(item.objId);
     } else if (type == 1) {

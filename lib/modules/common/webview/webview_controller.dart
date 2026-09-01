@@ -11,7 +11,7 @@ class WebViewPageController extends BaseController {
   final String url;
   WebViewPageController(this.url);
   final WebViewController webViewController = WebViewController();
-  var title = "載入中".obs;
+  var title = "加载中".obs;
   @override
   void onInit() {
     initWebView();
@@ -47,8 +47,8 @@ class WebViewPageController extends BaseController {
       "Cookie": UserService.instance.userProfile.value?.cookieVal ?? "",
     });
 
-    /// TODO 無法載入Mixed Content
-    /// 19年的問題了，Flutter還沒解決...
+    /// TODO 无法加载Mixed Content
+    /// 19年的问题了，Flutter还没解决...
     /// https://github.com/flutter/flutter/issues/43595
   }
 

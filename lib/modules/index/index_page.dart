@@ -45,17 +45,17 @@ class IndexPage extends GetView<IndexController> {
                   BottomNavigationBarItem(
                     icon: Icon(Remix.bear_smile_line),
                     activeIcon: Icon(Remix.bear_smile_fill),
-                    label: "漫畫",
+                    label: "漫画",
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Remix.article_line),
                     activeIcon: Icon(Remix.article_fill),
-                    label: "資訊",
+                    label: "资讯",
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Remix.book_open_line),
                     activeIcon: Icon(Remix.book_open_fill),
-                    label: "輕小說",
+                    label: "轻小说",
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Remix.user_smile_line),
@@ -103,15 +103,15 @@ class IndexPage extends GetView<IndexController> {
                 destinations: const [
                   NavigationRailDestination(
                     icon: Icon(Remix.bear_smile_line),
-                    label: Text("漫畫"),
+                    label: Text("漫画"),
                   ),
                   NavigationRailDestination(
                     icon: Icon(Remix.article_line),
-                    label: Text("資訊"),
+                    label: Text("资讯"),
                   ),
                   NavigationRailDestination(
                     icon: Icon(Remix.book_open_line),
-                    label: Text("輕小說"),
+                    label: Text("轻小说"),
                   ),
                   NavigationRailDestination(
                     icon: Icon(Remix.user_smile_line),
@@ -153,7 +153,7 @@ class IndexPage extends GetView<IndexController> {
 
   /// 子路由
   Widget _buildContentNavigator() {
-    /// 攔截子路由的返回
+    /// 拦截子路由的返回
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -201,7 +201,7 @@ class IndexPage extends GetView<IndexController> {
   }
 }
 
-/// 子路由監聽
+/// 子路由监听
 class SubNavigatorObserver extends NavigatorObserver {
   @override
   void didPush(Route route, Route? previousRoute) {

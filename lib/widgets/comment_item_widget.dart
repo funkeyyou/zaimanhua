@@ -167,7 +167,7 @@ class CommentItemWidget extends StatelessWidget {
           padding: AppStyle.edgeInsetsA8,
           child: Center(
               child: Text(
-            "點選展開${list.length - 2}條評論",
+            "点击展开${list.length - 2}条评论",
             style: const TextStyle(fontSize: 12, color: Colors.grey),
           )),
         ),
@@ -309,7 +309,7 @@ class CommentItemWidget extends StatelessWidget {
           },
         ),
         ListTile(
-          title: const Text("複製內容"),
+          title: const Text("复制内容"),
           leading: const Icon(Icons.content_copy),
           onTap: () {
             Utils.copyText(item.content);
@@ -318,7 +318,7 @@ class CommentItemWidget extends StatelessWidget {
           },
         ),
         ListTile(
-          title: const Text("點贊評論"),
+          title: const Text("点赞评论"),
           leading: const Icon(Icons.thumb_up_outlined),
           onTap: () {
             AppNavigator.closePage();
@@ -326,7 +326,7 @@ class CommentItemWidget extends StatelessWidget {
           },
         ),
         ListTile(
-          title: const Text("回覆評論"),
+          title: const Text("回复评论"),
           leading: const Icon(Icons.message_outlined),
           onTap: () {
             AppNavigator.closePage();

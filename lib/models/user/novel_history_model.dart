@@ -36,7 +36,7 @@ class UserNovelHistoryModel {
         cover: asT<String?>(json['cover']) ?? "",
         novelName: asT<String?>(json['novel_name']) ??
             asT<String?>(json['title']) ??
-            "未知小說",
+            "未知小说",
         volumeName: asT<String?>(json['volume_name']) ?? "-",
         chapterName: asT<String?>(json['chapter_name']) ?? "-",
       );

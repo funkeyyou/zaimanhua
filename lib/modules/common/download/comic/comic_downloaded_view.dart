@@ -75,7 +75,7 @@ class ComicDownloadedView extends StatelessWidget {
                   ),
                   AppStyle.vGap4,
                   Text(
-                    "已下載${item.chapterCount}章",
+                    "已下载${item.chapterCount}章",
                     style: const TextStyle(color: Colors.grey, fontSize: 14),
                   ),
                 ],

@@ -38,7 +38,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   }
 
 
-  /// 重新整理國漫
+  /// 刷新国漫
   Future<void> refreshGuoman() async {
     try {
       var index = list.indexWhere((x) => x.categoryId == 52);
@@ -55,7 +55,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
     }
   }
 
-  /// 重新整理近期必看
+  /// 刷新近期必看
   Future<void> refreshRecommend() async {
     try {
       var index = list.indexWhere((x) => x.categoryId == 47);
@@ -72,7 +72,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
     }
   }
 
-  /// 載入訂閱
+  /// 加载订阅
   void loadSubscribe() async {
     try {
       var result = await request.recommendSubscribe();
@@ -87,7 +87,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
     }
   }
 
-  /// 重新整理熱門連載
+  /// 刷新热门连载
   Future<void> refreshHot() async {
     try {
       var index = list.indexWhere((x) => x.categoryId == 54);
@@ -105,21 +105,21 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   }
 
   void openDetail(ComicRecommendItemModel item) {
-    //漫畫=1
+    //漫画=1
     if (item.type == null || item.type == 1) {
       AppNavigator.toComicDetail(
         item.objId ?? item.id ?? 0,
       );
     } else if (item.type == 5) {
-      //專題=5
+      //专题=5
       AppNavigator.toSpecialDetail(
         item.objId ?? 0,
       );
     } else if (item.type == 6) {
-      //網頁=6
+      //网页=6
       AppNavigator.toWebView(item.url ?? "");
     } else if (item.type == 7) {
-      //新聞=7
+      //新闻=7
       AppNavigator.toNewsDetail(
         url: item.url ?? "",
         newsId: item.objId ?? 0,
@@ -129,8 +129,8 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
       //作者=8
       AppNavigator.toComicAuthorDetail(item.objId ?? 0);
     } else if (item.type == 13) {
-      //社群=13
-      //直接跳轉至網頁
+      //社区=13
+      //直接跳转至网页
       launchUrlString(
         "http://m.forum.idmzj.com/thread/detail?tid=${item.objId}",
         mode: LaunchMode.externalApplication,
@@ -139,7 +139,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
       //   "http://m.forum.dmzj.com/thread/detail?tid=${item.objId}",
       // );
     } else {
-      SmartDialog.showToast("未知型別，無法跳轉");
+      SmartDialog.showToast("未知类型，无法跳转");
     }
   }
 

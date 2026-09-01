@@ -7,13 +7,13 @@ import 'package:get/get.dart';
 class NovelRankController extends BasePageController<NovelRankModel> {
   final NovelRequest request = NovelRequest();
   RxMap<int, String> tags = {
-    0: "全部分類",
+    0: "全部分类",
   }.obs;
   var tag = 0.obs;
 
   Map<int, String> rankTypes = {
-    0: "人氣排行",
-    1: "訂閱排行",
+    0: "人气排行",
+    1: "订阅排行",
   };
   var rankType = 0.obs;
 
@@ -26,7 +26,7 @@ class NovelRankController extends BasePageController<NovelRankModel> {
   void loadFilter() async {
     try {
       final newTags = await request.rankFilter();
-      tags.value = {...tags, ...newTags}; // 合併後整體回寫
+      tags.value = {...tags, ...newTags}; // 合并后整体回写
     } catch (e) {
       SmartDialog.showToast(e.toString());
     }

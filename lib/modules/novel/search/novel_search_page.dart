@@ -25,7 +25,7 @@ class NovelSearchPage extends StatelessWidget {
             controller: controller.searchController,
             autofocus: true,
             decoration: InputDecoration(
-              hintText: "搜尋輕小說",
+              hintText: "搜索轻小说",
               contentPadding: AppStyle.edgeInsetsH12,
               border: const OutlineInputBorder(),
               prefixIcon: SizedBox(
@@ -76,7 +76,7 @@ class NovelSearchPage extends StatelessWidget {
           //         child: Column(
           //           children: [
           //             const ListTile(
-          //               title: Text("熱門搜尋"),
+          //               title: Text("热门搜索"),
           //             ),
           //             Padding(
           //               padding: AppStyle.edgeInsetsH12.copyWith(bottom: 12),

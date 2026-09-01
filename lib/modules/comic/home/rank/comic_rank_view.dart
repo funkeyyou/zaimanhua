@@ -200,7 +200,7 @@ class ComicRankView extends StatelessWidget {
                   Text(item.lastUpdateChapterName ?? '-',
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 2),
-                  Text("更新於${Utils.formatTimestamp(item.lastUpdatetime ?? 0)}",
+                  Text("更新于${Utils.formatTimestamp(item.lastUpdatetime ?? 0)}",
                       style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 ],
               ),

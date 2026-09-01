@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:zai_x/models/version_model.dart';
 
-/// 通用的請求
+/// 通用的请求
 class CommonRequest {
   Future<VersionModel> checkUpdate() async {
     try {
@@ -11,7 +11,7 @@ class CommonRequest {
     }
   }
 
-  /// 檢查更新
+  /// 检查更新
   Future<VersionModel> checkUpdateGitMirror() async {
     var result = await Dio().get(
       "https://raw.gitmirror.com/xiaoyaocz/zai_x/zaimanhua/document/app_version.json",
@@ -25,7 +25,7 @@ class CommonRequest {
     return VersionModel.fromJson(result.data);
   }
 
-  /// 檢查更新
+  /// 检查更新
   Future<VersionModel> checkUpdateJsDelivr() async {
     var result = await Dio().get(
       "https://cdn.jsdelivr.net/gh/xiaoyaocz/zai_x@zaimanhua/document/app_version.json",

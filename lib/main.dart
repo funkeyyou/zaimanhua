@@ -41,9 +41,9 @@ void main() async {
     );
   }
   await Hive.initFlutter();
-  //初始化服務
+  //初始化服务
   await initServices();
-  //設定狀態列為透明
+  //设置状态栏为透明
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
@@ -56,17 +56,17 @@ void main() async {
 }
 
 Future initServices() async {
-  //包資訊
+  //包信息
   Utils.packageInfo = await PackageInfo.fromPlatform();
-  //本地儲存
+  //本地存储
   Log.d("Init LocalStorage Service");
   await Get.put(LocalStorageService()).init();
 
-  //使用者資訊
+  //用户信息
   Log.d("Init User Service");
   Get.put(UserService()).init();
 
-  //註冊Hive介面卡
+  //注册Hive适配器
   Hive.registerAdapter(ComicHistoryAdapter());
   Hive.registerAdapter(NovelHistoryAdapter());
   Hive.registerAdapter(DownloadStatusAdapter());
@@ -75,14 +75,14 @@ Future initServices() async {
   Hive.registerAdapter(LocalFavoriteAdapter());
   await Get.put(DBService()).init();
 
-  //初始化設定服務
+  //初始化设置服务
   await Get.put(NovelFontService()).init();
 
   Get.put(AppSettingsService());
 
-  //初始化漫畫下載服務
+  //初始化漫画下载服务
   Get.put(ComicDownloadService()).init();
-  //初始化小說下載服務
+  //初始化小说下载服务
   Get.put(NovelDownloadService()).init();
 }
 
@@ -115,7 +115,7 @@ class DMZJApp extends StatelessWidget {
       navigatorObservers: [FlutterSmartDialog.observer],
       builder: FlutterSmartDialog.init(
         loadingBuilder: ((msg) => const AppLoaddingWidget()),
-        //字型大小不跟隨系統變化
+        //字体大小不跟随系统变化
         builder: (context, child) => Obx(
           () => MediaQuery(
             data: AppSettingsService.instance.useSystemFontSize.value
