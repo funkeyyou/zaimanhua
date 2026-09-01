@@ -38,7 +38,6 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
     return ls;
   }
 
-
   /// 刷新国漫
   Future<void> refreshGuoman() async {
     try {

@@ -234,82 +234,132 @@ class ComicRecommendView extends StatelessWidget {
   }
 
   Widget buildTreeColumnGridView(List<ComicRecommendItemModel> items) {
-    return MasonryGridView.count(
-      padding: EdgeInsets.zero,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 3,
-      mainAxisSpacing: 12,
-      crossAxisSpacing: 12,
-      itemCount: items.length,
-      itemBuilder: (_, i) {
-        var item = items[i];
-        return InkWell(
-          onTap: () => controller.openDetail(item),
-          borderRadius: AppStyle.radius4,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: AppStyle.radius4,
-                child: AspectRatio(
-                  aspectRatio: 27 / 36,
-                  child: NetImage(
-                    item.cover,
-                    width: 270,
-                    height: 360,
+    return LayoutBuilder(builder: (context, box) {
+      return MasonryGridView.count(
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: gridCount(box.maxWidth, 160, 3),
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        itemCount: items.length,
+        itemBuilder: (_, i) {
+          var item = items[i];
+          return InkWell(
+            onTap: () => controller.openDetail(item),
+            borderRadius: AppStyle.radius4,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: AppStyle.radius4,
+                  child: AspectRatio(
+                    aspectRatio: 27 / 36,
+                    child: NetImage(
+                      item.cover,
+                      width: 270,
+                      height: 360,
+                    ),
                   ),
                 ),
-              ),
-              AppStyle.vGap8,
-              Text(
-                item.title.i18n,
-                maxLines: 1,
-                style: const TextStyle(height: 1.2),
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                item.subTitle ?? item.status ?? '',
-                maxLines: 1,
-                style: const TextStyle(
-                  height: 1.2,
-                  fontSize: 12,
-                  color: Colors.grey,
+                AppStyle.vGap8,
+                Text(
+                  item.title.i18n,
+                  maxLines: 1,
+                  style: const TextStyle(height: 1.2),
                   overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              AppStyle.vGap8,
-            ],
-          ),
-        );
-      },
-    );
+                Text(
+                  item.subTitle ?? item.status ?? '',
+                  maxLines: 1,
+                  style: const TextStyle(
+                    height: 1.2,
+                    fontSize: 12,
+                    color: Colors.grey,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                AppStyle.vGap8,
+              ],
+            ),
+          );
+        },
+      );
+    });
   }
 
   Widget buildAuthorGridView(List<ComicRecommendItemModel> items) {
-    return MasonryGridView.count(
-      padding: EdgeInsets.zero,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 3,
-      mainAxisSpacing: 8,
-      crossAxisSpacing: 8,
-      itemCount: items.length,
-      itemBuilder: (_, i) {
-        var item = items[i];
-        return InkWell(
-          onTap: () => controller.openDetail(item),
-          borderRadius: AppStyle.radius8,
-          child: Padding(
-            padding: AppStyle.edgeInsetsA12,
+    return LayoutBuilder(builder: (context, box) {
+      return MasonryGridView.count(
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: gridCount(box.maxWidth, 120, 3),
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+        itemCount: items.length,
+        itemBuilder: (_, i) {
+          var item = items[i];
+          return InkWell(
+            onTap: () => controller.openDetail(item),
+            borderRadius: AppStyle.radius8,
+            child: Padding(
+              padding: AppStyle.edgeInsetsA12,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  NetImage(
+                    item.cover,
+                    width: 56,
+                    height: 56,
+                    borderRadius: 32,
+                  ),
+                  Padding(
+                    padding: AppStyle.edgeInsetsV8,
+                    child: Text(
+                      item.title.i18n,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(height: 1.2, fontSize: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    });
+  }
+
+  Widget buildTwoColumnGridView(List<ComicRecommendItemModel> items) {
+    return LayoutBuilder(builder: (context, box) {
+      return MasonryGridView.count(
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: gridCount(box.maxWidth, 240, 2),
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        itemCount: items.length,
+        itemBuilder: (_, i) {
+          var item = items[i];
+          return InkWell(
+            onTap: () => controller.openDetail(item),
+            borderRadius: AppStyle.radius4,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                NetImage(
-                  item.cover,
-                  width: 56,
-                  height: 56,
-                  borderRadius: 32,
+                ClipRRect(
+                  borderRadius: AppStyle.radius4,
+                  child: AspectRatio(
+                    aspectRatio: 32 / 17,
+                    child: NetImage(
+                      item.cover,
+                      width: 320,
+                      height: 170,
+                    ),
+                  ),
                 ),
                 Padding(
                   padding: AppStyle.edgeInsetsV8,
@@ -317,58 +367,22 @@ class ComicRecommendView extends StatelessWidget {
                     item.title.i18n,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(height: 1.2, fontSize: 12),
+                    style: const TextStyle(height: 1.2),
                   ),
                 ),
               ],
             ),
-          ),
-        );
-      },
-    );
+          );
+        },
+      );
+    });
   }
 
-  Widget buildTwoColumnGridView(List<ComicRecommendItemModel> items) {
-    return MasonryGridView.count(
-      padding: EdgeInsets.zero,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      mainAxisSpacing: 12,
-      crossAxisSpacing: 12,
-      itemCount: items.length,
-      itemBuilder: (_, i) {
-        var item = items[i];
-        return InkWell(
-          onTap: () => controller.openDetail(item),
-          borderRadius: AppStyle.radius4,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: AppStyle.radius4,
-                child: AspectRatio(
-                  aspectRatio: 32 / 17,
-                  child: NetImage(
-                    item.cover,
-                    width: 320,
-                    height: 170,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: AppStyle.edgeInsetsV8,
-                child: Text(
-                  item.title.i18n,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(height: 1.2),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+  /// 依可用寬度換算欄數：平板橫屏、折疊機展開態自動變多欄
+  /// * [itemWidth] 單欄理想寬度
+  /// * [min] 手機直向時的原始欄數，不低於此值
+  static int gridCount(double width, int itemWidth, int min) {
+    var count = width ~/ itemWidth;
+    return count < min ? min : count;
   }
 }

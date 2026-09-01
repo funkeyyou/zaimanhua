@@ -178,55 +178,59 @@ class NovelRecommendView extends StatelessWidget {
   }
 
   Widget buildTreeColumnGridView(List<NovelRecommendItemModel> items) {
-    return MasonryGridView.count(
-      padding: EdgeInsets.zero,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 3,
-      mainAxisSpacing: 12,
-      crossAxisSpacing: 12,
-      itemCount: items.length,
-      itemBuilder: (_, i) {
-        var item = items[i];
-        return InkWell(
-          onTap: () => controller.openDetail(item),
-          borderRadius: AppStyle.radius4,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: AppStyle.radius4,
-                child: AspectRatio(
-                  aspectRatio: 27 / 36,
-                  child: NetImage(
-                    item.cover,
-                    width: 270,
-                    height: 360,
+    return LayoutBuilder(builder: (context, box) {
+      var count = box.maxWidth ~/ 160;
+      if (count < 3) count = 3;
+      return MasonryGridView.count(
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: count,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        itemCount: items.length,
+        itemBuilder: (_, i) {
+          var item = items[i];
+          return InkWell(
+            onTap: () => controller.openDetail(item),
+            borderRadius: AppStyle.radius4,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: AppStyle.radius4,
+                  child: AspectRatio(
+                    aspectRatio: 27 / 36,
+                    child: NetImage(
+                      item.cover,
+                      width: 270,
+                      height: 360,
+                    ),
                   ),
                 ),
-              ),
-              AppStyle.vGap8,
-              Text(
-                item.title.i18n,
-                maxLines: 1,
-                style: const TextStyle(height: 1.2),
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                item.subTitle ?? item.status ?? '',
-                maxLines: 1,
-                style: const TextStyle(
-                  height: 1.2,
-                  fontSize: 12,
-                  color: Colors.grey,
+                AppStyle.vGap8,
+                Text(
+                  item.title.i18n,
+                  maxLines: 1,
+                  style: const TextStyle(height: 1.2),
                   overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              AppStyle.vGap8,
-            ],
-          ),
-        );
-      },
-    );
+                Text(
+                  item.subTitle ?? item.status ?? '',
+                  maxLines: 1,
+                  style: const TextStyle(
+                    height: 1.2,
+                    fontSize: 12,
+                    color: Colors.grey,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                AppStyle.vGap8,
+              ],
+            ),
+          );
+        },
+      );
+    });
   }
 }
