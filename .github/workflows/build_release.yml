@@ -1,5 +1,6 @@
 name: build-release
 # 手動觸發（workflow_dispatch）出測試包；推 v* tag 時自動建立 GitHub Release
+# Flutter 版本依 pubspec.lock（3.38.x）；勿改回 3.22
 on:
   workflow_dispatch:
   push:
