@@ -170,6 +170,11 @@ class IndexPage extends GetView<IndexController> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
+          // 阅读器等主路由刚关闭时，忽略紧跟着的重复返回事件，
+          // 否则会把子路由的详情页(选集页面)一起退掉，直接掉回底部分页。
+          if (AppNavigator.justClosedMainRoute) {
+            return;
+          }
           if (Navigator.canPop(Get.context!)) {
             Get.back();
             return;

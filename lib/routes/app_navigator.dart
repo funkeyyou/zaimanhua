@@ -42,6 +42,39 @@ class AppNavigator {
     }
   }
 
+  /// 子路由栈里是否还有内容页(即 '/' 之上还有页面)
+  static bool get hasContentPage =>
+      subNavigatorKey?.currentState?.canPop() ?? false;
+
+  /// 主路由(阅读器等)最近一次被关闭的时间
+  static DateTime? _lastMainRoutePop;
+
+  /// 主路由刚刚关闭(短时间内)
+  ///
+  /// Android 的返回事件在某些机型上会被派发两次：第一次退掉主路由的阅读器，
+  /// 第二次落到首页的返回拦截里，把子路由的详情页也一起退掉。
+  /// 首页拦截会用这个标记忽略紧接着的那一次。
+  static bool get justClosedMainRoute {
+    final last = _lastMainRoutePop;
+    if (last == null) return false;
+    return DateTime.now().difference(last).inMilliseconds < 500;
+  }
+
+  static void markMainRoutePopped() {
+    _lastMainRoutePop = DateTime.now();
+  }
+
+  /// 阅读器关闭后，确保内容区仍停在原来的详情页(选集页面)
+  ///
+  /// 阅读器跑在主路由、详情页跑在子路由，两者生命周期互相独立；
+  /// 某些情况下(系统返回手势一次退掉两层、子路由被重建)详情页会一起消失，
+  /// 退出阅读器后就直接掉回底部分页(书架/首页)。这里做一次兜底还原。
+  static void _restoreDetailPage(String routeName, int id) {
+    if (currentContentRouteName != routeName || !hasContentPage) {
+      toContentPage(routeName, arg: id);
+    }
+  }
+
   /// 关闭页面
   /// 优先关闭主路由的页面
   static void closePage() {
@@ -171,6 +204,7 @@ class AppNavigator {
     required bool isLongComic,
   }) async {
     // 使用主路由跳转
+    final fromDetail = currentContentRouteName == RoutePath.kComicDetail;
     await Get.toNamed(RoutePath.kComicReader, arguments: {
       "comicId": comicId,
       "comicTitle": comicTitle,
@@ -179,6 +213,10 @@ class AppNavigator {
       "chapter": chapter,
       "isLongComic": isLongComic,
     });
+    markMainRoutePopped();
+    if (fromDetail) {
+      _restoreDetailPage(RoutePath.kComicDetail, comicId);
+    }
   }
 
   /// 打开漫画阅读
@@ -190,6 +228,7 @@ class AppNavigator {
     required NovelDetailChapter chapter,
   }) async {
     // 使用主路由跳转
+    final fromDetail = currentContentRouteName == RoutePath.kNovelDetail;
     await Get.toNamed(RoutePath.kNovelReader, arguments: {
       "novelId": novelId,
       "novelTitle": novelTitle,
@@ -197,6 +236,10 @@ class AppNavigator {
       "chapters": chapters,
       "chapter": chapter,
     });
+    markMainRoutePopped();
+    if (fromDetail) {
+      _restoreDetailPage(RoutePath.kNovelDetail, novelId);
+    }
   }
 
   /// 打开漫画下载-选择章节
