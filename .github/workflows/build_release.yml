@@ -43,7 +43,9 @@ jobs:
           files: ZAI-X-android.apk
 
   build-windows:
-    runs-on: windows-latest
+    # windows-latest 已是 VS2026，其 STL 對 <experimental/coroutine> 直接報錯（STL1011），
+    # permission_handler_windows 0.2.1 尚未跟進；VS2022 工具鏈可正常編譯
+    runs-on: windows-2022
     permissions:
       contents: write
     steps:
