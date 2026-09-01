@@ -15,7 +15,8 @@
 
 - [x] App 內自動簽到（ZAI_X 已內建：啟動時已登入且未簽到就自動簽）
 - [x] 獨立自動簽到工具（不開 App 也能簽）：`tools/auto_signin/`，支援本機排程與 GitHub Actions 每日 cron 兩種跑法
-- [ ] 繁體中文介面——UI 字串繁化（系統環境 zh-TW）；漫畫標題/簡介可選 OpenCC 簡轉繁顯示
+- [x] 繁體中文介面——建置期 OpenCC s2twp 轉換（`tools/s2twp/`）：源碼保持簡體與上游一致，CI 矩陣同時產出簡/繁兩種 APK 與 Windows 包；本機繁體 Windows 版用 `tools/s2twp/build_tc_windows.ps1`
+- [ ] 內容（漫畫標題/簡介）簡轉繁顯示切換——需執行期轉換，另行設計
 - [ ] 簽到結果通知（安卓通知列 / Windows toast）
 
 ## P2 閱讀體驗（安卓優先）
