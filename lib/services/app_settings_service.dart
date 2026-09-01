@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 import 'package:zai_x/app/i18n.dart';
+import 'package:zai_x/app/log.dart';
 import 'package:zai_x/services/local_storage_service.dart';
 import 'package:zai_x/services/novel_font_service.dart';
 import 'package:zai_x/services/reader_volume_key_service.dart';
@@ -109,6 +113,8 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kReaderVolumeKeyTurnPage, false);
     readerKeepScreenOn.value = LocalStorageService.instance
         .getValue(LocalStorageService.kReaderKeepScreenOn, true);
+    readerBrightness.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kReaderBrightness, -1.0);
     eInkMode.value =
         LocalStorageService.instance.getValue(LocalStorageService.kEInkMode, false);
     if (eInkMode.value) {
@@ -467,6 +473,46 @@ class AppSettingsService extends GetxController {
     readerKeepScreenOn.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kReaderKeepScreenOn, value);
+  }
+
+  /// 阅读器屏幕亮度（0.05-1.0，-1 表示跟随系统）
+  /// 仅 Android/iOS；应用级亮度，退出阅读器自动还原
+  RxDouble readerBrightness = (-1.0).obs;
+  bool get brightnessSupported => Platform.isAndroid || Platform.isIOS;
+  void setReaderBrightness(double value) {
+    if (value < 0.05) value = 0.05;
+    if (value > 1.0) value = 1.0;
+    readerBrightness.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kReaderBrightness, value);
+    applyReaderBrightness();
+  }
+
+  void resetReaderBrightnessSetting() {
+    readerBrightness.value = -1.0;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kReaderBrightness, -1.0);
+    restoreSystemBrightness();
+  }
+
+  /// 进入阅读器时套用亮度
+  void applyReaderBrightness() {
+    if (!brightnessSupported || readerBrightness.value < 0) {
+      return;
+    }
+    ScreenBrightness.instance
+        .setApplicationScreenBrightness(readerBrightness.value)
+        .catchError((e) => Log.logPrint(e));
+  }
+
+  /// 退出阅读器时还原系统亮度
+  void restoreSystemBrightness() {
+    if (!brightnessSupported) {
+      return;
+    }
+    ScreenBrightness.instance
+        .resetApplicationScreenBrightness()
+        .catchError((e) => Log.logPrint(e));
   }
 
   /// 漫画阅读器左右翻页触控区宽度（占屏宽百分比，单侧，5-40）

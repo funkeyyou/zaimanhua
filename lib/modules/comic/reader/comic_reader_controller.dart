@@ -133,6 +133,7 @@ class ComicReaderController extends BaseController {
     if (settings.readerKeepScreenOn.value) {
       WakelockPlus.enable().catchError((e) => Log.logPrint(e));
     }
+    settings.applyReaderBrightness();
     loadDetail();
     super.onInit();
   }
@@ -193,6 +194,7 @@ class ComicReaderController extends BaseController {
   @override
   void onClose() {
     WakelockPlus.disable().catchError((e) => Log.logPrint(e));
+    settings.restoreSystemBrightness();
     focusNode.dispose();
     connectivitySubscription?.cancel();
     batterySubscription?.cancel();
@@ -604,6 +606,35 @@ class ComicReaderController extends BaseController {
                 () => ListView(
                   padding: AppStyle.edgeInsetsA12,
                   children: [
+                    if (settings.brightnessSupported) ...[
+                      buildBGItem(
+                        child: ListTile(
+                          title: Row(
+                            children: [
+                              Text("屏幕亮度".i18n),
+                              const Spacer(),
+                              IconButton(
+                                tooltip: "跟随系统".i18n,
+                                onPressed:
+                                    settings.resetReaderBrightnessSetting,
+                                icon: const Icon(Remix.refresh_line, size: 18),
+                              ),
+                            ],
+                          ),
+                          subtitle: Slider(
+                            value: settings.readerBrightness.value < 0
+                                ? 0.5
+                                : settings.readerBrightness.value,
+                            min: 0.05,
+                            max: 1.0,
+                            onChanged: (e) {
+                              settings.setReaderBrightness(e);
+                            },
+                          ),
+                        ),
+                      ),
+                      AppStyle.vGap12,
+                    ],
                     buildBGItem(
                       child: SwitchListTile(
                         value: settings.comicReaderHD.value,

@@ -102,6 +102,9 @@ class LocalStorageService extends GetxService {
   /// 阅读时保持屏幕常亮
   static const String kReaderKeepScreenOn = "ReaderKeepScreenOn";
 
+  /// 阅读器屏幕亮度（0.05-1.0，-1 表示跟随系统）
+  static const String kReaderBrightness = "ReaderBrightness";
+
   /// 小说阅读-翻页动画
   static const String kNovelReaderPageAnimation = "NovelReaderPageAnimation";
 
