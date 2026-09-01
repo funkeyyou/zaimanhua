@@ -7,11 +7,51 @@ import 'package:zai_x/services/novel_font_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:zai_x/app/i18n.dart';
+import 'package:zai_x/services/subscribe_notify_scheduler.dart';
+import 'package:zai_x/services/subscribe_notify_service.dart';
+import 'package:zai_x/services/user_service.dart';
 
 class SettingsController extends GetxController {
   final settings = AppSettingsService.instance;
   var imageCacheSize = "正在计算缓存...".i18n.obs;
   var novelCacheSize = "正在计算缓存...".i18n.obs;
+
+  /// 订阅更新提醒开关
+  void setSubscribeNotify(bool value) async {
+    if (value && !UserService.instance.logined.value) {
+      SmartDialog.showToast("请先登录".i18n);
+      return;
+    }
+    var ok = await SubscribeNotifyScheduler.setEnabled(value);
+    if (!ok) {
+      SmartDialog.showToast("未取得通知权限".i18n);
+    }
+  }
+
+  void setSubscribeNotifyHours(int value) {
+    settings.setSubscribeNotifyHours(value);
+    SubscribeNotifyScheduler.apply();
+  }
+
+  /// 立即跑一次订阅更新检查（用来确认通知链路是否正常）
+  void checkSubscribeUpdateNow() async {
+    if (!UserService.instance.logined.value) {
+      SmartDialog.showToast("请先登录".i18n);
+      return;
+    }
+    try {
+      SmartDialog.showLoading(msg: "检查中...".i18n);
+      await SubscribeNotifyScheduler.apply();
+      var list = await SubscribeNotifyService.checkAndNotify(force: true);
+      SmartDialog.dismiss();
+      SmartDialog.showToast(
+        list.isEmpty ? "没有新的更新".i18n : "发现 ${list.length} 部作品有更新".i18n,
+      );
+    } catch (e) {
+      SmartDialog.dismiss();
+      SmartDialog.showToast("检查失败：$e".i18n);
+    }
+  }
 
   @override
   void onInit() {

@@ -48,3 +48,6 @@ app.*.map.json
 
 /android/zai_key.properties
 android/build/
+
+# Codex 附件（使用者傳入的截圖等）
+.codex-remote-attachments/

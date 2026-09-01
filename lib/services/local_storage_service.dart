@@ -105,6 +105,15 @@ class LocalStorageService extends GetxService {
   /// 双页模式下首页（封面）单独占一页
   static const String kComicReaderDualPageCover = "ComicReaderDualPageCover";
 
+  /// 订阅更新提醒
+  static const String kSubscribeNotify = "SubscribeNotify";
+
+  /// 订阅更新检查间隔（小时）
+  static const String kSubscribeNotifyHours = "SubscribeNotifyHours";
+
+  /// 我的订阅排序 0=订阅顺序 1=更新时间
+  static const String kSubscribeSort = "SubscribeSort";
+
   /// 阅读时保持屏幕常亮
   static const String kReaderKeepScreenOn = "ReaderKeepScreenOn";
 

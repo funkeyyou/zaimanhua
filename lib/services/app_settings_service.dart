@@ -47,6 +47,12 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kComicReaderDualPage, 1);
     comicReaderDualPageCover.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderDualPageCover, true);
+    subscribeNotify.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kSubscribeNotify, false);
+    subscribeNotifyHours.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kSubscribeNotifyHours, 6);
+    subscribeSort.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kSubscribeSort, 0);
     //小说
     novelReaderDirection.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderDirection, 0);
@@ -496,6 +502,32 @@ class AppSettingsService extends GetxController {
     comicReaderDualPageCover.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kComicReaderDualPageCover, value);
+  }
+
+  /// 订阅更新提醒（仅 Android/iOS）
+  RxBool subscribeNotify = false.obs;
+  void setSubscribeNotify(bool value) {
+    subscribeNotify.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kSubscribeNotify, value);
+  }
+
+  /// 订阅更新检查间隔（小时）
+  RxInt subscribeNotifyHours = 6.obs;
+  void setSubscribeNotifyHours(int value) {
+    subscribeNotifyHours.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kSubscribeNotifyHours, value);
+  }
+
+  /// 我的订阅排序
+  /// * [0] 订阅顺序（接口默认）
+  /// * [1] 更新时间
+  RxInt subscribeSort = 0.obs;
+  void setSubscribeSort(int value) {
+    subscribeSort.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kSubscribeSort, value);
   }
 
   /// 阅读器屏幕亮度（0.05-1.0，-1 表示跟随系统）

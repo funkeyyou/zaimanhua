@@ -28,6 +28,23 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:windows_single_instance/windows_single_instance.dart';
+import 'package:workmanager/workmanager.dart';
+import 'package:zai_x/services/subscribe_notify_service.dart';
+import 'package:zai_x/services/subscribe_notify_scheduler.dart';
+
+/// Workmanager 背景任務進入點（獨立 isolate，不可依賴主進程的 GetX 服務）
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    try {
+      await SubscribeNotifyService.checkAndNotify();
+    } catch (e) {
+      Log.logPrint(e);
+    }
+    // 一律回報成功：訂閱檢查失敗不值得讓系統反覆重試而耗電
+    return true;
+  });
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,6 +68,19 @@ void main() async {
     systemNavigationBarColor: Colors.transparent,
   );
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+
+  if (Platform.isAndroid || Platform.isIOS) {
+    try {
+      await Workmanager().initialize(callbackDispatcher);
+    } catch (e) {
+      Log.logPrint(e);
+    }
+    unawaited(SubscribeNotifyScheduler.apply());
+    unawaited(SubscribeNotifyScheduler.checkOnStart());
+    // 登入狀態改變後，背景任務用的 token 也要跟著更新
+    UserService.loginedStream.listen((_) => SubscribeNotifyScheduler.apply());
+    UserService.logoutStream.listen((_) => SubscribeNotifyScheduler.apply());
+  }
 
   runApp(const DMZJApp());
 }

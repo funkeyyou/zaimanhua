@@ -5,6 +5,7 @@ import 'package:zai_x/modules/user/settings/settings_controller.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:zai_x/app/i18n.dart';
+import 'package:zai_x/services/subscribe_notify_scheduler.dart';
 
 class SettingsPage extends StatelessWidget {
   final int index;
@@ -88,6 +89,44 @@ class SettingsPage extends StatelessWidget {
               controller.settings.changeLanguage();
             },
           ),
+          if (SubscribeNotifyScheduler.platformSupported) ...[
+            SwitchListTile(
+              value: controller.settings.subscribeNotify.value,
+              onChanged: (e) {
+                controller.setSubscribeNotify(e);
+              },
+              title: Text("订阅更新提醒".i18n),
+              subtitle: Text("订阅的漫画有新话时发送通知，需要登录".i18n),
+            ),
+            if (controller.settings.subscribeNotify.value) ...[
+              ListTile(
+                title: Text("检查间隔".i18n),
+                subtitle: Slider(
+                  value: controller.settings.subscribeNotifyHours.value
+                      .toDouble(),
+                  min: 1,
+                  max: 24,
+                  divisions: 23,
+                  label: "${controller.settings.subscribeNotifyHours.value} 小时"
+                      .i18n,
+                  onChanged: (e) {
+                    controller.setSubscribeNotifyHours(e.toInt());
+                  },
+                ),
+                trailing: Text(
+                  "${controller.settings.subscribeNotifyHours.value} 小时".i18n,
+                ),
+              ),
+              ListTile(
+                title: Text("立即检查".i18n),
+                subtitle: Text("马上跑一次检查，用来确认通知是否正常".i18n),
+                trailing: OutlinedButton(
+                  onPressed: controller.checkSubscribeUpdateNow,
+                  child: Text("检查".i18n),
+                ),
+              ),
+            ],
+          ],
           SwitchListTile(
             value: controller.settings.eInkMode.value,
             onChanged: (e) {
