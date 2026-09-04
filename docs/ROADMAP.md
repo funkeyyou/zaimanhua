@@ -7,7 +7,7 @@
 ## P0 基礎設施（先讓迭代循環轉起來）
 
 - [x] 自有 GitHub 倉庫 + CI（tag 觸發自動出 APK 與 Windows zip；無 secrets 時自動退回 debug 簽名）
-- [x] Android 正式簽名金鑰（keystore 位於 C:\Users\funke\keys，密碼與 base64 已存入 repo secrets；**務必備份，遺失則無法更新已安裝的 App**）
+- [x] Android 正式簽名金鑰（keystore 位於 C:\Users\funke\keys，密碼與 base64 已存入 repo secrets；使用者已於 2026-09-05 完成備份）
 - [x] 本機 Android 開發環境（JDK 17.0.20.1 + Android SDK 36 + build-tools 36.0.0，flutter 已指向）
 - [x] App 內更新檢查改讀本倉庫的 GitHub Release（`api.github.com/repos/funkeyyou/zaimanhua/releases/latest`，自動依平台挑 apk／zip 資產）；倉庫已於 v1.4.1 轉為 public，API 可匿名存取
 
