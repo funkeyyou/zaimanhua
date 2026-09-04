@@ -40,7 +40,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
           controller.keyDown(e.logicalKey);
           Log.d(e.toString());
         }
-        return ComicReaderController.isTurnPageKey(e.logicalKey)
+        return controller.consumesKey(e.logicalKey)
             ? KeyEventResult.handled
             : KeyEventResult.ignored;
       },

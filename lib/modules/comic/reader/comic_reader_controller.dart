@@ -1166,13 +1166,38 @@ class ComicReaderController extends BaseController {
   }
 
   /// 阅读器自己消化的翻页键（不再往下传给滚动动作）
-  static bool isTurnPageKey(LogicalKeyboardKey key) =>
-      key == LogicalKeyboardKey.arrowLeft ||
-      key == LogicalKeyboardKey.arrowRight ||
-      key == LogicalKeyboardKey.pageUp ||
-      key == LogicalKeyboardKey.pageDown;
+  ///
+  /// 没被消化的按键会落到 Flutter 预设的滚动动作，把外层 EasyRefresh
+  /// 推到越界就变成换上一话/下一话，所以翻页相关的键一律在这里吃掉。
+  bool consumesKey(LogicalKeyboardKey key) {
+    if (key == LogicalKeyboardKey.arrowLeft ||
+        key == LogicalKeyboardKey.arrowRight ||
+        key == LogicalKeyboardKey.pageUp ||
+        key == LogicalKeyboardKey.pageDown) {
+      return true;
+    }
+    // 纵向滚动模式保留上下键的滚动行为
+    if (direction.value == ReaderDirection.kUpToDown) {
+      return false;
+    }
+    return key == LogicalKeyboardKey.arrowUp ||
+        key == LogicalKeyboardKey.arrowDown ||
+        key == LogicalKeyboardKey.space;
+  }
 
   void keyDown(LogicalKeyboardKey key) {
+    // 横向翻页时上下键与空白键也当成翻页
+    if (direction.value != ReaderDirection.kUpToDown) {
+      if (key == LogicalKeyboardKey.arrowUp) {
+        forwardPageByInput();
+        return;
+      }
+      if (key == LogicalKeyboardKey.arrowDown ||
+          key == LogicalKeyboardKey.space) {
+        nextPageByInput();
+        return;
+      }
+    }
     if (key == LogicalKeyboardKey.arrowLeft ||
         key == LogicalKeyboardKey.pageUp ||
         (!Platform.isAndroid &&

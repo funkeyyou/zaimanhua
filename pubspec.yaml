@@ -41,17 +41,19 @@ dependencies:
   #系统交互
   url_launcher: ^6.2.4 #打开链接
   webview_flutter: ^4.7.0 #WebView
-  package_info_plus: ^9.0.1 #包信息
+  package_info_plus: ^10.2.1 #包信息
   flutter_widget_from_html_core: ^0.17.2 #HTML转Widget
-  share_plus: ^12.0.2 #分享
+  share_plus: ^13.3.0 #分享
+  # 13.x 的 permission_handler_android 需要更新的 Kotlin/AGP 建置設定（compilerOptions DSL），
+  # 目前專案的 gradle 設定會編譯失敗，等技術債批次處理 AGP 時再升
   permission_handler: ^12.0.1 #权限检查
   path_provider: ^2.1.5 #常用目录
-  image_gallery_saver_plus: ^4.0.1 #保存图片至相册
+  image_gallery_saver_plus: ^5.1.1 #保存图片至相册
   connectivity_plus: ^7.1.0 #连接状态
   battery_plus: ^7.0.0 #电池状态
   file_selector: ^1.0.3 #文件选择
   archive: ^4.0.9 #cbz 导出
-  windows_single_instance: ^1.0.1 #Windows单实例
+  windows_single_instance: ^1.2.0 #Windows单实例
   
   flutter: 
     sdk: flutter
@@ -60,7 +62,7 @@ dependencies:
   
   path: 1.9.1
   collection: 1.19.1
-  wakelock_plus: ^1.5.2
+  wakelock_plus: ^1.6.1
   screen_brightness: ^2.1.11
   flutter_local_notifications: ^22.3.0
   workmanager: ^0.10.9
