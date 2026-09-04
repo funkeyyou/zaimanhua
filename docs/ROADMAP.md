@@ -46,8 +46,11 @@
 
 ## P5 技術債（穿插進行）
 
-- [ ] Flutter 3.38.10 → 3.47 升級；90 個被舊約束卡住的過時套件逐步更新
-- [ ] CI 加入 `flutter analyze` 作為合併門檻
+- [x] Flutter 3.38.10 → 3.47.2 升級（本機與 CI 同步）；analyze 零錯誤、Android 建置與模擬器實測通過
+- [x] 依賴升級：package_info_plus 10、share_plus 13、image_gallery_saver_plus 5、wakelock_plus 1.6、windows_single_instance 1.2，其餘鎖定版本內更新
+- [ ] permission_handler 13：其 Android 端要求較新的 Kotlin/AGP 設定（`compilerOptions` DSL），需先整理 android/build.gradle 才能升
+- [ ] 其餘過時套件（flutter_smart_dialog 5.3、lottie、intl、protobuf 6 等）受相依約束卡住，待上游放寬
+- [x] CI 加入 analyze + test 門檻（`flutter analyze --no-fatal-infos`，Android/Windows 建置都要等它通過）
 - [x] CI actions 升版（checkout/upload-artifact v7、setup-java v6），棄用警告歸零
 - [x] 內建思源黑體 Medium 裁剪版（12.8 MB）：部分安卓 ROM 無視 Flutter 字重請求，主題層 w500/w600 不足以解決，改為內建字體
 - [ ] Windows 非 ASCII 路徑建置問題：文件化 junction 做法（`C:\Users\funke\zmh`），或向 Flutter 上游回報

@@ -11,6 +11,13 @@ analyzer:
   errors:
     unreachable_switch_default: ignore
     todo: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - windows/**
+    - macos/**
+    - linux/**
 include: package:flutter_lints/flutter.yaml
 
 linter:

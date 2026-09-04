@@ -39,7 +39,7 @@
 
 ## 開發
 
-- Flutter 3.38.10（CI 設定檔裡若見 3.22 為過時資訊）
+- Flutter 3.47.2（本機與 CI 版本需一致）
 - Windows 本機建置請走 ASCII 路徑：中文路徑會讓原生建置步驟讀壞檔案，可用 `mklink /J` 建 junction
 - 新增中文 UI 字串後執行 `tools/i18n/gen_dict.py` 重建簡繁對照表；合併上游後另跑 `tools/i18n/apply_i18n.py`
 - 開發路線：[docs/ROADMAP.md](docs/ROADMAP.md)
