@@ -18,6 +18,6 @@ class ComicCategoryController
   }
 
   void toDetail(ComicCategoryItemModel item) {
-    AppNavigator.toComicCategoryDetail(item.tagId);
+    AppNavigator.toComicCategoryDetail(item.tagId, tagName: item.title);
   }
 }

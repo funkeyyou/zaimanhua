@@ -138,10 +138,12 @@ class AppPages {
           ),
         );
       case RoutePath.kComicCategoryDetail:
+        final categoryArg = settings.arguments;
         return GetPageRoute(
           settings: settings,
           page: () => CategoryDetailPage(
-            settings.arguments as int,
+            categoryArg is Map ? (categoryArg["id"] as int) : categoryArg as int,
+            tagName: categoryArg is Map ? categoryArg["tagName"] as String? : null,
           ),
         );
       case RoutePath.kSpecialDetail:

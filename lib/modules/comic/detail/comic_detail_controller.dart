@@ -292,7 +292,7 @@ class ComicDetailControler extends BaseController {
       //神隐漫画没有ID，直接跳转搜索
       AppNavigator.toComicSearch(keyword: e.tagName);
     } else {
-      AppNavigator.toComicCategoryDetail(e.tagId);
+      AppNavigator.toComicCategoryDetail(e.tagId, tagName: e.tagName);
     }
   }
 

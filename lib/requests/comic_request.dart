@@ -7,6 +7,7 @@ import 'package:zai_x/models/comic/category_comic_model.dart';
 import 'package:zai_x/models/comic/category_filter_model.dart';
 import 'package:zai_x/models/comic/category_item_model.dart';
 import 'package:zai_x/models/comic/chapter_detail_model.dart';
+import 'package:zai_x/models/comic/comic_tag_table.g.dart';
 import 'package:zai_x/models/comic/chapter_detail_web_model.dart';
 import 'package:zai_x/models/comic/chapter_info.dart';
 import 'package:zai_x/models/comic/comic_related_model.dart';
@@ -92,57 +93,113 @@ class ComicRequest {
   }
 
   /// 分类
+  ///
+  /// 服务端只返回一部分标签，ゆり、AA、纯爱、历史 这些都被藏了起来，
+  /// 但它们的 tagId 拿去筛选依然有效，所以这里用本地标签表补齐。
   Future<List<ComicCategoryItemModel>> categores() async {
     var list = <ComicCategoryItemModel>[];
-    var result = await HttpClient.instance.getJson(
-      '/comic/filter/category',
-      queryParameters: {"source": 1},
-      checkCode: true,
-    );
-    for (var item in result["cateList"]) {
-      list.add(ComicCategoryItemModel.fromJson(item));
+    var ids = <int>{};
+    try {
+      var result = await HttpClient.instance.getJson(
+        '/comic/filter/category',
+        queryParameters: {"source": 1},
+        checkCode: true,
+      );
+      for (var item in result["cateList"]) {
+        var tag = ComicCategoryItemModel.fromJson(item);
+        if (ids.add(tag.tagId)) {
+          list.add(tag);
+        }
+      }
+    } catch (e) {
+      // 接口挂掉时完全靠本地表兜底，至少分类页不会空白
+      Log.logPrint(e);
+    }
+    for (var entry in kComicTagTable) {
+      if (ids.add(entry.tagId)) {
+        list.add(
+          ComicCategoryItemModel(
+            tagId: entry.tagId,
+            title: entry.title,
+            cover: "",
+            tagType: entry.dimension,
+          ),
+        );
+      }
     }
     return list;
   }
 
   /// 分类-筛选
+  ///
+  /// 按维度拆成 状态/地区/受众/题材 四组。
+  /// 接口只有 theme 一个通用标签位，受众和题材共用它，所以两者互斥，
+  /// 这个约束由 CategoryDetailController 负责。
   Future<List<ComicCategoryFilterModel>> categoryFilter() async {
-    var result = await HttpClient.instance.getJson(
-      '/comic/filter/category',
-      queryParameters: {"source": 1},
-      checkCode: true,
-    );
-    // for (var item in result["cateList"]) {
-    //   list.add(ComicCategoryFilterModel.fromJson(item));
-    // }
-    var list = <ComicCategoryFilterItemModel>[];
-    for (var item in result["cateList"]) {
-      list.add(ComicCategoryFilterItemModel.fromJson(item));
+    var tags = await categores();
+
+    List<ComicCategoryFilterItemModel> pick(int dimension) => tags
+        .where((x) => x.tagType == dimension)
+        .map(
+          (x) => ComicCategoryFilterItemModel(tagId: x.tagId, tagName: x.title),
+        )
+        .toList();
+
+    var groups = <ComicCategoryFilterModel>[];
+    void add(String title, int dimension) {
+      var items = pick(dimension);
+      if (items.isEmpty) return;
+      groups.add(
+        ComicCategoryFilterModel(
+          title: title,
+          dimension: dimension,
+          items: [
+            ComicCategoryFilterItemModel(tagId: 0, tagName: "全部"),
+            ...items,
+          ],
+        ),
+      );
     }
-    return [
-      ComicCategoryFilterModel(title: "全部分类".i18n, items: list),
-    ];
+
+    add("状态", ComicTagDimension.status);
+    add("地区", ComicTagDimension.zone);
+    add("受众", ComicTagDimension.audience);
+    add("题材", ComicTagDimension.theme);
+    return groups;
   }
 
   /// 分类下漫画
-  /// - [ids] 标签
-  /// - [sort] 排序,0=人气,1=更新
-  /// - [page] 页数，从0开始
+  /// - [id] 题材或受众标签，两者共用接口的 theme 位，0=不限
+  /// - [sort] 排序，1=更新，2=热度
+  /// - [page] 页数，从1开始
+  /// - [status] 进度标签，2309=连载，2310=完结，0=不限
+  ///   (接口收的是 tagId，不是 0/1/2)
+  /// - [zone] 地区标签，2304=日本…，0=不限
+  /// - [firstLetter] 首字母，空=不限
   Future<List<ComicCategoryComicModel>> categoryComic({
     required int id,
     int sort = 1,
     int page = 1,
     int status = 0,
+    int zone = 0,
+    String firstLetter = "",
   }) async {
     var list = <ComicCategoryComicModel>[];
+    var query = <String, dynamic>{
+      "theme": id,
+      "status": status,
+      "sortType": sort,
+      "page": page,
+      "size": 20,
+    };
+    if (zone != 0) {
+      query["zone"] = zone;
+    }
+    if (firstLetter.isNotEmpty) {
+      query["firstLetter"] = firstLetter;
+    }
     var result = await HttpClient.instance.getJson('/comic/filter/list',
-        queryParameters: {
-          "theme": id,
-          "status": 0,
-          "sortType": sort,
-          "page": page,
-          "size": 20,
-        },
+        queryParameters: query,
         checkCode: true,
         needLogin: true // 登录可以更多内容
         );

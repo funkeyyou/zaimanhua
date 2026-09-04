@@ -141,8 +141,12 @@ class AppNavigator {
   }
 
   /// 打开漫画分类详情
-  static void toComicCategoryDetail(int id) {
-    toContentPage(RoutePath.kComicCategoryDetail, arg: id);
+  /// - [tagName] 标签名，服务端新加的标签本地表还没有时用来显示
+  static void toComicCategoryDetail(int id, {String? tagName}) {
+    toContentPage(
+      RoutePath.kComicCategoryDetail,
+      arg: {"id": id, "tagName": tagName},
+    );
   }
 
   /// 打开漫画作者详情

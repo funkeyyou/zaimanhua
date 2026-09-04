@@ -12,9 +12,9 @@ import 'package:zai_x/app/i18n.dart';
 class CategoryDetailPage extends StatelessWidget {
   final int id;
   final CategoryDetailController controller;
-  CategoryDetailPage(this.id, {super.key})
+  CategoryDetailPage(this.id, {super.key, String? tagName})
       : controller = Get.put(
-          CategoryDetailController(id),
+          CategoryDetailController(id, entryTagName: tagName),
           tag: DateTime.now().millisecondsSinceEpoch.toString(),
         );
 
@@ -43,8 +43,23 @@ class CategoryDetailPage extends StatelessWidget {
           () => SafeArea(
             child: ListView.builder(
               padding: AppStyle.edgeInsetsA12.copyWith(top: 12),
-              itemCount: controller.filters.length,
+              itemCount: controller.filters.length + 1,
               itemBuilder: (context, i) {
+                if (i == controller.filters.length) {
+                  return Padding(
+                    padding: AppStyle.edgeInsetsV12,
+                    child: OutlinedButton.icon(
+                      icon: const Icon(Remix.refresh_line, size: 18),
+                      label: Text("重置筛选".i18n),
+                      onPressed: controller.hasFilter
+                          ? () {
+                              Navigator.pop(context);
+                              controller.resetFilter();
+                            }
+                          : null,
+                    ),
+                  );
+                }
                 var item = controller.filters[i];
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,10 +100,8 @@ class CategoryDetailPage extends StatelessWidget {
                                 ),
                               ),
                               onPressed: () async {
-                                item.selectId.value = x.tagId;
-
                                 Navigator.pop(context);
-                                controller.refreshData();
+                                controller.select(item, x.tagId);
                               },
                             ),
                           )
