@@ -509,6 +509,7 @@ class SettingsPage extends StatelessWidget {
               controller.settings.setDownloadAllowCellular(e);
             },
             title: Text("允许使用流量下载".i18n),
+            subtitle: Text("关闭后只在 Wi-Fi 下下载，切到流量会自动暂停".i18n),
           ),
           ListTile(
             title: Text("漫画最大任务数".i18n),

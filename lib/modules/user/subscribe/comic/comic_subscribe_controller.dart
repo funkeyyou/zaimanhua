@@ -46,6 +46,9 @@ class ComicSubscribeController
 
   var editMode = false.obs;
 
+  /// 正在補齊分頁／排序：畫面先顯示讀取動畫，算完再一次呈現
+  var preparing = false.obs;
+
   /// 標籤篩選與非預設排序都需要完整清單才能算對
   bool get _needsFullList => sort.value != 0 || tag.value.isNotEmpty;
 
@@ -63,21 +66,37 @@ class ComicSubscribeController
 
   @override
   Future loadData() async {
-    await super.loadData();
-    if (_needsFullList) {
-      // 只排序／篩選已載入的那一頁會誤導，先把分頁補齊（上限 500 筆）
-      var guard = 0;
-      while (canLoadMore.value && list.length < 500 && guard++ < 25) {
-        await super.loadData();
-      }
-      canLoadMore.value = false;
+    var needFull = _needsFullList;
+    // 補分頁的過程中清單會一直長，排完序又整個重排；
+    // 先用讀取動畫蓋住，排好之後再一次顯示。
+    if (needFull) {
+      preparing.value = true;
     }
-    _all
-      ..clear()
-      ..addAll(list);
-    // 先把清單畫出來，標籤在背景補抓，抓到再更新下拉選單與篩選結果
-    applyFilterAndSort();
-    unawaited(_loadTags());
+    try {
+      await super.loadData();
+      if (needFull) {
+        // 只排序／篩選已載入的那一頁會誤導，先把分頁補齊（上限 500 筆）
+        var guard = 0;
+        while (canLoadMore.value && list.length < 500 && guard++ < 25) {
+          await super.loadData();
+        }
+        canLoadMore.value = false;
+      }
+      _all
+        ..clear()
+        ..addAll(list);
+      if (tag.value.isEmpty) {
+        // 先把清單畫出來，標籤在背景補抓，抓到再更新下拉選單
+        applyFilterAndSort();
+        unawaited(_loadTags());
+      } else {
+        // 標籤篩選要等標籤補齊才算得準
+        await _loadTags();
+        applyFilterAndSort();
+      }
+    } finally {
+      preparing.value = false;
+    }
   }
 
   /// 訂閱清單沒有題材欄位，標籤要另外從漫畫詳情補抓（結果會快取）
@@ -151,8 +170,24 @@ class ComicSubscribeController
     tag.value = value;
     if (!wasFull && _needsFullList) {
       refreshData();
+    } else if (value.isNotEmpty && tagLoading.value) {
+      // 標籤還在補抓，等抓完再顯示篩選結果
+      _applyAfterTags();
     } else {
       applyFilterAndSort();
+    }
+  }
+
+  /// 等背景的標籤補抓結束後再套用篩選
+  Future _applyAfterTags() async {
+    preparing.value = true;
+    try {
+      while (tagLoading.value) {
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+      applyFilterAndSort();
+    } finally {
+      preparing.value = false;
     }
   }
 

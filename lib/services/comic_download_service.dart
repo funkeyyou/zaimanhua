@@ -376,6 +376,10 @@ class ComicDownloadService extends GetxService {
     return comicDir.path;
   }
 
+  /// 讀取單一章節的下載資訊（匯出 cbz 用）
+  ComicDownloadInfo? getDownloadInfo(int comicId, int chapterId) =>
+      box.get('${comicId}_$chapterId');
+
   ///删除
   void delete(ComicDownloadInfo info) async {
     try {

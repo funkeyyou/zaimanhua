@@ -1,9 +1,16 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:file_selector/file_selector.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:zai_x/app/event_bus.dart';
 import 'package:zai_x/models/comic/detail_info.dart';
+import 'package:zai_x/models/db/comic_download_info.dart';
 import 'package:zai_x/models/db/comic_history.dart';
 import 'package:zai_x/routes/app_navigator.dart';
+import 'package:zai_x/services/cbz_export_service.dart';
 import 'package:zai_x/services/comic_download_service.dart';
 import 'package:zai_x/services/db_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -178,6 +185,64 @@ class ComicDownloadedDetailController extends GetxController {
       selectItems.remove(item);
     } else {
       selectItems.add(item);
+    }
+  }
+
+  /// 匯出選取章節為 cbz
+  ///
+  /// 下載檔案放在 App 私有目錄，桌面版讓使用者選資料夾直接寫出去，
+  /// 行動版先產生在 App 目錄再走系統分享，讓使用者自己決定存哪。
+  void exportCbz() async {
+    if (selectItems.isEmpty) {
+      SmartDialog.showToast('请先选择章节'.i18n);
+      return;
+    }
+    var chapters = <ComicDownloadInfo>[];
+    for (var item in selectItems) {
+      var download = ComicDownloadService.instance
+          .getDownloadInfo(info.comicId, item.chapterId);
+      if (download != null) {
+        chapters.add(download);
+      }
+    }
+    if (chapters.isEmpty) {
+      SmartDialog.showToast('没有可导出的章节'.i18n);
+      return;
+    }
+    var mobile = Platform.isAndroid || Platform.isIOS;
+    String outputDir;
+    if (mobile) {
+      var dir = await getApplicationDocumentsDirectory();
+      outputDir = p.join(dir.path, 'cbz');
+    } else {
+      var picked = await getDirectoryPath();
+      if (picked == null) {
+        return;
+      }
+      outputDir = picked;
+    }
+    try {
+      SmartDialog.showLoading(msg: '导出中...'.i18n);
+      var files = await CbzExportService.exportChapters(
+        chapters: chapters,
+        outputDir: outputDir,
+      );
+      SmartDialog.dismiss(status: SmartStatus.loading);
+      if (files.isEmpty) {
+        SmartDialog.showToast('没有可导出的章节'.i18n);
+        return;
+      }
+      exitEditMode();
+      if (mobile) {
+        await SharePlus.instance.share(
+          ShareParams(files: files.map((e) => XFile(e)).toList()),
+        );
+      } else {
+        SmartDialog.showToast('已导出到：$outputDir'.i18n);
+      }
+    } catch (e) {
+      SmartDialog.dismiss(status: SmartStatus.loading);
+      SmartDialog.showToast(e.toString());
     }
   }
 }

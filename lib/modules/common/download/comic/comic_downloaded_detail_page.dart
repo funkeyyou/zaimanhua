@@ -132,6 +132,19 @@ class ComicDownloadedDetailPage extends StatelessWidget {
                           style: TextButton.styleFrom(
                             textStyle: const TextStyle(fontSize: 14),
                           ),
+                          onPressed: controller.exportCbz,
+                          icon: const Icon(
+                            Remix.folder_zip_line,
+                            size: 20,
+                          ),
+                          label: Text("导出".i18n),
+                        ),
+                      ),
+                      Expanded(
+                        child: TextButton.icon(
+                          style: TextButton.styleFrom(
+                            textStyle: const TextStyle(fontSize: 14),
+                          ),
                           onPressed: controller.exitEditMode,
                           icon: const Icon(
                             Remix.close_line,

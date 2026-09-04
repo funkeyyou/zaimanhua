@@ -7,6 +7,7 @@ import 'package:zai_x/widgets/keep_alive_wrapper.dart';
 import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_grid_view.dart';
 import 'package:zai_x/widgets/shadow_card.dart';
+import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
 import 'package:zai_x/app/i18n.dart';
 
@@ -55,22 +56,36 @@ class ComicSubscribeView extends StatelessWidget {
             height: 1.0,
           ),
           Expanded(
-            child: LayoutBuilder(builder: (context, constraints) {
-              var count = constraints.maxWidth ~/ 160;
-              if (count < 3) count = 3;
-              return PageGridView(
-                pageController: controller,
-                firstRefresh: true,
-                crossAxisCount: count,
-                padding: AppStyle.edgeInsetsA12,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                itemBuilder: (context, i) {
-                  var item = controller.list[i];
-                  return buildItem(item);
-                },
-              );
-            }),
+            child: Stack(
+              children: [
+                LayoutBuilder(builder: (context, constraints) {
+                  var count = constraints.maxWidth ~/ 160;
+                  if (count < 3) count = 3;
+                  return PageGridView(
+                    pageController: controller,
+                    firstRefresh: true,
+                    crossAxisCount: count,
+                    padding: AppStyle.edgeInsetsA12,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    itemBuilder: (context, i) {
+                      var item = controller.list[i];
+                      return buildItem(item);
+                    },
+                  );
+                }),
+                // 補分頁與排序期間蓋住中間狀態，排好再顯示
+                Obx(
+                  () => Offstage(
+                    offstage: !controller.preparing.value,
+                    child: Container(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      child: const AppLoaddingWidget(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           Obx(
             () => Offstage(

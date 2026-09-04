@@ -134,7 +134,10 @@ class ComicDownloader {
       var fileName = await _saveImage(bytes, index, p.extension(baseName));
       info.update((val) {
         val!.index = index;
-        val.files.add(fileName);
+        // 續傳時會重跑最後一張，避免同一頁被記兩次
+        if (!val.files.contains(fileName)) {
+          val.files.add(fileName);
+        }
       });
       await _saveInfo();
     } catch (e) {

@@ -50,6 +50,7 @@ dependencies:
   connectivity_plus: ^7.1.0 #连接状态
   battery_plus: ^7.0.0 #电池状态
   file_selector: ^1.0.3 #文件选择
+  archive: ^4.0.9 #cbz 导出
   windows_single_instance: ^1.0.1 #Windows单实例
   
   flutter: 
