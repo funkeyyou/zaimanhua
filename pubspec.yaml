@@ -18,7 +18,8 @@ dependencies:
   crypton: ^2.1.0 #加解密
   crypto: ^3.0.2 #加解密
   logger: ^2.0.2+1 #日志输出
-  protobuf: ^3.1.0 #Protobuf
+  protobuf: ^6.0.0 #Protobuf
+  fixnum: ^1.1.1 #protobuf 生成碼用到的 Int64
   intl: any
   universal_html: ^2.2.4 #HTML解析
   html_unescape: ^2.0.0 #HTML解码
@@ -44,9 +45,7 @@ dependencies:
   package_info_plus: ^10.2.1 #包信息
   flutter_widget_from_html_core: ^0.17.2 #HTML转Widget
   share_plus: ^13.3.0 #分享
-  # 13.x 的 permission_handler_android 需要更新的 Kotlin/AGP 建置設定（compilerOptions DSL），
-  # 目前專案的 gradle 設定會編譯失敗，等技術債批次處理 AGP 時再升
-  permission_handler: ^12.0.1 #权限检查
+  permission_handler: ^13.0.2 #权限检查
   path_provider: ^2.1.5 #常用目录
   image_gallery_saver_plus: ^5.1.1 #保存图片至相册
   connectivity_plus: ^7.1.0 #连接状态

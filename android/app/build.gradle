@@ -17,7 +17,8 @@ def hasReleaseKeystore =
 
 android {
     namespace "com.xycz.zmhx"
-    compileSdkVersion 36
+    // permission_handler_android 14 需要編譯在 SDK 37（Android 17）上；compileSdk 向後相容
+    compileSdk 37
     ndkVersion flutter.ndkVersion
 
     compileOptions {
