@@ -145,8 +145,8 @@ class DBService extends GetxService {
         var local = novelHistoryBox.get(item.lnovelId);
         if (local != null && local.chapterId != 0) {
           //与本地记录时间做比对，如果较新则覆盖，否则直接跳过处理
-          if ((local.updateTime.millisecondsSinceEpoch ~/ 1000) <
-              remoteTime.millisecondsSinceEpoch) {
+          //remoteTime 已是 DateTime，直接比时间点，避免秒与毫秒混比导致远端永远胜出
+          if (remoteTime.isAfter(local.updateTime)) {
             putNovelHistory(
               NovelHistory(
                 novelId: item.lnovelId,

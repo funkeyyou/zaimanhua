@@ -106,6 +106,10 @@ Future initServices() async {
   Hive.registerAdapter(LocalFavoriteAdapter());
   await Get.put(DBService()).init();
 
+  //DB 就绪后再拉一次远端阅读记录：登录状态是上一步 UserService.init() 读出来的，
+  //这里同步可以让换设备后的进度在启动时就合并进本地
+  UserService.instance.syncRemoteHistory();
+
   //初始化设置服务
   await Get.put(NovelFontService()).init();
 

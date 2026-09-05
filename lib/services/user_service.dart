@@ -79,9 +79,8 @@ class UserService extends GetxService {
 
       userAuthInfo = info;
       logined.value = info.token.isNotEmpty;
-      if (logined.value) {
-        //syncRemoteHistory();
-      }
+      // 启动时的远端阅读记录同步交给 main.initServices()：UserService 比 DBService
+      // 早一步初始化，在这里直接同步会撞上还没打开的 Hive box。
     } catch (e) {
       Log.logPrint(e);
       storage.removeValue(LocalStorageService.kUserAuthInfo);
