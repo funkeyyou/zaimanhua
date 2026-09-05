@@ -41,7 +41,7 @@
 
 ### 其他
 
-- **每日自動簽到**：App 內建並回報結果通知；另有獨立排程工具（[tools/auto_signin](tools/auto_signin)，不開 App 也能簽）
+- **每日自動簽到**：App 內建並回報結果通知；另有獨立排程工具（[tools/auto_signin](tools/auto_signin)，不開 App 也能簽）。GitHub Actions 的每日 cron 預設停用，要用得先加 `ZMH_USERNAME`／`ZMH_PASSWORD` secrets 與 `ENABLE_DAILY_SIGNIN=1` variable
 - **App 內更新檢查**：直接讀本倉庫的 GitHub Release，依平台挑安裝檔
 - **底部導航文字標籤**、折疊機與寬螢幕的多欄排版適配
 - Android 正式簽名發佈、CI 自動出包
