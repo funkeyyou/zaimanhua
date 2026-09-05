@@ -20,6 +20,10 @@
 - [x] 「我的」頁每日簽到入口（顯示今日狀態，可手動簽到）
 - [x] 訂閱更新提醒（安卓通知列）：Workmanager 週期檢查 + App 啟動前景檢查 + 「立即檢查」自測按鈕；狀態以 subscribe_notify.json 在主進程與背景 isolate 間交換（不共用 Hive box）
 - [x] 簽到結果通知（安卓通知列 / Windows toast；設定可關，同一天只發一次）
+- [x] App 內一鍵更新：檢查到新版直接在 App 內下載，安卓喚起系統安裝器（需「安裝未知來源應用」權限），Windows 下載 zip 後在檔案總管選取；失敗自動退回瀏覽器
+- [x] 搜尋歷史與建議：官方熱門搜尋接口已 404，改用本機資料——搜尋歷史（最多 20 筆、可單刪可清空）＋依輸入比對閱讀紀錄與本地收藏的作品，點了直接進詳情
+- [x] 閱讀統計：本機累計每日話數與閱讀時長（漫畫／小說分開），「我的」新增入口，含今天／最近 7 天／總計、連續閱讀天數與 7 天長條圖，可一鍵清空
+- [x] 任務中心與自動領取：官方 H5 走 task/list 與 task/get_reward 兩個 GET（與簽到同一個 lpi 服務），已接成任務清單＋手動／全部領取，設定開啟時啟動登入後自動領。欄位命名無公開文件，解析同時容納 snake_case 與 camelCase，長按任務可看原始 JSON
 
 ## P2 閱讀體驗（安卓優先）
 
@@ -31,6 +35,7 @@
 - [x] 卷末自動銜接下一話的順滑度優化（剩最後 3 頁時預抓下一話內容與前兩頁圖，換話跳過整屏 loading）
 - [x] E-ink 模式打磨（翻頁動畫、圖片淡入、頁面轉場全部關閉，音量鍵翻頁）
 - [x] 繼續閱讀進度可靠性：末頁不再被誤判為越界而回到第 1 頁；載入中退出、延遲回應與吐槽頁也不會覆蓋正確進度
+- [x] 已讀章節標記：新開 ZaiComicReadChapter 記錄每部漫畫看過的話，詳情頁把看過的變淡、長按可切換已讀／未讀、批次標到某一話為止或清空；舊資料以歷史裡的最後一話回填
 
 ## P3 收藏與跨裝置同步
 
@@ -55,6 +60,7 @@
 - [ ] build_runner 2.4.13 → 2.16 仍卡住：hive_generator 2.0.1 綁 `source_gen ^1.0.0`、`analyzer <7`，且已停止維護；要動就得改用社群分支（hive_ce）或自行維護 adapter
 - [x] CI Windows 建置改回 `windows-latest`（VS2026）：C++/WinRT 在 C++17 模式仍引用 `<experimental/coroutine>`，以 `_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS` 抑制 STL1011
 - [ ] 待 permission_handler_windows 改走 C++20 `<coroutine>` 後，移除 `windows/CMakeLists.txt` 的抑制巨集（微軟已預告該標頭會移除）
+- [ ] 任務中心欄位待實機核對：目前 task/list 的欄位名是依常見寫法推測，領獎也同時帶 task_id／taskId／id 三種參數。登入後長按任務看原始 JSON，就能把解析收斂成確定的欄位
 - [x] CI 加入 analyze + test 門檻（`flutter analyze --no-fatal-infos`，Android/Windows 建置都要等它通過）
 - [x] CI actions 升版（checkout/upload-artifact v7、setup-java v6），棄用警告歸零
 - [x] 內建思源黑體 Medium 裁剪版（12.8 MB）：部分安卓 ROM 無視 Flutter 字重請求，主題層 w500/w600 不足以解決，改為內建字體
