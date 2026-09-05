@@ -189,6 +189,26 @@ class UserService extends GetxService {
     }
   }
 
+  /// 上次自动领奖的时间，用来节流
+  DateTime? _lastAutoClaimAt;
+
+  /// 完成任务的当下就近领奖
+  ///
+  /// 读完一话、发完评论、订阅作品、App 回到前景时都会呼叫；
+  /// 两分钟内只打一次，避免频繁请求任务清单。
+  void claimTasksSoon() async {
+    if (!logined.value || !AppSettingsService.instance.autoClaimTask.value) {
+      return;
+    }
+    var now = DateTime.now();
+    if (_lastAutoClaimAt != null &&
+        now.difference(_lastAutoClaimAt!) < const Duration(minutes: 2)) {
+      return;
+    }
+    _lastAutoClaimAt = now;
+    await autoClaimTasks(silent: false);
+  }
+
   /// 每日自动签到：结果同时用 toast 与系统通知回报
   ///
   /// App 常常是在后台或刚启动时跑完签到，光靠 toast 很容易错过，
@@ -283,6 +303,8 @@ class UserService extends GetxService {
       }
 
       SmartDialog.showToast("订阅成功".i18n);
+      // 「叮叮叮叮」这类订阅任务这时候就完成了
+      claimTasksSoon();
       return true;
     } catch (e) {
       SmartDialog.showToast(e.toString());

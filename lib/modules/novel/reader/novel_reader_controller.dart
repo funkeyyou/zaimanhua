@@ -224,6 +224,7 @@ class NovelReaderController extends BaseController {
   void _saveReadingTime() {
     var seconds = DateTime.now().difference(_openedAt).inSeconds;
     ReadingStatsService.recordSeconds(seconds);
+    UserService.instance.claimTasksSoon();
   }
 
   /// 加载内容

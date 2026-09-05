@@ -234,6 +234,8 @@ class ComicReaderController extends BaseController {
   void _saveReadingTime() {
     var seconds = DateTime.now().difference(_openedAt).inSeconds;
     ReadingStatsService.recordSeconds(seconds);
+    // 「累计观看十分钟漫画」这类任务多半是读完这一段才达成
+    UserService.instance.claimTasksSoon();
   }
 
   void updateItemPosition() {

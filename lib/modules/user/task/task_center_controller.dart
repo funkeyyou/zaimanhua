@@ -25,6 +25,21 @@ class TaskCenterController extends BaseController {
   /// 累计签到概况
   final signSummary = Rx<SignSummary>(SignSummary(continuousDays: 0, totalDays: 0));
 
+  /// 手动展开的分组：全部领完的分组预设收起来
+  final expandedGroups = <String>{}.obs;
+
+  bool isExpanded(UserTaskGroup group) =>
+      expandedGroups.contains(group.title) ||
+      group.tasks.any((e) => !e.received);
+
+  void toggleGroup(UserTaskGroup group) {
+    if (expandedGroups.contains(group.title)) {
+      expandedGroups.remove(group.title);
+    } else {
+      expandedGroups.add(group.title);
+    }
+  }
+
   List<UserTaskModel> get tasks =>
       groups.expand((e) => e.tasks).toList(growable: false);
 

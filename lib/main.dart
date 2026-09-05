@@ -85,7 +85,16 @@ void main() async {
   }
 
   runApp(const DMZJApp());
+
+  // App 回到前景时补领一次任务奖励；要留着参照，不然监听会被回收
+  _appLifecycleListener = AppLifecycleListener(
+    onResume: () => UserService.instance.claimTasksSoon(),
+  );
 }
+
+/// 保持 App 生命周期监听不被回收
+// ignore: unused_element
+AppLifecycleListener? _appLifecycleListener;
 
 Future initServices() async {
   //包信息

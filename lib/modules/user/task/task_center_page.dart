@@ -114,12 +114,41 @@ class TaskCenterPage extends StatelessWidget {
   }
 
   Widget _buildGroup(UserTaskGroup group) {
+    if (!controller.isExpanded(group)) {
+      // 像新人任务这种一次性的，全部领完就收起来，需要时再展开
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ListTile(
+            title: Text(group.title.i18n, style: Get.textTheme.titleSmall),
+            subtitle: Text(
+              '${group.tasks.length} ${"项全部已领取".i18n}',
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+            trailing: const Icon(Icons.expand_more, color: Colors.grey),
+            onTap: () => controller.toggleGroup(group),
+          ),
+          const Divider(height: 1),
+        ],
+      );
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
           padding: AppStyle.edgeInsetsA12,
-          child: Text(group.title.i18n, style: Get.textTheme.titleSmall),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(group.title.i18n, style: Get.textTheme.titleSmall),
+              ),
+              if (group.tasks.every((e) => e.received))
+                InkWell(
+                  onTap: () => controller.toggleGroup(group),
+                  child: const Icon(Icons.expand_less, color: Colors.grey),
+                ),
+            ],
+          ),
         ),
         ...group.tasks.map(_buildItem),
         const Divider(height: 1),

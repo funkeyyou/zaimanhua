@@ -4,6 +4,7 @@ import 'package:zai_x/app/event_bus.dart';
 import 'package:zai_x/models/comment/comment_item.dart';
 import 'package:zai_x/requests/comment_request.dart';
 import 'package:zai_x/routes/app_navigator.dart';
+import 'package:zai_x/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:zai_x/app/i18n.dart';
 
@@ -44,6 +45,8 @@ class AddCommentController extends BaseController {
       }
 
       SmartDialog.showToast("发表成功".i18n);
+      // 「每日一歌」「举手发言」这类评论任务这时候就完成了
+      UserService.instance.claimTasksSoon();
       EventBus.instance.emit(EventBus.kRefreshComment, objId);
       AppNavigator.closePage();
     } catch (e) {
