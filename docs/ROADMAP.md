@@ -53,6 +53,8 @@
 - [x] flutter_smart_dialog 5.3.0、lottie 3.5.1、wakelock_plus 1.8.0（原本只是被 pubspec.lock 鎖住）
 - [x] protobuf 3.1 → 6.0：舊生成碼不相容（`PbList` 無名建構子），以 protoc 36.1 + protoc_plugin 25 依 `assets/proto` 重生；三份 descriptor 的 154 個欄位（名稱/編號/label/型別）與舊版逐項比對一致，另加 wire 格式解碼測試把關
 - [ ] build_runner 2.4.13 → 2.16 仍卡住：hive_generator 2.0.1 綁 `source_gen ^1.0.0`、`analyzer <7`，且已停止維護；要動就得改用社群分支（hive_ce）或自行維護 adapter
+- [x] CI Windows 建置改回 `windows-latest`（VS2026）：C++/WinRT 在 C++17 模式仍引用 `<experimental/coroutine>`，以 `_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS` 抑制 STL1011
+- [ ] 待 permission_handler_windows 改走 C++20 `<coroutine>` 後，移除 `windows/CMakeLists.txt` 的抑制巨集（微軟已預告該標頭會移除）
 - [x] CI 加入 analyze + test 門檻（`flutter analyze --no-fatal-infos`，Android/Windows 建置都要等它通過）
 - [x] CI actions 升版（checkout/upload-artifact v7、setup-java v6），棄用警告歸零
 - [x] 內建思源黑體 Medium 裁剪版（12.8 MB）：部分安卓 ROM 無視 Flutter 字重請求，主題層 w500/w600 不足以解決，改為內建字體
