@@ -32,6 +32,11 @@ set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE}")
 # Use Unicode for all projects.
 add_definitions(-DUNICODE -D_UNICODE)
 
+# VS2026 起，STL 把 <experimental/coroutine> 變成硬錯誤（STL1011）。C++/WinRT 在
+# C++17 模式下仍會引用該標頭（例如 permission_handler_windows），先用官方提供的
+# 抑制巨集；等外掛改走 C++20 <coroutine> 後即可移除。
+add_definitions(-D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS)
+
 # Compilation settings that should be applied to most targets.
 #
 # Be cautious about adding new options here, as plugins use this function by
