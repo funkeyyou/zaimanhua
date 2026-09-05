@@ -68,7 +68,7 @@ void main() {
     }
     var list = SearchHistoryService.get(AppConstant.kTypeComic);
     expect(list.length, SearchHistoryService.kMaxItems);
-    expect(list.first, 'kw-' + (total - 1).toString());
+    expect(list.first, 'kw-${total - 1}');
   });
 
   test('comic and novel histories do not mix', () async {
