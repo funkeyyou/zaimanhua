@@ -21,6 +21,7 @@ import 'package:zai_x/models/comic/view_point_model.dart';
 import 'package:zai_x/requests/comic_request.dart';
 import 'package:zai_x/services/db_service.dart';
 import 'package:zai_x/services/reader_volume_key_service.dart';
+import 'package:zai_x/services/reading_stats_service.dart';
 import 'package:zai_x/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -223,7 +224,16 @@ class ComicReaderController extends BaseController {
     exitFull();
     itemPositionsListener.itemPositions.removeListener(updateItemPosition);
     uploadHistory();
+    _saveReadingTime();
     super.onClose();
+  }
+
+  /// 这次进阅读器的时间点，用来累计阅读时长
+  final DateTime _openedAt = DateTime.now();
+
+  void _saveReadingTime() {
+    var seconds = DateTime.now().difference(_openedAt).inSeconds;
+    ReadingStatsService.recordSeconds(seconds);
   }
 
   void updateItemPosition() {
@@ -1137,6 +1147,7 @@ class ComicReaderController extends BaseController {
       var changed = await DBService.instance
           .markComicChaptersRead(comicId, [chapterId]);
       if (changed) {
+        ReadingStatsService.recordChapter(AppConstant.kTypeComic);
         EventBus.instance.emit(EventBus.kUpdatedComicHistory, comicId);
       }
     } catch (e) {

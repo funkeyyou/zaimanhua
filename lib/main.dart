@@ -18,6 +18,7 @@ import 'package:zai_x/models/db/novel_history.dart';
 import 'package:zai_x/services/comic_download_service.dart';
 import 'package:zai_x/services/novel_download_service.dart';
 import 'package:zai_x/services/novel_font_service.dart';
+import 'package:zai_x/services/reading_stats_service.dart';
 import 'package:zai_x/services/db_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -112,6 +113,9 @@ Future initServices() async {
 
   //初始化设置服务
   await Get.put(NovelFontService()).init();
+
+  //阅读统计（纯本机累计）
+  await Get.put(ReadingStatsService()).init();
 
   Get.put(AppSettingsService());
 

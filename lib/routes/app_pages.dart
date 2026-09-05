@@ -32,6 +32,7 @@ import 'package:zai_x/modules/user/history/user_history_page.dart';
 import 'package:zai_x/modules/user/local_favorite/local_favorite_page.dart';
 import 'package:zai_x/modules/user/local_history/local_history_page.dart';
 import 'package:zai_x/modules/user/settings/settings_page.dart';
+import 'package:zai_x/modules/user/stats/reading_stats_page.dart';
 import 'package:zai_x/modules/user/subscribe/user_subscribe_pgae.dart';
 import 'package:zai_x/modules/user/user_home_controller.dart';
 import 'package:zai_x/routes/route_path.dart';
@@ -215,6 +216,11 @@ class AppPages {
           page: () => SettingsPage(
             index: settings.arguments as int,
           ),
+        );
+      case RoutePath.kReadingStats:
+        return GetPageRoute(
+          settings: settings,
+          page: () => const ReadingStatsPage(),
         );
       case RoutePath.kNovelDetail:
         return GetPageRoute(

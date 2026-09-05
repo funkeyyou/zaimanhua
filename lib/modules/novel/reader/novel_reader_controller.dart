@@ -21,6 +21,7 @@ import 'package:zai_x/services/db_service.dart';
 import 'package:zai_x/services/novel_download_service.dart';
 import 'package:zai_x/services/novel_font_service.dart';
 import 'package:zai_x/services/reader_volume_key_service.dart';
+import 'package:zai_x/services/reading_stats_service.dart';
 import 'package:zai_x/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -203,7 +204,26 @@ class NovelReaderController extends BaseController {
     ReaderVolumeKeyService.instance.stop();
     exitFull();
     uploadHistory();
+    _saveReadingTime();
     super.onClose();
+  }
+
+  /// 同一话在同一次阅读里只算一次
+  final Set<int> _countedChapters = {};
+
+  /// 这次进阅读器的时间点，用来累计阅读时长
+  final DateTime _openedAt = DateTime.now();
+
+  void _countChapterRead() {
+    if (!_countedChapters.add(chapter.chapterId)) {
+      return;
+    }
+    ReadingStatsService.recordChapter(AppConstant.kTypeNovel);
+  }
+
+  void _saveReadingTime() {
+    var seconds = DateTime.now().difference(_openedAt).inSeconds;
+    ReadingStatsService.recordSeconds(seconds);
   }
 
   /// 加载内容
@@ -269,6 +289,7 @@ class NovelReaderController extends BaseController {
         scrollController.jumpTo(0);
         progress.value = 0.0;
       }
+      _countChapterRead();
       preloadContent();
       //TODO 阅读记录跳转
       //上传记录

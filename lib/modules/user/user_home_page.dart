@@ -297,6 +297,16 @@ class UserHomePage extends GetView<UserHomeController> {
                       onTap: controller.setTheme,
                     ),
                     ListTile(
+                      leading: const Icon(Remix.bar_chart_2_line),
+                      title: Text("阅读统计".i18n),
+                      subtitle: Text("只在本机累计，不会上传".i18n),
+                      trailing: const Icon(
+                        Icons.chevron_right,
+                        color: Colors.grey,
+                      ),
+                      onTap: controller.toReadingStats,
+                    ),
+                    ListTile(
                       leading: const Icon(Remix.settings_line),
                       title: Text("更多设置".i18n),
                       trailing: const Icon(

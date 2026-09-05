@@ -198,6 +198,11 @@ class AppNavigator {
     toContentPage(RoutePath.kSettings, arg: type);
   }
 
+  /// 打开阅读统计
+  static void toReadingStats() {
+    toContentPage(RoutePath.kReadingStats);
+  }
+
   /// 打开漫画阅读
   static Future toComicReader({
     required int comicId,
