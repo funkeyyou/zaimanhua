@@ -80,9 +80,9 @@ jobs:
           gh release upload "$GITHUB_REF_NAME" ZAI-X-android.apk --repo "$GITHUB_REPOSITORY" --clobber
 
   build-windows:
-    # windows-latest 已是 VS2026，其 STL 對 <experimental/coroutine> 直接報錯（STL1011），
-    # permission_handler_windows 0.2.1 尚未跟進；VS2022 工具鏈可正常編譯
-    runs-on: windows-2022
+    # 曾因 permission_handler_windows 0.2.1 的 <experimental/coroutine> 在 VS2026 STL 報 STL1011
+    # 而鎖在 windows-2022；0.2.2 已移除該標頭，改回追隨最新映像
+    runs-on: windows-latest
     needs: analyze
     permissions:
       contents: write
