@@ -58,7 +58,8 @@ class TaskCenterPage extends StatelessWidget {
                 ),
               ),
               const Divider(height: 1),
-              if (controller.tasks.isEmpty)
+              _buildSummary(),
+              if (controller.groups.isEmpty)
                 Padding(
                   padding: AppStyle.edgeInsetsA24,
                   child: Text(
@@ -68,11 +69,61 @@ class TaskCenterPage extends StatelessWidget {
                   ),
                 )
               else
-                ...controller.tasks.map(_buildItem),
+                ...controller.groups.map(_buildGroup),
             ],
           ),
         );
       }),
+    );
+  }
+
+  /// 顶部概况：积分与累计签到
+  Widget _buildSummary() {
+    var credits = controller.credits.value;
+    var sign = controller.signSummary.value;
+    if (credits == null && sign.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    var lines = <String>[];
+    if (credits != null) {
+      lines.add('${"当前积分".i18n}：$credits');
+    }
+    if (!sign.isEmpty) {
+      lines.add(
+        '${"连续签到".i18n} ${sign.continuousDays} ${"天".i18n}'
+        '  ${"累计".i18n} ${sign.totalDays} ${"天".i18n}',
+      );
+    }
+    return Padding(
+      padding: AppStyle.edgeInsetsA12,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: lines
+            .map(
+              (e) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: Text(
+                  e,
+                  style: const TextStyle(fontSize: 13, color: Colors.grey),
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+
+  Widget _buildGroup(UserTaskGroup group) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: AppStyle.edgeInsetsA12,
+          child: Text(group.title.i18n, style: Get.textTheme.titleSmall),
+        ),
+        ...group.tasks.map(_buildItem),
+        const Divider(height: 1),
+      ],
     );
   }
 
@@ -104,11 +155,11 @@ class TaskCenterPage extends StatelessWidget {
     if (task.description.isNotEmpty) {
       parts.add(task.description.i18n);
     }
-    if (task.target > 0) {
-      parts.add('${task.progress}/${task.target}');
+    if (task.credits > 0) {
+      parts.add('+${task.credits} ${"积分".i18n}');
     }
-    if (task.rewardText.isNotEmpty) {
-      parts.add(task.rewardText.i18n);
+    if (task.target > 0 && !task.received) {
+      parts.add('${task.progress}/${task.target}');
     }
     return parts.join('  ');
   }
