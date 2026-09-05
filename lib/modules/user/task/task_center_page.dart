@@ -24,6 +24,11 @@ class TaskCenterPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("任务中心".i18n),
         actions: [
+          IconButton(
+            tooltip: "复制原始资料".i18n,
+            onPressed: controller.copyRaw,
+            icon: const Icon(Icons.copy_all, size: 20),
+          ),
           TextButton(
             onPressed: controller.claimAll,
             child: Text("全部领取".i18n),

@@ -8,12 +8,16 @@ import 'package:zai_x/app/i18n.dart';
 import 'package:zai_x/app/log.dart';
 import 'package:zai_x/models/user/task_model.dart';
 import 'package:zai_x/requests/user_request.dart';
+import 'package:zai_x/app/utils.dart';
 import 'package:zai_x/services/user_service.dart';
 
 class TaskCenterController extends BaseController {
   final UserRequest request = UserRequest();
 
   final tasks = <UserTaskModel>[].obs;
+
+  /// task/list 的原始回应，用来核对字段命名
+  dynamic rawResponse;
 
   @override
   void onInit() {
@@ -31,7 +35,8 @@ class TaskCenterController extends BaseController {
     try {
       pageLoadding.value = true;
       pageError.value = false;
-      tasks.assignAll(await request.taskList());
+      rawResponse = await request.taskListRaw();
+      tasks.assignAll(parseUserTasks(rawResponse));
     } catch (e) {
       Log.logPrint(e);
       pageError.value = true;
@@ -79,6 +84,17 @@ class TaskCenterController extends BaseController {
       SmartDialog.dismiss(status: SmartStatus.loading);
     }
     await loadTasks();
+  }
+
+  /// 把整份原始资料复制起来，方便回报接口字段
+  void copyRaw() {
+    if (rawResponse == null) {
+      SmartDialog.showToast("还没有取得资料".i18n);
+      return;
+    }
+    Utils.copyText(
+      const JsonEncoder.withIndent('  ').convert(rawResponse),
+    );
   }
 
   /// 长按任务看原始资料：接口字段有变动时可以直接对照

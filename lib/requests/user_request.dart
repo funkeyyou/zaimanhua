@@ -156,12 +156,17 @@ class UserRequest {
   ///
   /// 官方 H5 走 GET /lpi/v1/task/list，与签到同一个服务。
   Future<List<UserTaskModel>> taskList() async {
+    return parseUserTasks(await taskListRaw());
+  }
+
+  /// 任务清单的原始回应：字段命名没有公开文件，需要照原样看
+  Future<dynamic> taskListRaw() async {
     var result = await HttpClient.instance.getJson(
       "/task/list",
       baseUrl: Api.BASE_SIGN_IN_USER,
       needLogin: true,
     );
-    return parseUserTasks(result);
+    return result;
   }
 
   /// 领取任务奖励
