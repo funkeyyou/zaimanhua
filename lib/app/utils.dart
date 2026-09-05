@@ -19,6 +19,7 @@ import 'package:path/path.dart' as p;
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:zai_x/app/i18n.dart';
+import 'package:zai_x/services/app_update_service.dart';
 
 class Utils {
   static late PackageInfo packageInfo;
@@ -240,10 +241,8 @@ class Utils {
                         elevation: 0,
                       ),
                       onPressed: () {
-                        launchUrlString(
-                          versionInfo.downloadUrl,
-                          mode: LaunchMode.externalApplication,
-                        );
+                        Get.back();
+                        AppUpdateService.download(versionInfo);
                       },
                       child: Text("更新".i18n),
                     ),

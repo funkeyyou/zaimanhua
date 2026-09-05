@@ -4,6 +4,8 @@
    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
    <!-- 订阅更新提醒（Android 13+ 需要） -->
    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+   <!-- App 内更新：下载完成后唤起系统安装器 -->
+   <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
    <application
         android:label="ZAI-X"
         android:name="${applicationName}"
