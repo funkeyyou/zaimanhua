@@ -85,6 +85,12 @@ class ComicReaderController extends BaseController {
   /// 初始化
   var initialIndex = 0;
 
+  // 换话或退出后，旧请求和延迟跳页都不能再改写当前阅读位置。
+  int _loadGeneration = 0;
+
+  // 页面组件重建时可能短暂回报第 1 页；恢复到目标页前禁止写历史。
+  bool _historyReady = false;
+
   /// 進入章節後直接跳到最後一頁（由「上一頁」翻進上一話時使用）
   var openAtLastPage = false;
 
@@ -206,6 +212,7 @@ class ComicReaderController extends BaseController {
 
   @override
   void onClose() {
+    _loadGeneration++;
     WakelockPlus.disable().catchError((e) => Log.logPrint(e));
     settings.restoreSystemBrightness();
     focusNode.dispose();
@@ -219,6 +226,7 @@ class ComicReaderController extends BaseController {
   }
 
   void updateItemPosition() {
+    if (isClosed || pageLoadding.value || pageError.value) return;
     var items = itemPositionsListener.itemPositions.value;
     if (items.isEmpty) {
       return;
@@ -235,8 +243,11 @@ class ComicReaderController extends BaseController {
 
   /// 加载信息
   void loadDetail() async {
+    if (isClosed) return;
+    final generation = ++_loadGeneration;
+    _historyReady = false;
+    final chapterId = chapters[chapterIndex.value].chapterId;
     try {
-      var chapterId = chapters[chapterIndex.value].chapterId;
       // 预先抓好的下一话可以直接用，省掉整屏 loading
       var cached = _prefetchedChapters.remove(chapterId);
       pageLoadding.value = cached == null;
@@ -256,13 +267,15 @@ class ComicReaderController extends BaseController {
             chapterId: chapterId,
             useHD: AppSettingsService.instance.comicReaderHD.value,
           );
+      if (isClosed || generation != _loadGeneration) return;
+      if (result.pageUrls.isEmpty) {
+        throw AppError("无法读取章节信息".i18n);
+      }
       var his = DBService.instance.getComicHistory(comicId);
       if (his != null && his.chapterId == chapterId && his.page != 0) {
-        var hisIndex = (his.page - 1) < 0 ? 0 : his.page - 1;
-        if (hisIndex >= result.pageUrls.length - 1) {
-          hisIndex = 0;
-        }
-        initialIndex = hisIndex;
+        // 最后一页也是有效进度。吐槽页或图片数量变化时停在最后一张图，
+        // 不能把越界位置一律重置为第一页。
+        initialIndex = (his.page - 1).clamp(0, result.pageUrls.length - 1);
       } else {
         initialIndex = 0;
       }
@@ -277,17 +290,23 @@ class ComicReaderController extends BaseController {
 
       detail.value = result;
       buildPageGroups();
+      final targetIndex = initialIndex;
       Future.delayed(const Duration(milliseconds: 100), () {
-        jumpToPage(initialIndex);
+        if (isClosed || generation != _loadGeneration) return;
+        jumpToPage(targetIndex);
+        _historyReady = true;
+        uploadHistory();
       });
-      //上传记录
-      uploadHistory();
+      pageLoadding.value = false;
     } catch (e) {
+      if (isClosed || generation != _loadGeneration) return;
       pageError.value = true;
       errorMsg.value = e.toString();
       setShowControls();
     } finally {
-      pageLoadding.value = false;
+      if (!isClosed && generation == _loadGeneration) {
+        pageLoadding.value = false;
+      }
     }
   }
 
@@ -1089,10 +1108,20 @@ class ComicReaderController extends BaseController {
 
   void uploadHistory() {
     var chapter = chapters[chapterIndex.value];
+    // 尚未载入、读取失败或正在换话时，没有可保存的实际阅读位置。
+    // 特别是重新打开后立刻返回，不能用初始值 0 覆盖已有历史。
+    if (pageLoadding.value ||
+        pageError.value ||
+        !_historyReady ||
+        detail.value.chapterId != chapter.chapterId) {
+      return;
+    }
+    final imageCount = detail.value.pageUrls.where((url) => url != "TC").length;
+    if (imageCount == 0) return;
     UserService.instance.updateComicHistory(
       comicId: comicId,
       chapterId: chapter.chapterId,
-      page: currentIndex.value + 1,
+      page: (currentIndex.value + 1).clamp(1, imageCount),
       comicName: comicTitle,
       comicCover: comicCover,
       chapterName: chapter.chapterTitle,

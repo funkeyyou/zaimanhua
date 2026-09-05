@@ -72,8 +72,7 @@ class DBService extends GetxService {
         var local = comicHistoryBox.get(item.comicId);
         if (local != null && local.chapterId != 0) {
           //与本地记录时间做比对，如果较新则覆盖，否则直接跳过处理
-          if ((local.updateTime.millisecondsSinceEpoch ~/ 1000) <
-              remoteTime.millisecondsSinceEpoch) {
+          if (remoteTime.isAfter(local.updateTime)) {
             putComicHistory(
               ComicHistory(
                 comicId: item.comicId,
