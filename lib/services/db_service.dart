@@ -15,6 +15,11 @@ class DBService extends GetxService {
   late Box<ComicHistory> comicHistoryBox;
   late Box<NovelHistory> novelHistoryBox;
   late Box<LocalFavorite> localFavoriteBox;
+
+  /// 每部漫画已看过的章节号：key 为 comicId，value 为 chapterId 列表
+  ///
+  /// ComicHistory 只留得住最后一话，无法回答「哪些话看过了」，所以单独存一份。
+  late Box comicReadChapterBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();
     newsLikeBox = await Hive.openBox(
@@ -33,6 +38,57 @@ class DBService extends GetxService {
       "ZaiLocalFavorite",
       path: dir.path,
     );
+    comicReadChapterBox = await Hive.openBox(
+      "ZaiComicReadChapter",
+      path: dir.path,
+    );
+  }
+
+  /// 某部漫画已看过的章节
+  Set<int> getComicReadChapters(int comicId) {
+    var value = comicReadChapterBox.get(comicId);
+    if (value is! List) {
+      return <int>{};
+    }
+    return value.map((e) => e is int ? e : int.tryParse("$e") ?? 0).toSet()
+      ..remove(0);
+  }
+
+  bool isComicChapterRead(int comicId, int chapterId) =>
+      getComicReadChapters(comicId).contains(chapterId);
+
+  /// 标记为已读，返回是否真的有变化
+  Future<bool> markComicChaptersRead(
+    int comicId,
+    Iterable<int> chapterIds,
+  ) async {
+    var ids = getComicReadChapters(comicId);
+    var before = ids.length;
+    ids.addAll(chapterIds.where((id) => id != 0));
+    if (ids.length == before) {
+      return false;
+    }
+    await comicReadChapterBox.put(comicId, ids.toList());
+    return true;
+  }
+
+  /// 取消已读标记，返回是否真的有变化
+  Future<bool> markComicChaptersUnread(
+    int comicId,
+    Iterable<int> chapterIds,
+  ) async {
+    var ids = getComicReadChapters(comicId);
+    var before = ids.length;
+    ids.removeAll(chapterIds);
+    if (ids.length == before) {
+      return false;
+    }
+    if (ids.isEmpty) {
+      await comicReadChapterBox.delete(comicId);
+    } else {
+      await comicReadChapterBox.put(comicId, ids.toList());
+    }
+    return true;
   }
 
   Future putComicHistory(ComicHistory history) async {

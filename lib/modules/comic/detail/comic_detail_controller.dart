@@ -39,6 +39,9 @@ class ComicDetailControler extends BaseController {
   /// 阅读记录
   Rx<ComicHistory?> history = Rx<ComicHistory?>(null);
 
+  /// 已看过的章节号
+  final readChapterIds = <int>{}.obs;
+
   /// 更新漫画记录
   StreamSubscription<dynamic>? updateComicSubscription;
 
@@ -90,6 +93,57 @@ class ComicDetailControler extends BaseController {
       history.value = comicHistory;
       history.update((val) {});
     }
+    loadReadChapters();
+  }
+
+  /// 载入已读章节；旧资料只有「上次看到」，先把那一话补进来
+  void loadReadChapters() {
+    var ids = DBService.instance.getComicReadChapters(comicId);
+    var last = history.value?.chapterId ?? 0;
+    if (last != 0 && ids.add(last)) {
+      DBService.instance.markComicChaptersRead(comicId, [last]);
+    }
+    readChapterIds.assignAll(ids);
+  }
+
+  bool isChapterRead(int chapterId) => readChapterIds.contains(chapterId);
+
+  /// 长按章节：在已读与未读之间切换
+  Future<void> toggleChapterRead(ComicDetailChapterItem item) async {
+    if (isChapterRead(item.chapterId)) {
+      await DBService.instance
+          .markComicChaptersUnread(comicId, [item.chapterId]);
+      SmartDialog.showToast("已标记为未读".i18n);
+    } else {
+      await DBService.instance.markComicChaptersRead(comicId, [item.chapterId]);
+      SmartDialog.showToast("已标记为已读".i18n);
+    }
+    loadReadChapters();
+  }
+
+  /// 把这一话与它之前的章节全部标记为已读
+  Future<void> markReadUntil(
+    ComicDetailVolume volume,
+    ComicDetailChapterItem item,
+  ) async {
+    var chapters = List<ComicDetailChapterItem>.from(volume.chapters)
+      ..sort((a, b) => a.chapterOrder.compareTo(b.chapterOrder));
+    var ids = <int>[];
+    for (var chapter in chapters) {
+      ids.add(chapter.chapterId);
+      if (chapter.chapterId == item.chapterId) break;
+    }
+    await DBService.instance.markComicChaptersRead(comicId, ids);
+    loadReadChapters();
+    SmartDialog.showToast("已标记这一话之前的章节为已读".i18n);
+  }
+
+  /// 清掉这部漫画的已读标记
+  Future<void> clearReadChapters() async {
+    await DBService.instance
+        .markComicChaptersUnread(comicId, readChapterIds.toList());
+    loadReadChapters();
+    SmartDialog.showToast("已清除已读标记".i18n);
   }
 
   void refreshV1() async {

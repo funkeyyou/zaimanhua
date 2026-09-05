@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:zai_x/app/app_color.dart';
 import 'package:zai_x/app/app_style.dart';
 import 'package:zai_x/app/utils.dart';
+import 'package:zai_x/models/comic/detail_info.dart';
 import 'package:zai_x/modules/comic/detail/comic_detail_controller.dart';
 import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/status/app_error_widget.dart';
@@ -319,6 +320,77 @@ class ComicDetailPage extends StatelessWidget {
   }
 
   Widget _buildChapter() {
+    return _buildChapterList();
+  }
+
+  /// 章节按钮的文字颜色：上次看到的那一话最显眼，看过的变淡
+  Color? _chapterColor(ComicDetailChapterItem chapter) {
+    if (chapter.chapterId == controller.history.value?.chapterId) {
+      return Colors.blue;
+    }
+    var normal = Get.textTheme.bodyMedium!.color;
+    if (controller.isChapterRead(chapter.chapterId)) {
+      return normal?.withValues(alpha: 0.35);
+    }
+    return normal;
+  }
+
+  /// 长按章节的操作选单
+  void _showChapterMenu(
+    BuildContext context,
+    ComicDetailVolume volume,
+    ComicDetailChapterItem chapter,
+  ) {
+    var read = controller.isChapterRead(chapter.chapterId);
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
+      ),
+      constraints: const BoxConstraints(maxWidth: 500),
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text(chapter.chapterTitle.i18n),
+              subtitle: Text(read ? "已看过".i18n : "还没看过".i18n),
+            ),
+            const Divider(height: 1),
+            ListTile(
+              leading: Icon(read ? Remix.eye_off_line : Remix.eye_line),
+              title: Text(read ? "标记为未读".i18n : "标记为已读".i18n),
+              onTap: () {
+                Get.back();
+                controller.toggleChapterRead(chapter);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Remix.check_double_line),
+              title: Text("这一话与之前全部标记为已读".i18n),
+              onTap: () {
+                Get.back();
+                controller.markReadUntil(volume, chapter);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Remix.delete_bin_line),
+              title: Text("清除本作的已读标记".i18n),
+              onTap: () {
+                Get.back();
+                controller.clearReadChapters();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChapterList() {
     return Column(
       children: controller.detail.value.volumes.isEmpty
           ? [
@@ -424,12 +496,9 @@ class ComicDetailPage extends StatelessWidget {
                                     children: [
                                       OutlinedButton(
                                         style: OutlinedButton.styleFrom(
-                                          foregroundColor: item
-                                                      .chapters[i].chapterId ==
-                                                  controller
-                                                      .history.value?.chapterId
-                                              ? Colors.blue
-                                              : Get.textTheme.bodyMedium!.color,
+                                          foregroundColor: _chapterColor(
+                                            item.chapters[i],
+                                          ),
                                           textStyle:
                                               const TextStyle(fontSize: 14),
                                           tapTargetSize:
@@ -441,6 +510,11 @@ class ComicDetailPage extends StatelessWidget {
                                           controller.readChapter(
                                               item, item.chapters[i]);
                                         },
+                                        onLongPress: () => _showChapterMenu(
+                                          ctx,
+                                          item,
+                                          item.chapters[i],
+                                        ),
                                         child: Text(
                                           item.chapters[i].chapterTitle.i18n,
                                           textAlign: TextAlign.center,

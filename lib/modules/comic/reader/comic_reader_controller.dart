@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:zai_x/app/app_constant.dart';
 import 'package:zai_x/app/app_error.dart';
 import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/app/event_bus.dart';
 import 'package:zai_x/app/utils.dart';
 import 'package:zai_x/services/app_settings_service.dart';
 import 'package:zai_x/app/controller/base_controller.dart';
@@ -290,6 +291,8 @@ class ComicReaderController extends BaseController {
 
       detail.value = result;
       buildPageGroups();
+      // 章节内容真的载入了才算看过，避免 VIP、载入失败的话被标成已读
+      _markChapterRead(chapterId);
       final targetIndex = initialIndex;
       Future.delayed(const Duration(milliseconds: 100), () {
         if (isClosed || generation != _loadGeneration) return;
@@ -1126,6 +1129,19 @@ class ComicReaderController extends BaseController {
       comicCover: comicCover,
       chapterName: chapter.chapterTitle,
     );
+  }
+
+  /// 记下这一话已经看过，详情页的章节列表会跟着变灰
+  void _markChapterRead(int chapterId) async {
+    try {
+      var changed = await DBService.instance
+          .markComicChaptersRead(comicId, [chapterId]);
+      if (changed) {
+        EventBus.instance.emit(EventBus.kUpdatedComicHistory, comicId);
+      }
+    } catch (e) {
+      Log.logPrint(e);
+    }
   }
 
   /// 进入全屏
