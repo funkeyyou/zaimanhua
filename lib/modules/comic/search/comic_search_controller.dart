@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:zai_x/app/dialog_utils.dart';
 import 'package:zai_x/app/controller/base_controller.dart';
 import 'package:zai_x/app/log.dart';
+import 'package:zai_x/app/app_constant.dart';
 import 'package:zai_x/models/comic/search_item.dart';
 import 'package:zai_x/requests/comic_request.dart';
 import 'package:zai_x/routes/app_navigator.dart';
+import 'package:zai_x/services/search_history_service.dart';
 import 'package:get/get.dart';
 import 'package:zai_x/app/i18n.dart';
 
@@ -23,13 +25,51 @@ class ComicSearchController extends BasePageController<SearchComicItem> {
 
   var showHotWord = true.obs;
 
+  /// 搜索历史
+  final searchHistory = <String>[].obs;
+
+  /// 依输入内容从本机资料给的建议
+  final suggestions = <LocalSearchSuggestion>[].obs;
+
   @override
   void onInit() {
     // loadHotWord();
+    loadHistory();
     if (keyword.isNotEmpty) {
       submit();
     }
     super.onInit();
+  }
+
+  void loadHistory() {
+    searchHistory.assignAll(
+      SearchHistoryService.get(AppConstant.kTypeComic),
+    );
+  }
+
+  /// 输入变化时更新建议；清空输入就回到历史列表
+  void onKeywordChanged(String text) {
+    suggestions.assignAll(
+      SearchHistoryService.suggest(AppConstant.kTypeComic, text),
+    );
+    if (text.isEmpty) {
+      showHotWord.value = true;
+    }
+  }
+
+  void searchKeyword(String text) {
+    searchController.text = text;
+    submit();
+  }
+
+  Future<void> removeHistory(String text) async {
+    await SearchHistoryService.remove(AppConstant.kTypeComic, text);
+    loadHistory();
+  }
+
+  Future<void> clearHistory() async {
+    await SearchHistoryService.clear(AppConstant.kTypeComic);
+    loadHistory();
   }
 
   void submit() async {
@@ -50,6 +90,9 @@ class ComicSearchController extends BasePageController<SearchComicItem> {
 
     showHotWord.value = false;
     _keyword = searchController.text;
+    suggestions.clear();
+    await SearchHistoryService.add(AppConstant.kTypeComic, _keyword);
+    loadHistory();
     refreshData();
   }
 

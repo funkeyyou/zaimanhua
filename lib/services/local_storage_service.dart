@@ -141,6 +141,12 @@ class LocalStorageService extends GetxService {
   /// E-ink display mode
   static const String kEInkMode = "EInkMode";
 
+  /// 漫画搜索历史
+  static const String kComicSearchHistory = "ComicSearchHistory";
+
+  /// 小说搜索历史
+  static const String kNovelSearchHistory = "NovelSearchHistory";
+
   late Box settingsBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();

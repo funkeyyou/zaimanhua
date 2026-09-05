@@ -5,6 +5,7 @@ import 'package:zai_x/modules/comic/search/comic_search_controller.dart';
 import 'package:zai_x/routes/app_navigator.dart';
 import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_list_view.dart';
+import 'package:zai_x/widgets/search_suggestion_view.dart';
 import 'package:get/get.dart';
 import 'package:zai_x/app/i18n.dart';
 
@@ -49,6 +50,7 @@ class ComicSearchPage extends StatelessWidget {
             onSubmitted: (e) {
               controller.submit();
             },
+            onChanged: controller.onKeywordChanged,
           ),
         ),
       ),
@@ -69,43 +71,25 @@ class ComicSearchPage extends StatelessWidget {
               return buildItem(item);
             },
           ),
-          // Positioned.fill(
-          //   child: Obx(
-          //     () => Offstage(
-          //       offstage: !controller.showHotWord.value,
-          //       child: SingleChildScrollView(
-          //         child: Column(
-          //           children: [
-          //             const ListTile(
-          //               title: Text("热门搜索"),
-          //             ),
-          //             Padding(
-          //               padding: AppStyle.edgeInsetsH12.copyWith(bottom: 12),
-          //               child: Wrap(
-          //                 spacing: 8,
-          //                 runSpacing: 8,
-          //                 children: controller.hotWords.keys
-          //                     .map(
-          //                       (e) => OutlinedButton(
-          //                         style: OutlinedButton.styleFrom(
-          //                           tapTargetSize:
-          //                               MaterialTapTargetSize.shrinkWrap,
-          //                         ),
-          //                         onPressed: () {
-          //                           AppNavigator.toComicDetail(e);
-          //                         },
-          //                         child: Text(controller.hotWords[e] ?? ""),
-          //                       ),
-          //                     )
-          //                     .toList(),
-          //               ),
-          //             )
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          Positioned.fill(
+            child: Obx(
+              () => Offstage(
+                offstage: !controller.showHotWord.value &&
+                    controller.suggestions.isEmpty,
+                child: Container(
+                  color: Get.theme.scaffoldBackgroundColor,
+                  child: SearchSuggestionView(
+                    history: controller.searchHistory.toList(),
+                    suggestions: controller.suggestions.toList(),
+                    onSearch: controller.searchKeyword,
+                    onRemoveHistory: controller.removeHistory,
+                    onClearHistory: controller.clearHistory,
+                    onOpen: AppNavigator.toComicDetail,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
