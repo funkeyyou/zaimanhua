@@ -49,7 +49,11 @@
 ## 開發
 
 - Flutter 3.47.2（本機與 CI 版本需一致）
-- Windows 本機建置請走 ASCII 路徑：中文路徑會讓原生建置步驟讀壞檔案，可用 `mklink /J` 建 junction
+- Windows 本機開發請走 ASCII 路徑：專案放在含中文的目錄時，原生建置會讀壞檔案，`flutter analyze` 也會因 LSP 訊息長度算錯而丟 `FormatException`。做法是建一個 junction 再從那裡操作：
+  ```cmd
+  mklink /J C:\Users\funke\zmh "C:\Users\funke\Documents\再漫畫"
+  ```
+  之後 `flutter analyze`／`flutter test`／`flutter build` 都在 `C:\Users\funke\zmh` 下執行（同一份檔案，git 操作留在原路徑即可）。CI 跑在 ASCII 路徑，不受影響
 - 新增中文 UI 字串後執行 `tools/i18n/gen_dict.py` 重建簡繁對照表；合併上游後另跑 `tools/i18n/apply_i18n.py`
 - 開發路線：[docs/ROADMAP.md](docs/ROADMAP.md)
 - 授權：GPL-3.0，保留原作者署名，禁止商業用途

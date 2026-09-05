@@ -34,7 +34,7 @@
 
 ## P3 收藏與跨裝置同步
 
-- [ ] 雲端閱讀進度同步：漫畫端的秒／毫秒比較錯誤已修復，舊遠端進度不再覆蓋較新的本地進度。待處理：小說端相同問題；另 `UserService` 啟動時的 `syncRemoteHistory()` 目前是註解狀態
+- [x] 雲端閱讀進度同步：漫畫與小說的秒／毫秒比較錯誤都已修復，舊遠端進度不再覆蓋較新的本地進度；啟動時的 `syncRemoteHistory()` 改由 `main.initServices()` 在 DBService 就緒後觸發（UserService 比 DBService 早初始化，寫在 `init()` 會撞上還沒開的 Hive box）
 - [x] 書架分頁（底部導航常駐我的訂閱）
 - [x] 訂閱排序升／降序（訂閱時間、更新時間）＋ 題材標籤篩選（標籤由漫畫詳情補抓並快取於 SubscribeTagsCache）
 - [ ] 本地收藏、閱讀紀錄匯出／匯入
@@ -49,12 +49,14 @@
 
 - [x] Flutter 3.38.10 → 3.47.2 升級（本機與 CI 同步）；analyze 零錯誤、Android 建置與模擬器實測通過
 - [x] 依賴升級：package_info_plus 10、share_plus 13、image_gallery_saver_plus 5、wakelock_plus 1.6、windows_single_instance 1.2，其餘鎖定版本內更新
-- [ ] permission_handler 13：其 Android 端要求較新的 Kotlin/AGP 設定（`compilerOptions` DSL），需先整理 android/build.gradle 才能升
-- [ ] 其餘過時套件（flutter_smart_dialog 5.3、lottie、intl、protobuf 6 等）受相依約束卡住，待上游放寬
+- [x] permission_handler 12 → 13.0.2：AGP 8.11.1 + Kotlin 2.2.20 已滿足其建置需求，另把 `compileSdk` 提到 37（permission_handler_android 14 要求）
+- [x] flutter_smart_dialog 5.3.0、lottie 3.5.1、wakelock_plus 1.8.0（原本只是被 pubspec.lock 鎖住）
+- [x] protobuf 3.1 → 6.0：舊生成碼不相容（`PbList` 無名建構子），以 protoc 36.1 + protoc_plugin 25 依 `assets/proto` 重生；三份 descriptor 的 154 個欄位（名稱/編號/label/型別）與舊版逐項比對一致，另加 wire 格式解碼測試把關
+- [ ] build_runner 2.4.13 → 2.16 仍卡住：hive_generator 2.0.1 綁 `source_gen ^1.0.0`、`analyzer <7`，且已停止維護；要動就得改用社群分支（hive_ce）或自行維護 adapter
 - [x] CI 加入 analyze + test 門檻（`flutter analyze --no-fatal-infos`，Android/Windows 建置都要等它通過）
 - [x] CI actions 升版（checkout/upload-artifact v7、setup-java v6），棄用警告歸零
 - [x] 內建思源黑體 Medium 裁剪版（12.8 MB）：部分安卓 ROM 無視 Flutter 字重請求，主題層 w500/w600 不足以解決，改為內建字體
-- [ ] Windows 非 ASCII 路徑建置問題：文件化 junction 做法（`C:\Users\funke\zmh`），或向 Flutter 上游回報
+- [x] Windows 非 ASCII 路徑：README 寫上 junction 做法（`C:\Users\funke\zmh`）。除了原生建置，`flutter analyze` 在中文路徑下也會因 LSP 訊息長度算錯而丟 `FormatException`
 
 ## 維護原則
 
