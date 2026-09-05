@@ -9,6 +9,7 @@ import 'package:zai_x/models/user/novel_history_model.dart';
 import 'package:zai_x/models/user/subscribe_comic_model.dart';
 import 'package:zai_x/models/user/subscribe_news_model.dart';
 import 'package:zai_x/models/user/subscribe_novel_model.dart';
+import 'package:zai_x/models/user/task_model.dart';
 import 'package:zai_x/models/user/user_center_model.dart';
 import 'package:zai_x/models/user/user_profile_model.dart';
 import 'package:zai_x/requests/common/api.dart';
@@ -149,6 +150,49 @@ class UserRequest {
       throw result['errmsg']?.toString() ?? '今天已签到过~'.i18n;
     }
     return true;
+  }
+
+  /// 任务中心的任务清单
+  ///
+  /// 官方 H5 走 GET /lpi/v1/task/list，与签到同一个服务。
+  Future<List<UserTaskModel>> taskList() async {
+    var result = await HttpClient.instance.getJson(
+      "/task/list",
+      baseUrl: Api.BASE_SIGN_IN_USER,
+      needLogin: true,
+    );
+    return parseUserTasks(result);
+  }
+
+  /// 领取任务奖励
+  ///
+  /// 官方 H5 走 GET /lpi/v1/task/get_reward。参数名没有公开文件，
+  /// 常见的三种写法一起带上，服务器会挑自己认得的那个。
+  Future<String> taskGetReward(int taskId) async {
+    var result = await HttpClient.instance.getJson(
+      "/task/get_reward",
+      baseUrl: Api.BASE_SIGN_IN_USER,
+      needLogin: true,
+      queryParameters: {
+        "task_id": taskId,
+        "taskId": taskId,
+        "id": taskId,
+      },
+    );
+    if (result is Map) {
+      var errno = result["errno"];
+      if (errno != null && errno != 0) {
+        throw result["errmsg"]?.toString() ?? "领取失败".i18n;
+      }
+      var data = result["data"];
+      if (data is Map) {
+        var text = data["msg"] ?? data["message"] ?? data["reward"];
+        if (text != null && text.toString().isNotEmpty) {
+          return text.toString();
+        }
+      }
+    }
+    return "";
   }
 
   /// 我的漫画订阅

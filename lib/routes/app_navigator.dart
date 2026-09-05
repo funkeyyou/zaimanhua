@@ -203,6 +203,11 @@ class AppNavigator {
     toContentPage(RoutePath.kReadingStats);
   }
 
+  /// 打开任务中心
+  static void toTaskCenter() {
+    toContentPage(RoutePath.kTaskCenter);
+  }
+
   /// 打开漫画阅读
   static Future toComicReader({
     required int comicId,

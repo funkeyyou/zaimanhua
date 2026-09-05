@@ -151,8 +151,41 @@ class UserService extends GetxService {
       if (userProfile.value?.isSign == false) {
         await _autoSignIn();
       }
+      await autoClaimTasks();
     } catch (e) {
       Log.logPrint(e);
+    }
+  }
+
+  /// 任务中心：把已达成但还没领的奖励一次领掉
+  ///
+  /// 回传实际领到的任务数；设定关掉或没有可领的就是 0。
+  Future<int> autoClaimTasks({bool silent = true}) async {
+    if (!logined.value || !AppSettingsService.instance.autoClaimTask.value) {
+      return 0;
+    }
+    try {
+      var tasks = await request.taskList();
+      var claimable = tasks.where((e) => e.claimable).toList();
+      if (claimable.isEmpty) {
+        return 0;
+      }
+      var done = 0;
+      for (var task in claimable) {
+        try {
+          await request.taskGetReward(task.id);
+          done++;
+        } catch (e) {
+          Log.logPrint(e);
+        }
+      }
+      if (done > 0 && !silent) {
+        SmartDialog.showToast("已领取任务奖励".i18n);
+      }
+      return done;
+    } catch (e) {
+      Log.logPrint(e);
+      return 0;
     }
   }
 

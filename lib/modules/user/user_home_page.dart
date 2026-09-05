@@ -307,6 +307,16 @@ class UserHomePage extends GetView<UserHomeController> {
                       onTap: controller.toReadingStats,
                     ),
                     ListTile(
+                      leading: const Icon(Remix.task_line),
+                      title: Text("任务中心".i18n),
+                      subtitle: Text("达成的任务可自动领取奖励".i18n),
+                      trailing: const Icon(
+                        Icons.chevron_right,
+                        color: Colors.grey,
+                      ),
+                      onTap: controller.toTaskCenter,
+                    ),
+                    ListTile(
                       leading: const Icon(Remix.settings_line),
                       title: Text("更多设置".i18n),
                       trailing: const Icon(

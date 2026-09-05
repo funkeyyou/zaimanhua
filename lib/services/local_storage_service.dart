@@ -147,6 +147,9 @@ class LocalStorageService extends GetxService {
   /// 小说搜索历史
   static const String kNovelSearchHistory = "NovelSearchHistory";
 
+  /// 任务达成后自动领取奖励
+  static const String kAutoClaimTask = "AutoClaimTask";
+
   late Box settingsBox;
   Future init() async {
     var dir = await getApplicationSupportDirectory();

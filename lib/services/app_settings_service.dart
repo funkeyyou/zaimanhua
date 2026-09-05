@@ -53,6 +53,8 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kSubscribeNotifyHours, 6);
     signInNotify.value = LocalStorageService.instance
         .getValue(LocalStorageService.kSignInNotify, true);
+    autoClaimTask.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kAutoClaimTask, true);
     subscribeSort.value = LocalStorageService.instance
         .getValue(LocalStorageService.kSubscribeSort, 0);
     //小说
@@ -528,6 +530,14 @@ class AppSettingsService extends GetxController {
     signInNotify.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kSignInNotify, value);
+  }
+
+  /// 任务达成后自动领取奖励
+  RxBool autoClaimTask = true.obs;
+  void setAutoClaimTask(bool value) {
+    autoClaimTask.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kAutoClaimTask, value);
   }
 
   /// 我的订阅排序

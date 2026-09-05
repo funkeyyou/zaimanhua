@@ -58,6 +58,9 @@ class RoutePath {
   /// 阅读统计
   static const kReadingStats = "/user/stats";
 
+  /// 任务中心
+  static const kTaskCenter = "/user/task";
+
   /// 小说详情
   static const kNovelDetail = "/novel/detail";
 

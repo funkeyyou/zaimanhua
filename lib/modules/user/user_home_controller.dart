@@ -101,6 +101,10 @@ class UserHomeController extends GetxController {
     AppNavigator.toReadingStats();
   }
 
+  void toTaskCenter() {
+    AppNavigator.toTaskCenter();
+  }
+
   void comicDownload() {
     AppNavigator.toComicDownloadManage(0);
   }

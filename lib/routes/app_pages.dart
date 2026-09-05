@@ -33,6 +33,7 @@ import 'package:zai_x/modules/user/local_favorite/local_favorite_page.dart';
 import 'package:zai_x/modules/user/local_history/local_history_page.dart';
 import 'package:zai_x/modules/user/settings/settings_page.dart';
 import 'package:zai_x/modules/user/stats/reading_stats_page.dart';
+import 'package:zai_x/modules/user/task/task_center_page.dart';
 import 'package:zai_x/modules/user/subscribe/user_subscribe_pgae.dart';
 import 'package:zai_x/modules/user/user_home_controller.dart';
 import 'package:zai_x/routes/route_path.dart';
@@ -221,6 +222,11 @@ class AppPages {
         return GetPageRoute(
           settings: settings,
           page: () => const ReadingStatsPage(),
+        );
+      case RoutePath.kTaskCenter:
+        return GetPageRoute(
+          settings: settings,
+          page: () => TaskCenterPage(),
         );
       case RoutePath.kNovelDetail:
         return GetPageRoute(
