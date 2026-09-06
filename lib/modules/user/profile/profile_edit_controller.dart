@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:zai_x/app/controller/base_controller.dart';
@@ -148,40 +147,6 @@ class ProfileEditController extends BaseController {
       SmartDialog.showToast("已保存".i18n);
       await load();
       UserService.instance.refreshProfile();
-    } catch (e) {
-      SmartDialog.showToast(e.toString().i18n);
-    } finally {
-      SmartDialog.dismiss(status: SmartStatus.loading);
-    }
-  }
-
-  /// 换头像：选图 → 上传 → 需要的话再设定回资料
-  Future<void> editAvatar() async {
-    try {
-      var file = await openFile(
-        acceptedTypeGroups: const [
-          XTypeGroup(
-            label: 'image',
-            extensions: ['jpg', 'jpeg', 'png', 'webp'],
-          ),
-        ],
-      );
-      if (file == null) return;
-      SmartDialog.showLoading();
-      var bytes = await file.readAsBytes();
-      var url = await request.uploadAvatar(bytes, file.name);
-      if (url.isNotEmpty && url != photo.value) {
-        try {
-          await request.editPersonalInfo({'photo': url});
-        } catch (e) {
-          Log.logPrint(e);
-        }
-      }
-      await load();
-      UserService.instance.refreshProfile();
-      SmartDialog.showToast(
-        photo.value == url ? "头像已更新".i18n : "已上传，官方没有套用这张图".i18n,
-      );
     } catch (e) {
       SmartDialog.showToast(e.toString().i18n);
     } finally {

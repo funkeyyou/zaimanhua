@@ -34,8 +34,7 @@ class ProfileEditPage extends StatelessWidget {
           children: [
             ListTile(
               title: Text("头像".i18n),
-              subtitle: Text("点一下从相册换一张".i18n),
-              onTap: controller.editAvatar,
+              subtitle: Text("官方接口不开放换头像，请在官方 App 更换".i18n),
               trailing: controller.photo.value.isEmpty
                   ? null
                   : NetImage(
