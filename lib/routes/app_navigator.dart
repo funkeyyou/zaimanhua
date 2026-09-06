@@ -208,6 +208,11 @@ class AppNavigator {
     toContentPage(RoutePath.kTaskCenter);
   }
 
+  /// 打开个人资料编辑
+  static void toProfileEdit() {
+    toContentPage(RoutePath.kProfileEdit);
+  }
+
   /// 打开漫画阅读
   static Future toComicReader({
     required int comicId,

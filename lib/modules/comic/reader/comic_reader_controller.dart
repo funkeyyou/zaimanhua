@@ -154,6 +154,7 @@ class ComicReaderController extends BaseController {
     if (settings.readerKeepScreenOn.value) {
       WakelockPlus.enable().catchError((e) => Log.logPrint(e));
     }
+    _startHistoryTimer();
     settings.applyReaderBrightness();
     loadDetail();
     super.onInit();
@@ -221,6 +222,7 @@ class ComicReaderController extends BaseController {
     connectivitySubscription?.cancel();
     batterySubscription?.cancel();
     ReaderVolumeKeyService.instance.stop();
+    _historyTimer?.cancel();
     exitFull();
     itemPositionsListener.itemPositions.removeListener(updateItemPosition);
     uploadHistory();
@@ -230,6 +232,23 @@ class ComicReaderController extends BaseController {
 
   /// 这次进阅读器的时间点，用来累计阅读时长
   final DateTime _openedAt = DateTime.now();
+
+  /// 阅读期间定时回传进度
+  ///
+  /// 除了让服务器上的进度更接近实际，官方「累计观看十分钟漫画」这类任务
+  /// 也可能是靠回传的间隔在算时间，只在开合章节时传两次是不够的。
+  Timer? _historyTimer;
+
+  void _startHistoryTimer() {
+    _historyTimer?.cancel();
+    _historyTimer = Timer.periodic(
+      const Duration(seconds: 60),
+      (_) {
+        if (isClosed) return;
+        uploadHistory();
+      },
+    );
+  }
 
   void _saveReadingTime() {
     var seconds = DateTime.now().difference(_openedAt).inSeconds;

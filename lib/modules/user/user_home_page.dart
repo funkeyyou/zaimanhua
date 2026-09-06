@@ -317,6 +317,16 @@ class UserHomePage extends GetView<UserHomeController> {
                       onTap: controller.toTaskCenter,
                     ),
                     ListTile(
+                      leading: const Icon(Remix.user_settings_line),
+                      title: Text("个人资料".i18n),
+                      subtitle: Text("昵称、签名、性别、生日、所在地".i18n),
+                      trailing: const Icon(
+                        Icons.chevron_right,
+                        color: Colors.grey,
+                      ),
+                      onTap: controller.toProfileEdit,
+                    ),
+                    ListTile(
                       leading: const Icon(Remix.settings_line),
                       title: Text("更多设置".i18n),
                       trailing: const Icon(

@@ -134,6 +134,27 @@ class TaskCenterController extends BaseController {
     }
   }
 
+  /// 个人资料接口探测：长按复制钮触发，结果一起写进档案
+  Future<void> probeProfile() async {
+    try {
+      SmartDialog.showLoading();
+      var result = <String, dynamic>{};
+      result.addAll(await request.probeProfileApis());
+      result.addAll(await request.probeProfileFields());
+      var text = const JsonEncoder.withIndent('  ').convert(result);
+      var dir = await getExternalStorageDirectory() ??
+          await getApplicationSupportDirectory();
+      var file = File(p.join(dir.path, 'profile_probe.json'));
+      await file.writeAsString(text);
+      SmartDialog.showToast(file.path);
+    } catch (e) {
+      Log.logPrint(e);
+      SmartDialog.showToast(e.toString());
+    } finally {
+      SmartDialog.dismiss(status: SmartStatus.loading);
+    }
+  }
+
   /// 长按任务看原始资料：接口字段有变动时可以直接对照
   void showRaw(UserTaskModel task) {
     Get.dialog(

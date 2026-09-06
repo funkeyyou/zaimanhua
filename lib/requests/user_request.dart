@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:crypto/crypto.dart';
 import 'package:zai_x/app/app_constant.dart';
 import 'package:zai_x/app/app_error.dart';
@@ -167,6 +168,314 @@ class UserRequest {
       needLogin: true,
     );
     return result;
+  }
+
+  /// 个人资料接口探测
+  ///
+  /// 官方只有 i.zaimanhua.com 那支前端知道这些接口，参数名没有公开文件。
+  /// 这里刻意少带参数，用回传的错误讯息反推需要什么栏位；全部都是读取或检查，
+  /// 不会改到帐号资料。
+  Future<Map<String, dynamic>> probeProfileApis() async {
+    var result = <String, dynamic>{};
+
+    Future<void> run(String name, Future<dynamic> Function() action) async {
+      try {
+        result[name] = await action();
+      } catch (e) {
+        result[name] = 'ERROR: ${e.toString()}';
+      }
+    }
+
+    await run(
+      "personal/info/get",
+      () => HttpClient.instance.getJson(
+        "/u_center/personal/info/get",
+        baseUrl: Api.BASE_URL_USER,
+        needLogin: true,
+      ),
+    );
+    await run(
+      "setting/check_can_modify_name",
+      () => HttpClient.instance.postJson(
+        "/u_center/setting/check_can_modify_name",
+        baseUrl: Api.BASE_URL_USER,
+        needLogin: true,
+      ),
+    );
+    await run(
+      "user/checkNickName",
+      () => HttpClient.instance.getJson(
+        "/user/checkNickName",
+        baseUrl: Api.BASE_URL_USER,
+        needLogin: true,
+        queryParameters: {"nickname": "再漫畫測試暱稱"},
+      ),
+    );
+    await run(
+      "setting/modify_name(空参数)",
+      () => HttpClient.instance.postJson(
+        "/u_center/setting/modify_name",
+        baseUrl: Api.BASE_URL_USER,
+        needLogin: true,
+      ),
+    );
+    await run(
+      "personal/info/edit(空参数)",
+      () => HttpClient.instance.postJson(
+        "/u_center/personal/info/edit",
+        baseUrl: Api.BASE_URL_USER,
+        needLogin: true,
+      ),
+    );
+    await run(
+      "personal/save_photo(空参数)",
+      () => HttpClient.instance.postJson(
+        "/u_center/personal/save_photo",
+        baseUrl: Api.BASE_URL_USER,
+        needLogin: true,
+      ),
+    );
+    await run(
+      "personal/privacy",
+      () => HttpClient.instance.getJson(
+        "/u_center/personal/privacy",
+        baseUrl: Api.BASE_URL_USER,
+        needLogin: true,
+      ),
+    );
+    return result;
+  }
+
+  /// 第二轮探测：确认昵称检查与资料编辑真正吃的栏位
+  ///
+  /// 只做检查与可还原的编辑（description 事后会被改回去），不动昵称与头像。
+  Future<Map<String, dynamic>> probeProfileFields() async {
+    var result = <String, dynamic>{};
+
+    Future<void> run(String name, Future<dynamic> Function() action) async {
+      try {
+        result[name] = await action();
+      } catch (e) {
+        result[name] = 'ERROR: \${e.toString()}';
+      }
+    }
+
+    for (var key in const ['nickName', 'name', 'nick_name', 'nick']) {
+      await run(
+        'checkNickName?key=$key',
+        () => HttpClient.instance.getJson(
+          "/user/checkNickName",
+          baseUrl: Api.BASE_URL_USER,
+          needLogin: true,
+          queryParameters: {key: 'zmh_probe_name'},
+        ),
+      );
+    }
+
+    await run(
+      'info/edit description=探测中',
+      () => HttpClient.instance.postJson(
+        "/u_center/personal/info/edit",
+        baseUrl: Api.BASE_URL_USER,
+        needLogin: true,
+        formUrlEncoded: true,
+        data: {'description': '探测中'},
+      ),
+    );
+    await run(
+      'info/get after edit',
+      () => HttpClient.instance.getJson(
+        "/u_center/personal/info/get",
+        baseUrl: Api.BASE_URL_USER,
+        needLogin: true,
+      ),
+    );
+    await run(
+      'info/edit description=(还原)',
+      () => HttpClient.instance.postJson(
+        "/u_center/personal/info/edit",
+        baseUrl: Api.BASE_URL_USER,
+        needLogin: true,
+        formUrlEncoded: true,
+        data: {'description': ''},
+      ),
+    );
+
+    for (var key in const ['photo', 'file', 'image', 'img', 'avatar']) {
+      await run(
+        'save_photo key=$key base64',
+        () => HttpClient.instance.postJson(
+          "/u_center/personal/save_photo",
+          baseUrl: Api.BASE_URL_USER,
+          needLogin: true,
+          formUrlEncoded: true,
+          data: {key: _kTinyPngBase64},
+        ),
+      );
+    }
+    await run(
+      'save_photo photo=dataUrl',
+      () => HttpClient.instance.postJson(
+        "/u_center/personal/save_photo",
+        baseUrl: Api.BASE_URL_USER,
+        needLogin: true,
+        formUrlEncoded: true,
+        data: {'photo': 'data:image/png;base64,$_kTinyPngBase64'},
+      ),
+    );
+    await run(
+      'save_photo multipart photo',
+      () => HttpClient.instance.postJson(
+        "/u_center/personal/save_photo",
+        baseUrl: Api.BASE_URL_USER,
+        needLogin: true,
+        data: {'photo': _kTinyPngBase64},
+      ),
+    );
+
+    // 真正的 multipart 上传：base64 与表单栏位都被打回票，八成要档案本体
+    for (var key in const ['photo', 'file', 'image']) {
+      await run(
+        'save_photo multipart field=$key',
+        () => _uploadTinyPhoto(key),
+      );
+    }
+    return result;
+  }
+
+  /// 用 multipart 送一张 1x1 PNG，纯粹试栏位名
+  Future<dynamic> _uploadTinyPhoto(String field) async {
+    var bytes = base64Decode(_kTinyPngBase64);
+    var form = FormData.fromMap({
+      field: MultipartFile.fromBytes(bytes, filename: 'avatar.png'),
+    });
+    var response = await Dio().post(
+      '${Api.BASE_URL_USER}/u_center/personal/save_photo',
+      data: form,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer ${UserService.instance.dmzjToken}',
+        },
+        responseType: ResponseType.json,
+      ),
+    );
+    return response.data;
+  }
+
+  /// 1x1 透明 PNG，只用来看接口回什么错误
+  static const String _kTinyPngBase64 =
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+
+  /// 昵称是否还能修改
+  Future<bool> canModifyNickName() async {
+    var result = await HttpClient.instance.postJson(
+      "/u_center/setting/check_can_modify_name",
+      baseUrl: Api.BASE_URL_USER,
+      needLogin: true,
+    );
+    if (result is Map) {
+      var data = result["data"];
+      if (data is Map) {
+        return data["can_modify"] == true;
+      }
+    }
+    return false;
+  }
+
+  /// 个人资料原始栏位（与 info/edit 的栏位名一致）
+  Future<Map<String, dynamic>> personalInfo() async {
+    var result = await HttpClient.instance.getJson(
+      "/u_center/personal/info/get",
+      baseUrl: Api.BASE_URL_USER,
+      needLogin: true,
+      withDefaultParameter: true,
+    );
+    if (result is Map) {
+      var data = result["data"];
+      if (data is Map) {
+        var info = data["personalInfo"];
+        if (info is Map) {
+          return Map<String, dynamic>.from(info);
+        }
+        return Map<String, dynamic>.from(data);
+      }
+    }
+    return <String, dynamic>{};
+  }
+
+  /// 昵称是否可用（没被占用、格式正确）
+  Future<bool> checkNickName(String nickName) async {
+    var result = await HttpClient.instance.getJson(
+      "/user/checkNickName",
+      baseUrl: Api.BASE_URL_USER,
+      needLogin: true,
+      queryParameters: {"nickName": nickName},
+    );
+    return result is Map && result["errno"] == 0;
+  }
+
+  /// 修改昵称
+  Future<void> modifyNickName(String nickName) async {
+    var result = await HttpClient.instance.postJson(
+      "/u_center/setting/modify_name",
+      baseUrl: Api.BASE_URL_USER,
+      needLogin: true,
+      formUrlEncoded: true,
+      data: {"nickName": nickName},
+    );
+    _throwIfFailed(result);
+  }
+
+  /// 编辑个人资料
+  ///
+  /// 字段沿用 personal/info/get 回来的名字：description、sex、birthday、address 等。
+  Future<void> editPersonalInfo(Map<String, dynamic> fields) async {
+    var result = await HttpClient.instance.postJson(
+      "/u_center/personal/info/edit",
+      baseUrl: Api.BASE_URL_USER,
+      needLogin: true,
+      formUrlEncoded: true,
+      data: fields,
+    );
+    _throwIfFailed(result);
+  }
+
+  /// 上传头像
+  ///
+  /// 实测：save_photo 只吃 multipart，且栏位名是 image（photo/file 都回「上传错误」），
+  /// 成功后回传 data.img_url。回传的网址若与目前不同，再用 info/edit 设定 photo。
+  Future<String> uploadAvatar(List<int> bytes, String filename) async {
+    var form = FormData.fromMap({
+      'image': MultipartFile.fromBytes(bytes, filename: filename),
+    });
+    var response = await Dio().post(
+      '\${Api.BASE_URL_USER}/u_center/personal/save_photo',
+      data: form,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer \${UserService.instance.dmzjToken}',
+        },
+        responseType: ResponseType.json,
+      ),
+    );
+    var result = response.data;
+    _throwIfFailed(result);
+    if (result is Map) {
+      var data = result['data'];
+      if (data is Map) {
+        return data['img_url']?.toString() ?? '';
+      }
+    }
+    return '';
+  }
+
+  void _throwIfFailed(dynamic result) {
+    if (result is Map) {
+      var errno = result["errno"];
+      if (errno != null && errno != 0) {
+        throw result["errmsg"]?.toString() ?? "操作失败".i18n;
+      }
+    }
   }
 
   /// 领取任务奖励

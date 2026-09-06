@@ -61,6 +61,9 @@ class RoutePath {
   /// 任务中心
   static const kTaskCenter = "/user/task";
 
+  /// 个人资料编辑
+  static const kProfileEdit = "/user/profile";
+
   /// 小说详情
   static const kNovelDetail = "/novel/detail";
 
