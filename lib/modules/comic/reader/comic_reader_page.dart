@@ -22,10 +22,15 @@ import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:zai_x/app/i18n.dart';
 
-/// 翻到最後（或最前）一頁後，再滑多少距離就換話。
+/// 翻頁模式：翻到最後（或最前）一頁後，再滑多少距離就換話。
 /// 值小到一次普通的翻頁手勢就會超過，換話因此像翻頁一樣順；
-/// 但仍需要一段明顯的越界拖曳，不會在正常翻頁時誤觸。
+/// 配合 triggerWhenReach，手指還按著就換話，不必長拖再放開。
 const double kChapterSwitchTriggerOffset = 45;
+
+/// 上下捲動模式的換話門檻。
+/// 這裡刻意維持「拉一下再放開」：連續捲動時手指常常還按著就到底，
+/// 若也改成一碰就換話，快速捲動與開章節時的小幅回彈都會誤跳。
+const double kScrollChapterSwitchTriggerOffset = 60;
 
 class ComicReaderPage extends GetView<ComicReaderController> {
   const ComicReaderPage({super.key});
@@ -455,8 +460,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
   Widget buildVertical() {
     return EasyRefresh(
       header: MaterialHeader2(
-        triggerOffset: kChapterSwitchTriggerOffset,
-        triggerWhenReach: true,
+        triggerOffset: kScrollChapterSwitchTriggerOffset,
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -470,8 +474,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         ),
       ),
       footer: MaterialFooter2(
-        triggerOffset: kChapterSwitchTriggerOffset,
-        triggerWhenReach: true,
+        triggerOffset: kScrollChapterSwitchTriggerOffset,
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
