@@ -120,6 +120,9 @@ class LocalStorageService extends GetxService {
   /// 我的订阅排序 0=订阅顺序 1=更新时间
   static const String kSubscribeSort = "SubscribeSort";
 
+  /// 书架预设排序切换到「更新时间」的一次性迁移标记
+  static const String kSubscribeSortDefaultV2 = "SubscribeSortDefaultV2";
+
   /// 阅读时保持屏幕常亮
   static const String kReaderKeepScreenOn = "ReaderKeepScreenOn";
 

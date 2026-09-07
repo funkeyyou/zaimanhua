@@ -22,6 +22,11 @@ import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:zai_x/app/i18n.dart';
 
+/// 翻到最後（或最前）一頁後，再滑多少距離就換話。
+/// 值小到一次普通的翻頁手勢就會超過，換話因此像翻頁一樣順；
+/// 但仍需要一段明顯的越界拖曳，不會在正常翻頁時誤觸。
+const double kChapterSwitchTriggerOffset = 45;
+
 class ComicReaderPage extends GetView<ComicReaderController> {
   const ComicReaderPage({super.key});
 
@@ -316,7 +321,10 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         }
         return EasyRefresh(
           header: MaterialHeader2(
-            triggerOffset: 80,
+            // 滑到底就直接換話，不用長拖再放開（triggerWhenReach 只在手指還按著時生效，
+            // 慣性滑動不會誤觸）
+            triggerOffset: kChapterSwitchTriggerOffset,
+            triggerWhenReach: true,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -330,7 +338,8 @@ class ComicReaderPage extends GetView<ComicReaderController> {
             ),
           ),
           footer: MaterialFooter2(
-            triggerOffset: 80,
+            triggerOffset: kChapterSwitchTriggerOffset,
+            triggerWhenReach: true,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -446,7 +455,8 @@ class ComicReaderPage extends GetView<ComicReaderController> {
   Widget buildVertical() {
     return EasyRefresh(
       header: MaterialHeader2(
-        triggerOffset: 80,
+        triggerOffset: kChapterSwitchTriggerOffset,
+        triggerWhenReach: true,
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -460,7 +470,8 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         ),
       ),
       footer: MaterialFooter2(
-        triggerOffset: 80,
+        triggerOffset: kChapterSwitchTriggerOffset,
+        triggerWhenReach: true,
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,

@@ -56,7 +56,8 @@ class AppSettingsService extends GetxController {
     autoClaimTask.value = LocalStorageService.instance
         .getValue(LocalStorageService.kAutoClaimTask, true);
     subscribeSort.value = LocalStorageService.instance
-        .getValue(LocalStorageService.kSubscribeSort, 0);
+        .getValue(LocalStorageService.kSubscribeSort, kSubscribeSortDefault);
+    _migrateSubscribeSortDefault();
     //小说
     novelReaderDirection.value = LocalStorageService.instance
         .getValue(LocalStorageService.kNovelReaderDirection, 0);
@@ -541,13 +542,31 @@ class AppSettingsService extends GetxController {
   }
 
   /// 我的订阅排序
-  /// * [0] 订阅顺序（接口默认）
-  /// * [1] 更新时间
-  RxInt subscribeSort = 0.obs;
+  /// * [0] 订阅时间（新到旧，接口默认顺序）
+  /// * [1] 订阅时间（旧到新）
+  /// * [2] 更新时间（新到旧）
+  /// * [3] 更新时间（旧到新）
+  static const int kSubscribeSortDefault = 2;
+  RxInt subscribeSort = kSubscribeSortDefault.obs;
   void setSubscribeSort(int value) {
     subscribeSort.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kSubscribeSort, value);
+  }
+
+  /// 书架预设改成「更新时间 ↓」：旧版本存过订阅顺序的装置也切换一次，
+  /// 之后使用者再自己挑就不会被覆盖。
+  void _migrateSubscribeSortDefault() {
+    var done = LocalStorageService.instance
+        .getValue(LocalStorageService.kSubscribeSortDefaultV2, false);
+    if (done) {
+      return;
+    }
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kSubscribeSortDefaultV2, true);
+    if (subscribeSort.value == 0 || subscribeSort.value == 1) {
+      setSubscribeSort(kSubscribeSortDefault);
+    }
   }
 
   /// 阅读器屏幕亮度（0.05-1.0，-1 表示跟随系统）

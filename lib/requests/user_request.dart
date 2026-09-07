@@ -332,7 +332,9 @@ class UserRequest {
         ...(subType != 1 ? {"status": subType} : {}),
         "firstLetter": letter,
         "page": page,
-        "size": 20
+        // 服务端最多接受 50，再大会退回一页 12 笔；
+        // 书架预设依更新时间排序要补齐全部分页，一页 50 可以少一半请求
+        "size": 50
       },
       needLogin: true,
       checkCode: true,

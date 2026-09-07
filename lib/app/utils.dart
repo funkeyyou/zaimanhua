@@ -53,6 +53,29 @@ class Utils {
     return dateFormat.format(dt);
   }
 
+  /// 相对时间：刚刚 / N分钟前 / N小时前 / N天前，超过 30 天显示日期
+  /// 书架的「上次更新」用这个，跟官方 App 的显示方式一致
+  static String friendlyTimestamp(int ts) {
+    if (ts <= 0) {
+      return "";
+    }
+    var dt = DateTime.fromMillisecondsSinceEpoch(ts * 1000);
+    var diff = DateTime.now().difference(dt);
+    if (diff.isNegative || diff.inMinutes < 1) {
+      return "刚刚".i18n;
+    }
+    if (diff.inMinutes < 60) {
+      return "${diff.inMinutes}分钟前".i18n;
+    }
+    if (diff.inHours < 24) {
+      return "${diff.inHours}小时前".i18n;
+    }
+    if (diff.inDays < 30) {
+      return "${diff.inDays}天前".i18n;
+    }
+    return formatTimestampToDate(ts);
+  }
+
   /// 时间戳格式化-毫秒
   static String formatTimestampMS(int ts) {
     var dt = DateTime.fromMillisecondsSinceEpoch(ts);

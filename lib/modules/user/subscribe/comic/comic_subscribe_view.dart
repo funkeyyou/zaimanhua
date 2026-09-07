@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/app/utils.dart';
 import 'package:zai_x/models/user/subscribe_comic_model.dart';
 import 'package:zai_x/modules/user/subscribe/comic/comic_subscribe_controller.dart';
 import 'package:zai_x/routes/app_navigator.dart';
@@ -235,6 +236,21 @@ class ComicSubscribeView extends StatelessWidget {
                   ),
                 ),
               ),
+              // 上次更新時間（如：6小时前），跟官方书架一致
+              if (item.lastUpdateTime > 0)
+                Padding(
+                  padding: AppStyle.edgeInsetsH4.copyWith(top: 2),
+                  child: Text(
+                    Utils.friendlyTimestamp(item.lastUpdateTime),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.grey.withValues(alpha: .8),
+                      fontSize: 11.0,
+                      height: 1.2,
+                    ),
+                  ),
+                ),
               AppStyle.vGap4,
             ],
           ),

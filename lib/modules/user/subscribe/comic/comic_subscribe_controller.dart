@@ -133,15 +133,10 @@ class ComicSubscribeController
         items = items.reversed.toList();
         break;
       case 2:
-        // 章節 ID 為全站遞增，數字越大代表更新時間越近
-        items.sort(
-          (a, b) => b.lastUpdateChapterId.compareTo(a.lastUpdateChapterId),
-        );
+        items.sort((a, b) => b.updateSortKey.compareTo(a.updateSortKey));
         break;
       case 3:
-        items.sort(
-          (a, b) => a.lastUpdateChapterId.compareTo(b.lastUpdateChapterId),
-        );
+        items.sort((a, b) => a.updateSortKey.compareTo(b.updateSortKey));
         break;
     }
     list.value = items;

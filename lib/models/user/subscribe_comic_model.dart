@@ -17,6 +17,7 @@ class UserSubscribeComicItemModel {
     required this.subReaded,
     required this.lastUpdateChapterId,
     required this.lastUpdateChapterName,
+    required this.lastUpdateTime,
     required this.comicPy,
     required this.status,
     required this.readingRecord,
@@ -31,6 +32,8 @@ class UserSubscribeComicItemModel {
         subReaded: asT<int>(json['sub_readed'])!,
         lastUpdateChapterId: asT<int>(json['last_update_chapter_id'])!,
         lastUpdateChapterName: asT<String>(json['last_update_chapter_name'])!,
+        // 接口的更新时间（秒）。章节 id 不是全站递增，排序只能靠这个
+        lastUpdateTime: asT<int>(json['last_updatetime']) ?? 0,
         comicPy: asT<String>(json['comic_py'])!,
         status: asT<String>(json['status'])!,
         readingRecord: ReadingRecord.fromJson(
@@ -44,12 +47,21 @@ class UserSubscribeComicItemModel {
   int subReaded;
   int lastUpdateChapterId;
   String lastUpdateChapterName;
+  int lastUpdateTime;
   String comicPy;
   String status;
   ReadingRecord readingRecord;
 
   var isChecked = false.obs;
   var hasNew = false.obs;
+
+  /// 更新時間排序鍵。
+  ///
+  /// 章節 ID 並不是全站遞增（同一天更新的兩部作品，章節 ID 可能差好幾千），
+  /// 拿來當更新順序會讓最近更新的作品掉到後面。接口另外給了 last_updatetime，
+  /// 那才是真正的更新時間；少數沒有這欄位的舊資料退回章節 ID，至少順序穩定。
+  int get updateSortKey =>
+      lastUpdateTime > 0 ? lastUpdateTime : lastUpdateChapterId;
 
   @override
   String toString() {
@@ -63,6 +75,7 @@ class UserSubscribeComicItemModel {
         'sub_readed': subReaded,
         'last_update_chapter_id': lastUpdateChapterId,
         'last_update_chapter_name': lastUpdateChapterName,
+        'last_updatetime': lastUpdateTime,
         'comic_py': comicPy,
         'status': status,
         'readingRecord': readingRecord,

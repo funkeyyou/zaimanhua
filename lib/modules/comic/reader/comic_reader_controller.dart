@@ -505,6 +505,9 @@ class ComicReaderController extends BaseController {
 
   /// 下一章
   void nextChapter() {
+    if (_chapterSwitchTooSoon()) {
+      return;
+    }
     if (chapterIndex.value == chapters.length - 1) {
       SmartDialog.showToast("后面没有了".i18n);
       return;
@@ -516,6 +519,9 @@ class ComicReaderController extends BaseController {
 
   /// 上一章
   void forwardChapter({bool toLastPage = false}) {
+    if (_chapterSwitchTooSoon()) {
+      return;
+    }
     if (chapterIndex.value == 0) {
       SmartDialog.showToast("前面没有了".i18n);
       return;
@@ -524,6 +530,20 @@ class ComicReaderController extends BaseController {
     openAtLastPage = toLastPage;
     chapterIndex.value -= 1;
     loadDetail();
+  }
+
+  DateTime? _lastChapterSwitchAt;
+
+  /// 越界滑動換話是手指還按著就觸發的，同一個手勢可能連續送好幾次；
+  /// 太密集的換話一律忽略，避免一次跳過兩話或連續跳出提示。
+  bool _chapterSwitchTooSoon() {
+    var now = DateTime.now();
+    var last = _lastChapterSwitchAt;
+    if (last != null && now.difference(last).inMilliseconds < 600) {
+      return true;
+    }
+    _lastChapterSwitchAt = now;
+    return false;
   }
 
   /// 下一页
