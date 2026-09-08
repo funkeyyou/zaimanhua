@@ -1,26 +1,34 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-class LocalImage extends StatelessWidget {
+class LocalImage extends StatefulWidget {
   final String path;
   final double? width;
   final double? height;
   final BoxFit? fit;
   final double borderRadius;
   final bool progress;
+  final VoidCallback? onLoaded;
   const LocalImage(this.path,
       {this.width,
       this.height,
       this.fit = BoxFit.cover,
       this.borderRadius = 0,
       this.progress = false,
+      this.onLoaded,
       super.key});
 
   @override
+  State<LocalImage> createState() => _LocalImageState();
+}
+
+class _LocalImageState extends State<LocalImage> {
+  String? _notifiedPath;
+
+  @override
   Widget build(BuildContext context) {
-    if (path.isEmpty) {
+    if (widget.path.isEmpty) {
       return Container(
         decoration: BoxDecoration(
           color: Colors.grey.withValues(alpha: .1),
@@ -33,34 +41,39 @@ class LocalImage extends StatelessWidget {
       );
     }
     return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: FutureBuilder(
-        future: File(path).readAsBytes(),
-        builder: (_, snap) {
-          if (snap.hasError) {
-            return Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.withValues(alpha: .1),
-              ),
-              child: const Icon(
-                Icons.broken_image,
-                color: Colors.grey,
-                size: 24,
-              ),
-            );
-          }
-          if (!snap.hasData) {
+      borderRadius: BorderRadius.circular(widget.borderRadius),
+      child: Image.file(
+        File(widget.path),
+        fit: widget.fit,
+        height: widget.height,
+        width: widget.width,
+        errorBuilder: (_, error, stack) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.withValues(alpha: .1),
+            ),
+            child: const Icon(
+              Icons.broken_image,
+              color: Colors.grey,
+              size: 24,
+            ),
+          );
+        },
+        frameBuilder: (context, child, frame, synchronous) {
+          if (frame == null) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          return Image.memory(
-            snap.data as Uint8List,
-            fit: fit,
-            height: height,
-            width: width,
-          );
+          if (_notifiedPath != widget.path && widget.onLoaded != null) {
+            final path = widget.path;
+            _notifiedPath = path;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted && widget.path == path) widget.onLoaded?.call();
+            });
+          }
+          return child;
         },
       ),
     );

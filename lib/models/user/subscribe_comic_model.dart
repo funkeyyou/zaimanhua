@@ -37,7 +37,7 @@ class UserSubscribeComicItemModel {
         comicPy: asT<String>(json['comic_py'])!,
         status: asT<String>(json['status'])!,
         readingRecord: ReadingRecord.fromJson(
-            asT<Map<String, dynamic>>(json['readingRecord'])!),
+            asT<Map<String, dynamic>>(json['readingRecord']) ?? {}),
         hasNew: (asT<int>(json['sub_readed']) == 0).obs,
       );
 
@@ -98,17 +98,17 @@ class ReadingRecord {
   });
 
   factory ReadingRecord.fromJson(Map<String, dynamic> json) => ReadingRecord(
-        typeName: asT<String>(json['type_name'])!,
-        uid: asT<int>(json['uid'])!,
-        source: asT<int>(json['source'])!,
-        bizId: asT<int>(json['biz_id'])!,
-        chapterId: asT<int>(json['chapter_id'])!,
-        viewingTime: asT<int>(json['viewing_time'])!,
-        record: asT<int>(json['record'])!,
-        volumeId: asT<int>(json['volume_id'])!,
-        totalNum: asT<int>(json['total_num'])!,
-        chapterName: asT<String>(json['chapter_name'])!,
-        volumeName: asT<String>(json['volume_name'])!,
+        typeName: asT<String>(json['type_name']) ?? '',
+        uid: asT<int>(json['uid']) ?? 0,
+        source: asT<int>(json['source']) ?? 0,
+        bizId: asT<int>(json['biz_id']) ?? 0,
+        chapterId: asT<int>(json['chapter_id']) ?? 0,
+        viewingTime: asT<int>(json['viewing_time']) ?? 0,
+        record: asT<int>(json['record']) ?? 0,
+        volumeId: asT<int>(json['volume_id']) ?? 0,
+        totalNum: asT<int>(json['total_num']) ?? 0,
+        chapterName: asT<String>(json['chapter_name']) ?? '',
+        volumeName: asT<String>(json['volume_name']) ?? '',
       );
 
   String typeName;

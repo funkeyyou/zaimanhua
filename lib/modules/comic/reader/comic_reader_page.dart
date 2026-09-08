@@ -306,13 +306,14 @@ class ComicReaderPage extends GetView<ComicReaderController> {
   Widget buildHorizontal() {
     // 響應式讀取必須留在 Obx 的 build 期間：LayoutBuilder 的 builder 於 layout 階段
     // 才執行，屆時的 .value 讀取不會被外層 Obx 追蹤，故先在此取值再往下傳。
-    var mode = controller.settings.comicReaderDualPage.value;
+    var mode = controller.dualPageMode;
     var dualActive = controller.isDualPaging;
     var groups = controller.pageGroups.toList();
     var urls = controller.detail.value.pageUrls;
     var reverse = controller.direction.value == ReaderDirection.kRightToLeft;
     var locked = controller.lockSwipe.value;
     var preload = controller.settings.eInkMode.value ? 2 : 4;
+    final generation = controller.pageGeneration;
     return LayoutBuilder(
       builder: (context, box) {
         // 寬螢幕（平板橫屏、折疊機展開態）才自動啟用雙頁對開
@@ -368,11 +369,16 @@ class ComicReaderPage extends GetView<ComicReaderController> {
           child: PreloadPageView.builder(
             controller: controller.preloadPageController,
             onPageChanged: (e) {
+              if (controller.isClosed ||
+                  generation != controller.pageGeneration) {
+                return;
+              }
               if (dualActive && e < groups.length) {
                 controller.currentIndex.value = groups[e].first;
               } else {
                 controller.currentIndex.value = e;
               }
+              controller.markCompletedIfVisible();
             },
             reverse: reverse,
             physics: locked ? const NeverScrollableScrollPhysics() : null,
@@ -421,7 +427,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
       if (index == urls.length - 1 && urls[index] == "TC") {
         return buildViewPoints();
       }
-      return buildZoomable(buildPageImage(urls[index]));
+      return buildZoomable(buildPageImage(urls[index], index));
     }
     // 對開：右到左閱讀時，較前的一頁放在右邊
     var ordered = reverse ? pages.reversed.toList() : pages;
@@ -430,7 +436,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: ordered
             .where((p) => p < urls.length)
-            .map<Widget>((p) => Expanded(child: buildPageImage(urls[p])))
+            .map<Widget>((p) => Expanded(child: buildPageImage(urls[p], p)))
             .toList(),
       ),
     );
@@ -447,13 +453,20 @@ class ComicReaderPage extends GetView<ComicReaderController> {
     );
   }
 
-  Widget buildPageImage(String url) {
+  Widget buildPageImage(String url, int page, {bool vertical = false}) {
+    final generation = controller.pageGeneration;
+    void loaded() => controller.onPageImageLoaded(generation, page);
     return controller.detail.value.isLocal
-        ? LocalImage(url, fit: BoxFit.contain)
+        ? LocalImage(url,
+            key: ValueKey('$generation:$page:$url'),
+            fit: BoxFit.contain,
+            onLoaded: loaded)
         : NetImage(
             url,
-            fit: BoxFit.contain,
+            key: ValueKey('$generation:$page:$url'),
+            fit: vertical ? BoxFit.fitWidth : BoxFit.contain,
             progress: true,
+            onLoaded: loaded,
           );
   }
 
@@ -508,13 +521,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
             constraints: const BoxConstraints(
               minHeight: 200,
             ),
-            child: controller.detail.value.isLocal
-                ? LocalImage(url, fit: BoxFit.contain)
-                : NetImage(
-                    url,
-                    fit: BoxFit.fitWidth,
-                    progress: true,
-                  ),
+            child: buildPageImage(url, i, vertical: true),
           );
         },
       ),

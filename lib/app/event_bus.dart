@@ -11,6 +11,8 @@ class EventBus {
   /// 更新了漫画记录
   static const String kUpdatedComicHistory = "UpdateComicHistory";
 
+  static const String kComicCompletionChanged = "ComicCompletionChanged";
+
   /// 更新了小说记录
   static const String kUpdatedNovelHistory = "UpdateNovelHistory";
 

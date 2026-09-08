@@ -258,6 +258,7 @@ class ComicRecommendView extends StatelessWidget {
                     child: NetImage(
                       item.cover,
                       width: 270,
+                      thumbnail: true,
                       height: 360,
                     ),
                   ),
@@ -311,6 +312,7 @@ class ComicRecommendView extends StatelessWidget {
                   NetImage(
                     item.cover,
                     width: 56,
+                    thumbnail: true,
                     height: 56,
                     borderRadius: 32,
                   ),
@@ -357,6 +359,7 @@ class ComicRecommendView extends StatelessWidget {
                     child: NetImage(
                       item.cover,
                       width: 320,
+                      thumbnail: true,
                       height: 170,
                     ),
                   ),

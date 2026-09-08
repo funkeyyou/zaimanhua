@@ -4,6 +4,7 @@ import 'package:zai_x/app/utils.dart';
 import 'package:zai_x/models/user/subscribe_comic_model.dart';
 import 'package:zai_x/modules/user/subscribe/comic/comic_subscribe_controller.dart';
 import 'package:zai_x/routes/app_navigator.dart';
+import 'package:zai_x/services/comic_completion_service.dart';
 import 'package:zai_x/widgets/keep_alive_wrapper.dart';
 import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_grid_view.dart';
@@ -38,8 +39,7 @@ class ComicSubscribeView extends StatelessWidget {
                   types: controller.types,
                   value: controller.type.value,
                   onSelected: (e) {
-                    controller.type.value = e;
-                    controller.refreshData();
+                    controller.setType(e);
                   },
                 ),
                 buildFilter(
@@ -52,6 +52,67 @@ class ComicSubscribeView extends StatelessWidget {
               ],
             ),
           ),
+          Obx(() => SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: AppStyle.edgeInsetsH12,
+                child: Row(
+                  children: controller.readFilters.entries
+                      .map((entry) => Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: ChoiceChip(
+                              label: Text(entry.value),
+                              selected:
+                                  controller.readFilter.value == entry.key,
+                              onSelected: (_) =>
+                                  controller.setReadFilter(entry.key),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              )),
+          Obx(() {
+            final saved = controller.savedAt.value;
+            return SizedBox(
+              height: 36,
+              child: Padding(
+                padding: AppStyle.edgeInsetsH12,
+                child: Row(children: [
+                  if (controller.refreshing.value) ...[
+                    const SizedBox(
+                        width: 12,
+                        height: 12,
+                        child: CircularProgressIndicator(strokeWidth: 2)),
+                    AppStyle.hGap8,
+                  ],
+                  Expanded(
+                      child: Text(
+                    controller.refreshFailed.value
+                        ? '刷新失败，保留上次的书架'.i18n
+                        : controller.refreshing.value
+                            ? '正在检查更新…'.i18n
+                            : saved == null
+                                ? ''
+                                : '上次同步：${Utils.friendlyTimestamp(saved.millisecondsSinceEpoch ~/ 1000)}'
+                                    .i18n,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                  )),
+                  if (controller.hasPendingUpdate.value)
+                    TextButton(
+                      onPressed: controller.editMode.value
+                          ? null
+                          : controller.showPendingUpdate,
+                      child: Text('查看更新'.i18n),
+                    )
+                  else if (controller.refreshFailed.value)
+                    TextButton(
+                        onPressed: controller.refreshData,
+                        child: Text('重试'.i18n)),
+                ]),
+              ),
+            );
+          }),
           Divider(
             color: Colors.grey.withValues(alpha: .2),
             height: 1.0,
@@ -64,7 +125,8 @@ class ComicSubscribeView extends StatelessWidget {
                   if (count < 3) count = 3;
                   return PageGridView(
                     pageController: controller,
-                    firstRefresh: true,
+                    firstRefresh: false,
+                    loadMore: false,
                     crossAxisCount: count,
                     padding: AppStyle.edgeInsetsA12,
                     mainAxisSpacing: 12,
@@ -126,13 +188,14 @@ class ComicSubscribeView extends StatelessWidget {
   }
 
   Widget buildItem(UserSubscribeComicItemModel item) {
+    final state = controller.stateOf(item);
     return ShadowCard(
+      key: ValueKey(item.id),
       onTap: () {
         if (controller.editMode.value) {
           item.isChecked.value = !item.isChecked.value;
           return;
         }
-        item.hasNew.value = false;
         AppNavigator.toComicDetail(item.id);
       },
       onLongPress: () {
@@ -156,6 +219,7 @@ class ComicSubscribeView extends StatelessWidget {
                     child: NetImage(
                       item.cover,
                       borderRadius: 4,
+                      thumbnail: true,
                     ),
                   ),
                   Positioned(
@@ -184,25 +248,27 @@ class ComicSubscribeView extends StatelessWidget {
                   Positioned(
                     right: 0,
                     top: 0,
-                    child: Obx(
-                      () => Visibility(
-                        visible: item.hasNew.value,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.deepOrange,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(4),
-                              topRight: Radius.circular(4),
-                            ),
+                    child: Visibility(
+                      visible: state != ComicUpdateState.unknown,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: state == ComicUpdateState.caughtUp
+                              ? Colors.teal
+                              : Colors.deepOrange,
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(4),
+                            topRight: Radius.circular(4),
                           ),
-                          padding:
-                              AppStyle.edgeInsetsH8.copyWith(top: 2, bottom: 2),
-                          child: Text(
-                            "新".i18n,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white,
-                            ),
+                        ),
+                        padding:
+                            AppStyle.edgeInsetsH8.copyWith(top: 2, bottom: 2),
+                        child: Text(
+                          state == ComicUpdateState.caughtUp
+                              ? '已追平'.i18n
+                              : '未读更新'.i18n,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.white,
                           ),
                         ),
                       ),

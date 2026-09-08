@@ -13,6 +13,8 @@ import 'package:zai_x/requests/user_request.dart';
 import 'package:zai_x/routes/app_navigator.dart';
 import 'package:zai_x/services/app_settings_service.dart';
 import 'package:zai_x/services/db_service.dart';
+import 'package:zai_x/services/comic_completion_service.dart';
+import 'package:zai_x/services/local_storage_service.dart';
 import 'package:zai_x/services/user_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -100,8 +102,13 @@ class ComicDetailControler extends BaseController {
   void loadReadChapters() {
     var ids = DBService.instance.getComicReadChapters(comicId);
     var last = history.value?.chapterId ?? 0;
-    if (last != 0 && ids.add(last)) {
-      DBService.instance.markComicChaptersRead(comicId, [last]);
+    final box = LocalStorageService.instance.settingsBox;
+    final migrationKey = 'ReadChapterHistoryMigrated:$comicId';
+    if (box.get(migrationKey) != true && last != 0) {
+      if (ids.add(last)) {
+        DBService.instance.markComicChaptersRead(comicId, [last]);
+      }
+      box.put(migrationKey, true);
     }
     readChapterIds.assignAll(ids);
   }
@@ -113,9 +120,13 @@ class ComicDetailControler extends BaseController {
     if (isChapterRead(item.chapterId)) {
       await DBService.instance
           .markComicChaptersUnread(comicId, [item.chapterId]);
+      await ComicCompletionService.current()
+          .setChapters(comicId, [item.chapterId], completed: false);
       SmartDialog.showToast("已标记为未读".i18n);
     } else {
       await DBService.instance.markComicChaptersRead(comicId, [item.chapterId]);
+      await ComicCompletionService.current()
+          .setChapters(comicId, [item.chapterId], completed: true);
       SmartDialog.showToast("已标记为已读".i18n);
     }
     loadReadChapters();
@@ -134,12 +145,17 @@ class ComicDetailControler extends BaseController {
       if (chapter.chapterId == item.chapterId) break;
     }
     await DBService.instance.markComicChaptersRead(comicId, ids);
+    await ComicCompletionService.current()
+        .setChapters(comicId, ids, completed: true);
     loadReadChapters();
     SmartDialog.showToast("已标记这一话之前的章节为已读".i18n);
   }
 
   /// 清掉这部漫画的已读标记
   Future<void> clearReadChapters() async {
+    await ComicCompletionService.current().setChapters(comicId,
+        detail.value.volumes.expand((v) => v.chapters).map((c) => c.chapterId),
+        completed: false);
     await DBService.instance
         .markComicChaptersUnread(comicId, readChapterIds.toList());
     loadReadChapters();

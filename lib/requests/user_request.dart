@@ -16,6 +16,7 @@ import 'package:zai_x/models/user/user_profile_model.dart';
 import 'package:zai_x/requests/common/api.dart';
 import 'package:zai_x/requests/common/http_client.dart';
 import 'package:zai_x/services/db_service.dart';
+import 'package:zai_x/services/comic_shelf_repository.dart';
 import 'package:zai_x/services/user_service.dart';
 import 'package:zai_x/app/i18n.dart';
 
@@ -323,7 +324,13 @@ class UserRequest {
   /// - [subType] 全部=1，未读=2，已读=3，完结=4
   /// - [letter] all=全部
   Future<List<UserSubscribeComicItemModel>> comicSubscribes(
-      {required int subType, int page = 1, String letter = ""}) async {
+          {required int subType, int page = 1, String letter = ""}) async =>
+      (await comicSubscriptionPage(
+              subType: subType, page: page, letter: letter))
+          .items;
+
+  Future<ComicSubscriptionPage> comicSubscriptionPage(
+      {int subType = 1, int page = 1, String letter = ""}) async {
     var list = <UserSubscribeComicItemModel>[];
     var result = await HttpClient.instance.getJson(
       '/comic/sub/list',
@@ -342,7 +349,9 @@ class UserRequest {
     for (var item in result["subList"]) {
       list.add(UserSubscribeComicItemModel.fromJson(item));
     }
-    return list;
+    final total = result['total'];
+    return ComicSubscriptionPage(list,
+        total: total is int && total >= 0 ? total : null);
   }
 
   /// 我的小说订阅

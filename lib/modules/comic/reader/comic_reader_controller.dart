@@ -13,6 +13,9 @@ import 'package:zai_x/app/app_style.dart';
 import 'package:zai_x/app/event_bus.dart';
 import 'package:zai_x/app/utils.dart';
 import 'package:zai_x/services/app_settings_service.dart';
+import 'package:zai_x/services/comic_completion_service.dart';
+import 'package:zai_x/services/comic_reader_preferences.dart';
+import 'package:zai_x/services/local_storage_service.dart';
 import 'package:zai_x/app/controller/base_controller.dart';
 import 'package:zai_x/app/log.dart';
 import 'package:zai_x/models/comic/chapter_info.dart';
@@ -108,6 +111,19 @@ class ComicReaderController extends BaseController {
   /// 阅读方向
   var direction = 0.obs;
 
+  final preferences = const ComicReaderPreferences().obs;
+  ComicReaderPreferencesStore get _preferencesStore =>
+      ComicReaderPreferencesStore(LocalStorageService.instance.settingsBox);
+  int get dualPageMode =>
+      preferences.value.dualPage ?? settings.comicReaderDualPage.value;
+  bool get coverAlone =>
+      preferences.value.coverAlone ?? settings.comicReaderDualPageCover.value;
+  int _layoutGeneration = 0;
+  final _loadedPages = <int>{};
+  bool _completionRecorded = false;
+  ComicCompletionService? _completion;
+  int get pageGeneration => _loadGeneration;
+
   /// 左手模式
   bool get leftHandMode => settings.comicReaderLeftHandMode.value;
 
@@ -129,12 +145,15 @@ class ComicReaderController extends BaseController {
 
   @override
   void onInit() {
+    preferences.value = _preferencesStore.read(comicId);
+    _completion = ComicCompletionService.current();
     initConnectivity();
     initBattery();
     if (isLongComic) {
       direction.value = ReaderDirection.kUpToDown;
     } else {
-      direction.value = settings.comicReaderDirection.value;
+      direction.value =
+          preferences.value.direction ?? settings.comicReaderDirection.value;
     }
 
     if (settings.comicReaderFullScreen.value) {
@@ -148,7 +167,10 @@ class ComicReaderController extends BaseController {
     );
 
     // 翻到接近本话结尾时先把下一话准备好
-    ever(currentIndex, (_) => maybePrefetchNextChapter());
+    _pageWorker = ever(currentIndex, (_) {
+      maybePrefetchNextChapter();
+      markCompletedIfVisible();
+    });
 
     itemPositionsListener.itemPositions.addListener(updateItemPosition);
     if (settings.readerKeepScreenOn.value) {
@@ -216,6 +238,9 @@ class ComicReaderController extends BaseController {
   @override
   void onClose() {
     _loadGeneration++;
+    _layoutGeneration++;
+    _pageWorker?.dispose();
+    _prefetchedChapters.clear();
     WakelockPlus.disable().catchError((e) => Log.logPrint(e));
     settings.restoreSystemBrightness();
     focusNode.dispose();
@@ -227,6 +252,7 @@ class ComicReaderController extends BaseController {
     itemPositionsListener.itemPositions.removeListener(updateItemPosition);
     uploadHistory();
     _saveReadingTime();
+    preloadPageController.dispose();
     super.onClose();
   }
 
@@ -238,6 +264,7 @@ class ComicReaderController extends BaseController {
   /// 除了让服务器上的进度更接近实际，官方「累计观看十分钟漫画」这类任务
   /// 也可能是靠回传的间隔在算时间，只在开合章节时传两次是不够的。
   Timer? _historyTimer;
+  Worker? _pageWorker;
 
   void _startHistoryTimer() {
     _historyTimer?.cancel();
@@ -264,13 +291,16 @@ class ComicReaderController extends BaseController {
       return;
     }
 
-    var index = items
-        .where((ItemPosition position) => position.itemTrailingEdge > 0)
+    final visible = items.where((position) =>
+        position.itemTrailingEdge > 0 && position.itemLeadingEdge < 1);
+    if (visible.isEmpty) return;
+    var index = visible
         .reduce((ItemPosition min, ItemPosition position) =>
             position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
         .index;
 
     currentIndex.value = index;
+    markCompletedIfVisible();
   }
 
   /// 加载信息
@@ -278,6 +308,8 @@ class ComicReaderController extends BaseController {
     if (isClosed) return;
     final generation = ++_loadGeneration;
     _historyReady = false;
+    _loadedPages.clear();
+    _completionRecorded = false;
     final chapterId = chapters[chapterIndex.value].chapterId;
     try {
       // 预先抓好的下一话可以直接用，省掉整屏 loading
@@ -329,6 +361,7 @@ class ComicReaderController extends BaseController {
         if (isClosed || generation != _loadGeneration) return;
         jumpToPage(targetIndex);
         _historyReady = true;
+        markCompletedIfVisible();
         uploadHistory();
       });
       pageLoadding.value = false;
@@ -372,8 +405,11 @@ class ComicReaderController extends BaseController {
         chapterId: item.chapterId,
         useHD: AppSettingsService.instance.comicReaderHD.value,
       );
+      if (isClosed) return;
+      _prefetchedChapters.clear();
       _prefetchedChapters[item.chapterId] = result;
       for (var url in result.pageUrls.take(2)) {
+        if (isClosed) return;
         if (url.isEmpty || url == "TC") {
           continue;
         }
@@ -610,7 +646,7 @@ class ComicReaderController extends BaseController {
     var hasViewPoint = urls.last == "TC";
     var imageCount = hasViewPoint ? urls.length - 1 : urls.length;
     var i = 0;
-    if (settings.comicReaderDualPageCover.value && imageCount > 0) {
+    if (coverAlone && imageCount > 0) {
       groups.add([0]);
       i = 1;
     }
@@ -643,20 +679,22 @@ class ComicReaderController extends BaseController {
 
   /// 切換雙頁生效狀態，並保持目前頁面位置
   void setDualPageActive(bool value) {
+    if (isClosed) return;
     if (dualPageActive.value == value) {
       return;
     }
-    var page = currentIndex.value;
+    var page = _historyReady ? currentIndex.value : initialIndex;
     dualPageActive.value = value;
     buildPageGroups();
-    Future.delayed(const Duration(milliseconds: 50), () {
-      jumpToPage(page);
-    });
+    _restoreAfterLayout(page);
   }
 
   /// 跳轉到指定分組
   void jumpToGroup(int group, {bool anime = false}) {
-    if (group < 0 || group >= pageGroups.length) {
+    if (isClosed ||
+        !preloadPageController.hasClients ||
+        group < 0 ||
+        group >= pageGroups.length) {
       return;
     }
     currentIndex.value = pageGroups[group].first;
@@ -668,15 +706,19 @@ class ComicReaderController extends BaseController {
 
   /// 跳转页数
   void jumpToPage(int page, {bool anime = false}) {
+    if (isClosed) return;
     //竖向
     if (direction.value == ReaderDirection.kUpToDown) {
-      itemScrollController.jumpTo(index: page);
+      if (itemScrollController.isAttached) {
+        itemScrollController.jumpTo(index: page);
+      }
       return;
     }
     if (isDualPaging) {
       jumpToGroup(groupIndexOf(page), anime: anime);
       return;
     }
+    if (!preloadPageController.hasClients) return;
     anime && pageAnimation
         ? preloadPageController.animateToPage(page,
             duration: const Duration(milliseconds: 200), curve: Curves.linear)
@@ -866,6 +908,17 @@ class ComicReaderController extends BaseController {
                 () => ListView(
                   padding: AppStyle.edgeInsetsA12,
                   children: [
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text('本作品阅读设置'.i18n),
+                      subtitle: Text('阅读方向、双页与封面设置仅用于这部作品'.i18n),
+                      trailing: TextButton(
+                        onPressed: preferences.value.isCustom
+                            ? resetPreferences
+                            : null,
+                        child: Text('恢复全局'.i18n),
+                      ),
+                    ),
                     if (settings.brightnessSupported) ...[
                       buildBGItem(
                         child: ListTile(
@@ -922,9 +975,8 @@ class ComicReaderController extends BaseController {
                                   onTap: () {
                                     setDirection(ReaderDirection.kLeftToRight);
                                   },
-                                  selected:
-                                      settings.comicReaderDirection.value ==
-                                          ReaderDirection.kLeftToRight,
+                                  selected: direction.value ==
+                                      ReaderDirection.kLeftToRight,
                                   child: const Icon(Remix.arrow_right_line),
                                 ),
                                 AppStyle.hGap8,
@@ -932,9 +984,8 @@ class ComicReaderController extends BaseController {
                                   onTap: () {
                                     setDirection(ReaderDirection.kRightToLeft);
                                   },
-                                  selected:
-                                      settings.comicReaderDirection.value ==
-                                          ReaderDirection.kRightToLeft,
+                                  selected: direction.value ==
+                                      ReaderDirection.kRightToLeft,
                                   child: const Icon(Remix.arrow_left_line),
                                 ),
                                 AppStyle.hGap8,
@@ -942,9 +993,8 @@ class ComicReaderController extends BaseController {
                                   onTap: () {
                                     setDirection(ReaderDirection.kUpToDown);
                                   },
-                                  selected:
-                                      settings.comicReaderDirection.value ==
-                                          ReaderDirection.kUpToDown,
+                                  selected: direction.value ==
+                                      ReaderDirection.kUpToDown,
                                   child: const Icon(Remix.arrow_down_line),
                                 )
                               ],
@@ -976,49 +1026,34 @@ class ComicReaderController extends BaseController {
                                   children: [
                                     buildSelectedButton(
                                       onTap: () {
-                                        settings.setComicReaderDualPage(0);
+                                        setDualPageMode(0);
                                       },
-                                      selected:
-                                          settings.comicReaderDualPage.value ==
-                                              0,
+                                      selected: dualPageMode == 0,
                                       child: Text("关闭".i18n),
                                     ),
                                     AppStyle.hGap8,
                                     buildSelectedButton(
                                       onTap: () {
-                                        settings.setComicReaderDualPage(1);
+                                        setDualPageMode(1);
                                       },
-                                      selected:
-                                          settings.comicReaderDualPage.value ==
-                                              1,
+                                      selected: dualPageMode == 1,
                                       child: Text("宽屏".i18n),
                                     ),
                                     AppStyle.hGap8,
                                     buildSelectedButton(
                                       onTap: () {
-                                        settings.setComicReaderDualPage(2);
+                                        setDualPageMode(2);
                                       },
-                                      selected:
-                                          settings.comicReaderDualPage.value ==
-                                              2,
+                                      selected: dualPageMode == 2,
                                       child: Text("总是".i18n),
                                     ),
                                   ],
                                 ),
                               ),
-                              if (settings.comicReaderDualPage.value != 0)
+                              if (dualPageMode != 0)
                                 SwitchListTile(
-                                  value:
-                                      settings.comicReaderDualPageCover.value,
-                                  onChanged: (e) {
-                                    settings.setComicReaderDualPageCover(e);
-                                    var page = currentIndex.value;
-                                    buildPageGroups();
-                                    Future.delayed(
-                                      const Duration(milliseconds: 50),
-                                      () => jumpToPage(page),
-                                    );
-                                  },
+                                  value: coverAlone,
+                                  onChanged: setCoverAlone,
                                   title: Text("封面单独一页".i18n),
                                   subtitle: Text(
                                     "第一页不与第二页并排显示".i18n,
@@ -1132,15 +1167,105 @@ class ComicReaderController extends BaseController {
   }
 
   void setDirection(int value) {
+    if (isLongComic || value == direction.value) return;
     initialIndex = currentIndex.value;
-    settings.setComicReaderDirection(value);
+    _savePreferences(preferences.value.copyWith(direction: value));
     direction.value = value;
     buildPageGroups();
-    if (initialIndex != 0) {
-      Future.delayed(const Duration(milliseconds: 200), () {
-        jumpToPage(initialIndex);
-      });
+    _restoreAfterLayout(initialIndex);
+  }
+
+  void _savePreferences(ComicReaderPreferences value) {
+    preferences.value = value;
+    unawaited(_preferencesStore
+        .write(comicId, value)
+        .catchError((e) => Log.logPrint(e)));
+  }
+
+  void setDualPageMode(int value) {
+    _savePreferences(preferences.value.copyWith(dualPage: value));
+  }
+
+  void setCoverAlone(bool value) {
+    final page = currentIndex.value;
+    _savePreferences(preferences.value.copyWith(coverAlone: value));
+    buildPageGroups();
+    _restoreAfterLayout(page);
+  }
+
+  void resetPreferences() {
+    final page = currentIndex.value;
+    preferences.value = const ComicReaderPreferences();
+    unawaited(
+        _preferencesStore.reset(comicId).catchError((e) => Log.logPrint(e)));
+    direction.value = isLongComic
+        ? ReaderDirection.kUpToDown
+        : settings.comicReaderDirection.value;
+    buildPageGroups();
+    _restoreAfterLayout(page);
+  }
+
+  void _restoreAfterLayout(int page) {
+    final layout = ++_layoutGeneration;
+    final generation = _loadGeneration;
+    _historyReady = false;
+    initialIndex = page;
+    Future.delayed(const Duration(milliseconds: 150), () {
+      if (isClosed ||
+          generation != _loadGeneration ||
+          layout != _layoutGeneration) {
+        return;
+      }
+      if (detail.value.pageUrls.isEmpty ||
+          pageLoadding.value ||
+          pageError.value) {
+        return;
+      }
+      jumpToPage(page.clamp(0, detail.value.pageUrls.length - 1));
+      _historyReady = true;
+      markCompletedIfVisible();
+    });
+  }
+
+  /// 图片解码完成后回报。预加载的末页、旧话的迟到回调不能提前清除更新提醒。
+  void onPageImageLoaded(int generation, int page) {
+    if (isClosed || generation != _loadGeneration) return;
+    _loadedPages.add(page);
+    markCompletedIfVisible();
+  }
+
+  void markCompletedIfVisible() {
+    if (isClosed ||
+        !_historyReady ||
+        pageLoadding.value ||
+        pageError.value ||
+        _completionRecorded) {
+      return;
     }
+    final count = detail.value.pageUrls.where((url) => url != 'TC').length;
+    if (count == 0 || !_loadedPages.contains(count - 1)) return;
+    bool visible;
+    if (direction.value == ReaderDirection.kUpToDown) {
+      visible = itemPositionsListener.itemPositions.value.any((p) =>
+          p.index == count - 1 &&
+          p.itemTrailingEdge > 0 &&
+          p.itemTrailingEdge <= 1.01);
+    } else {
+      visible = isDualPaging
+          ? pageGroups.isNotEmpty &&
+              pageGroups[currentGroupIndex].contains(count - 1)
+          : currentIndex.value == count - 1;
+    }
+    if (!visible) return;
+    _completionRecorded = true;
+    final generation = _loadGeneration;
+    final service = _completion ?? ComicCompletionService.current();
+    unawaited(service
+        .setChapters(comicId, [detail.value.chapterId], completed: true)
+        .catchError((e) {
+      if (generation == _loadGeneration) _completionRecorded = false;
+      Log.logPrint(e);
+    }));
   }
 
   void setShowViewPoint(bool value) {
@@ -1185,8 +1310,8 @@ class ComicReaderController extends BaseController {
   /// 记下这一话已经看过，详情页的章节列表会跟着变灰
   void _markChapterRead(int chapterId) async {
     try {
-      var changed = await DBService.instance
-          .markComicChaptersRead(comicId, [chapterId]);
+      var changed =
+          await DBService.instance.markComicChaptersRead(comicId, [chapterId]);
       if (changed) {
         ReadingStatsService.recordChapter(AppConstant.kTypeComic);
         EventBus.instance.emit(EventBus.kUpdatedComicHistory, comicId);

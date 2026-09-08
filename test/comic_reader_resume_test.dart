@@ -13,6 +13,8 @@ import 'package:zai_x/modules/comic/reader/comic_reader_controller.dart';
 import 'package:zai_x/requests/comic_request.dart';
 import 'package:zai_x/services/app_settings_service.dart';
 import 'package:zai_x/services/db_service.dart';
+import 'package:zai_x/services/comic_completion_service.dart';
+import 'support/comic_shelf_fixture.dart';
 import 'package:zai_x/services/local_storage_service.dart';
 import 'package:zai_x/services/user_service.dart';
 
@@ -21,6 +23,7 @@ void main() {
   late Directory directory;
   late DBService db;
   late AppSettingsService settings;
+  late LocalStorageService storage;
 
   setUpAll(() {
     Hive.registerAdapter(ComicHistoryAdapter());
@@ -39,8 +42,13 @@ void main() {
       'comic-resume',
       path: directory.path,
     );
+    db.comicReadChapterBox =
+        await Hive.openBox('read-chapters', path: directory.path);
     Get.put<DBService>(db);
-    Get.put<LocalStorageService>(LocalStorageService());
+    storage = LocalStorageService()
+      ..settingsBox =
+          await Hive.openBox('reader-settings', path: directory.path);
+    Get.put<LocalStorageService>(storage);
     Get.put<UserService>(_OfflineUserService());
     settings = Get.put<AppSettingsService>(_TestSettings());
   });
@@ -48,7 +56,55 @@ void main() {
   tearDown(() async {
     Get.reset();
     await db.comicHistoryBox.close();
+    await db.comicReadChapterBox.close();
+    await storage.settingsBox.close();
     await directory.delete(recursive: true);
+  });
+
+  test('preloaded last image does not count until its page is visible',
+      () async {
+    final reader = _Reader(_ChapterRequest());
+    reader.loadDetail();
+    await _settleReader();
+    final completion = ComicCompletionService.current();
+    final comic = shelfComic(7, latest: 10);
+    reader.onPageImageLoaded(reader.pageGeneration, 19);
+    expect(completion.stateOf(comic), ComicUpdateState.unread);
+    reader.currentIndex.value = 19;
+    reader.markCompletedIfVisible();
+    await Future<void>.delayed(Duration.zero);
+    expect(completion.stateOf(comic), ComicUpdateState.caughtUp);
+    reader.onDelete();
+  });
+
+  test('failed and stale images cannot complete a chapter', () async {
+    final reader = _Reader(_ChapterRequest());
+    reader.loadDetail();
+    await _settleReader();
+    reader.currentIndex.value = 19;
+    reader.markCompletedIfVisible();
+    reader.onPageImageLoaded(reader.pageGeneration - 1, 19);
+    expect(ComicCompletionService.current().stateOf(shelfComic(7, latest: 10)),
+        ComicUpdateState.unread);
+    reader.onDelete();
+  });
+
+  test(
+      'last image on the second side of a spread completes before the comments page',
+      () async {
+    final request = _ChapterRequest()
+      ..pending = Future.value(_chapter(pageCount: 19));
+    final reader = _Reader(request);
+    reader.loadDetail();
+    await _settleReader();
+    reader.dualPageActive.value = true;
+    reader.buildPageGroups();
+    reader.currentIndex.value = 17;
+    reader.onPageImageLoaded(reader.pageGeneration, 18);
+    await Future<void>.delayed(Duration.zero);
+    expect(ComicCompletionService.current().stateOf(shelfComic(7, latest: 10)),
+        ComicUpdateState.caughtUp);
+    reader.onDelete();
   });
 
   Future<void> save(int page, {DateTime? time}) => db.putComicHistory(
