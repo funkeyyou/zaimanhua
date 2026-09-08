@@ -8,7 +8,7 @@ import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/page_list_view.dart';
 import 'package:zai_x/widgets/refresh_until_widget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+import 'package:zai_x/widgets/recommendation_banner.dart';
 import 'package:get/get.dart';
 import 'package:zai_x/app/i18n.dart';
 
@@ -160,77 +160,12 @@ class ComicRecommendView extends StatelessWidget {
   }
 
   Widget buildBanner(ComicRecommendModel item) {
-    return Padding(
-      padding: AppStyle.edgeInsetsB12,
-      child: Obx(
-        () => ClipRRect(
-          borderRadius: AppStyle.radius4,
-          child: AspectRatio(
-            aspectRatio: 75 / 40,
-            child: Swiper(
-              itemWidth: 750,
-              itemHeight: 400,
-              autoplay: !AppSettingsService.instance.eInkMode.value,
-              itemCount: item.data.length,
-              itemBuilder: (_, i) => NetImage(
-                item.data[i].cover,
-                width: 750,
-                height: 400,
-              ),
-              onTap: (i) {
-                controller.openDetail(item.data[i]);
-              },
-              pagination: SwiperCustomPagination(
-                builder: (BuildContext context, SwiperPluginConfig config) {
-                  return Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                        left: 8,
-                        right: 12,
-                        top: 4,
-                        bottom: 4,
-                      ),
-                      //color: Colors.black12,
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            Colors.black38,
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              item.data[config.activeIndex].title.i18n,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  fontSize: 14, color: Colors.white),
-                            ),
-                          ),
-                          AppStyle.hGap8,
-                          PageIndicator(
-                            controller: config.pageController!,
-                            count: config.itemCount,
-                            size: 10,
-                            layout: PageIndicatorLayout.SCALE,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    return Obx(() => RecommendationBanner(
+          images: item.data.map((entry) => entry.cover).toList(),
+          titles: item.data.map((entry) => entry.title.i18n).toList(),
+          autoplay: !AppSettingsService.instance.eInkMode.value,
+          onSelected: (index) => controller.openDetail(item.data[index]),
+        ));
   }
 
   Widget buildTreeColumnGridView(List<ComicRecommendItemModel> items) {
