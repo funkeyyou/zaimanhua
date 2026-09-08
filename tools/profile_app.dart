@@ -18,13 +18,12 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized().addTimingsCallback(frames.addAll);
   var sample = 0;
   Timer.periodic(const Duration(seconds: 10), (_) {
-    if (frames.isEmpty) return;
     final build = frames.map((e) => e.buildDuration.inMicroseconds).toList()
       ..sort();
     final raster = frames.map((e) => e.rasterDuration.inMicroseconds).toList()
       ..sort();
     double p95(List<int> values) =>
-        values[((values.length - 1) * .95).round()] / 1000;
+        values.isEmpty ? 0 : values[((values.length - 1) * .95).round()] / 1000;
     final cache = PaintingBinding.instance.imageCache;
     debugPrint('ZMH_PROFILE ${jsonEncode({
           'sample': ++sample,

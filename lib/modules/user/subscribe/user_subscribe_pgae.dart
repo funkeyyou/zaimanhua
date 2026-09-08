@@ -9,6 +9,7 @@ import 'package:zai_x/app/i18n.dart';
 class UserSubscribePage extends StatelessWidget {
   final UserSubscribeController controller;
   final int type;
+  final String comicControllerTag = UniqueKey().toString();
   UserSubscribePage({this.type = 0, super.key})
       : controller = Get.put(
           UserSubscribeController(type),
@@ -43,7 +44,7 @@ class UserSubscribePage extends StatelessWidget {
       body: TabBarView(
         controller: controller.tabController,
         children: [
-          ComicSubscribeView(),
+          ComicSubscribeView(controllerTag: comicControllerTag),
           NovelSubscribeView(),
           // NewsSubscribeView(),
         ],

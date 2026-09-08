@@ -123,8 +123,8 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                 }),
               ),
               Obx(
-                () => Offstage(
-                  offstage: !controller.pageLoadding.value,
+                () => Visibility(
+                  visible: controller.pageLoadding.value,
                   child: const AppLoaddingWidget(),
                 ),
               ),

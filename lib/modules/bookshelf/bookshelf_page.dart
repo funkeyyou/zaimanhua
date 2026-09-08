@@ -32,7 +32,7 @@ class BookshelfPage extends StatelessWidget {
             ? TabBarView(
                 controller: controller.tabController,
                 children: [
-                  ComicSubscribeView(),
+                  ComicSubscribeView(controllerTag: 'bookshelf-comics'),
                   NovelSubscribeView(),
                 ],
               )
@@ -59,4 +59,3 @@ class BookshelfPage extends StatelessWidget {
     );
   }
 }
-

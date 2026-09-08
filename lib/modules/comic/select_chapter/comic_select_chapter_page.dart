@@ -40,8 +40,8 @@ class ComicSelectChapterPage extends StatelessWidget {
             child: _buildVolumes(),
           ),
           Obx(
-            () => Offstage(
-              offstage: !controller.pageLoadding.value,
+            () => Visibility(
+              visible: controller.pageLoadding.value,
               child: const AppLoaddingWidget(),
             ),
           ),

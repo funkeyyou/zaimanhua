@@ -15,8 +15,8 @@ import 'package:zai_x/app/i18n.dart';
 
 class ComicSubscribeView extends StatelessWidget {
   final ComicSubscribeController controller;
-  ComicSubscribeView({super.key})
-      : controller = Get.put(ComicSubscribeController());
+  ComicSubscribeView({super.key, String? controllerTag})
+      : controller = Get.put(ComicSubscribeController(), tag: controllerTag);
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +63,18 @@ class ComicSubscribeView extends StatelessWidget {
                               label: Text(entry.value),
                               selected:
                                   controller.readFilter.value == entry.key,
+                              showCheckmark: true,
+                              checkmarkColor:
+                                  Theme.of(context).colorScheme.primary,
+                              selectedColor: Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withValues(alpha: .2),
+                              side: BorderSide(
+                                  color: controller.readFilter.value ==
+                                          entry.key
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Colors.transparent),
                               onSelected: (_) =>
                                   controller.setReadFilter(entry.key),
                             ),
@@ -139,8 +151,8 @@ class ComicSubscribeView extends StatelessWidget {
                 }),
                 // 補分頁與排序期間蓋住中間狀態，排好再顯示
                 Obx(
-                  () => Offstage(
-                    offstage: !controller.preparing.value,
+                  () => Visibility(
+                    visible: controller.preparing.value,
                     child: Container(
                       color: Theme.of(context).scaffoldBackgroundColor,
                       child: const AppLoaddingWidget(),

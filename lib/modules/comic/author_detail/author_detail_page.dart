@@ -70,8 +70,8 @@ class ComicAuthorDetailPage extends StatelessWidget {
               ),
             ),
             Obx(
-              () => Offstage(
-                offstage: !controller.pageLoadding.value,
+              () => Visibility(
+                visible: controller.pageLoadding.value,
                 child: const AppLoaddingWidget(),
               ),
             ),

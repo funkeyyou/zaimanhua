@@ -114,8 +114,8 @@ class NovelReaderPage extends GetView<NovelReaderController> {
                   ),
                 ),
                 Obx(
-                  () => Offstage(
-                    offstage: !controller.pageLoadding.value,
+                  () => Visibility(
+                    visible: controller.pageLoadding.value,
                     child: const AppLoaddingWidget(),
                   ),
                 ),

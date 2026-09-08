@@ -158,7 +158,14 @@ class IndexPage extends GetView<IndexController> {
       () => IndexedStack(
         key: controller.indexKey,
         index: controller.index.value,
-        children: controller.pages,
+        children: [
+          for (var i = 0; i < controller.pages.length; i++)
+            TickerMode(
+              key: ValueKey(i),
+              enabled: controller.index.value == i,
+              child: controller.pages[i],
+            ),
+        ],
       ),
     );
   }
