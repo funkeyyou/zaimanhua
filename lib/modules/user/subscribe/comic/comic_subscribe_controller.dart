@@ -270,6 +270,14 @@ class ComicSubscribeController
     _toTop();
   }
 
+  void resetFilters() {
+    tag.value = '';
+    type.value = 1;
+    readFilter.value = 0;
+    applyFilterAndSort();
+    _toTop();
+  }
+
   void setType(int value) {
     type.value = value;
     applyFilterAndSort();
@@ -295,7 +303,7 @@ class ComicSubscribeController
   }
 
   Map<String, String> get tagOptions => {
-        '': '全部'.i18n,
+        '': '全部标签'.i18n,
         for (final value in tags) value: value,
       };
 

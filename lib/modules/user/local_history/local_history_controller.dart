@@ -10,8 +10,15 @@ class LocalHistoryController extends GetxController
 
   @override
   void onInit() {
-    tabController = TabController(length: 2, vsync: this, initialIndex: type.clamp(0, 1).toInt());
+    tabController = TabController(
+        length: 2, vsync: this, initialIndex: type.clamp(0, 1).toInt());
 
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    tabController.dispose();
+    super.onClose();
   }
 }

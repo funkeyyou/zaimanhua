@@ -52,13 +52,13 @@ class UserHomeController extends GetxController {
         child: ClipRRect(
           borderRadius: AppStyle.radius12,
           child: Image.asset(
-            'assets/images/logo.png',
+            'assets/images/zaimanhua_x.png',
             width: 48,
             height: 48,
           ),
         ),
       ),
-      applicationName: "ZAI-X",
+      applicationName: "再漫画X".i18n,
       applicationVersion: "Ver ${Utils.packageInfo.version}",
       applicationLegalese: "@xiaoyaocz",
     ));
@@ -67,30 +67,6 @@ class UserHomeController extends GetxController {
   /// 检查更新
   void checkUpdate() {
     Utils.checkUpdate(showMsg: true);
-  }
-
-  /// 订阅
-  void toUserSubscribe() async {
-    if (!await UserService.instance.login()) {
-      return;
-    }
-    AppNavigator.toUserSubscribe();
-  }
-
-  /// 历史
-  void toUserHistory() async {
-    if (!await UserService.instance.login()) {
-      return;
-    }
-    AppNavigator.toUserHistory();
-  }
-
-  /// 本机历史
-  void toLocalHistory() async {
-    if (!await UserService.instance.login()) {
-      return;
-    }
-    AppNavigator.toUserHistory();
   }
 
   void toSettings() async {

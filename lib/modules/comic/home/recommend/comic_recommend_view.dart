@@ -37,7 +37,7 @@ class ComicRecommendView extends StatelessWidget {
             return buildCard(
               context,
               child: buildTreeColumnGridView(item.data),
-              title: item.title.toString(),
+              title: '我的书架'.i18n,
               action: buildShowMore(onTap: controller.toMySubscribe),
             );
           }

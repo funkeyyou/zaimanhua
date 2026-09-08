@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:zai_x/modules/index/index_controller.dart';
 
 import 'package:zai_x/app/controller/base_controller.dart';
 import 'package:zai_x/app/log.dart';
@@ -149,7 +150,7 @@ class ComicRecommendController extends BasePageController<ComicRecommendModel> {
   }
 
   void toMySubscribe() {
-    AppNavigator.toUserSubscribe();
+    Get.find<IndexController>().setIndex(3);
   }
 
   @override

@@ -30,12 +30,13 @@ class ComicDetailPage extends StatelessWidget {
           () => Text(
             controller.detail.value.title.isEmpty
                 ? "漫画详情".i18n
-                : controller.detail.value.title,
+                : controller.detail.value.title.i18n,
           ),
         ),
         actions: [
           Obx(
             () => IconButton(
+              tooltip: '本机收藏'.i18n,
               onPressed: controller.favorited.value
                   ? controller.cancelFavorite
                   : controller.favorite,
@@ -45,6 +46,7 @@ class ComicDetailPage extends StatelessWidget {
             ),
           ),
           IconButton(
+            tooltip: '分享'.i18n,
             onPressed: controller.share,
             icon: const Icon(Icons.share),
           ),
@@ -59,33 +61,10 @@ class ComicDetailPage extends StatelessWidget {
                 header: const MaterialHeader(),
                 onRefresh: controller.refreshDetail,
                 child: ListView(
-                  padding: AppStyle.edgeInsetsA12,
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
                   children: [
                     _buildHeader(),
-                    Obx(
-                      () => Offstage(
-                        offstage: controller.history.value == null,
-                        child: Column(
-                          children: [
-                            ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              title: Text(
-                                "上次看到：${controller.history.value?.chapterName ?? ".i18n"}  第${controller.history.value?.page}页".i18n,
-                                style: Get.textTheme.titleSmall,
-                              ),
-                              trailing: const Icon(Icons.chevron_right),
-                              onTap: () {
-                                controller.read();
-                              },
-                            ),
-                            Divider(
-                              color: Colors.grey.withValues(alpha: .2),
-                              height: 1.0,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    _buildResume(context),
                     _buildChapter(),
                   ],
                 ),
@@ -109,77 +88,116 @@ class ComicDetailPage extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        elevation: 2,
-        onPressed: controller.read,
-        child: const Icon(Icons.play_circle_outline_rounded),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: SizedBox(
-          height: 48,
-          child: Row(
-            children: [
-              Expanded(
-                child: Obx(
-                  () => TextButton.icon(
-                    style: TextButton.styleFrom(
-                      textStyle: const TextStyle(fontSize: 14),
-                    ),
-                    onPressed: controller.subscribe,
-                    icon: Icon(
-                      controller.subscribeStatus.value
-                          ? Remix.heart_fill
-                          : Remix.heart_line,
-                      size: 20,
-                    ),
-                    label: Text(controller.subscribeStatus.value ? "取消".i18n : "订阅".i18n),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: TextButton.icon(
-                  style: TextButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 14),
-                  ),
-                  onPressed: controller.comment,
-                  icon: const Icon(
-                    Remix.chat_2_line,
-                    size: 20,
-                  ),
-                  label: Text("评论".i18n),
-                ),
-              ),
-              Expanded(
-                child: TextButton.icon(
-                  style: TextButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 14),
-                  ),
-                  onPressed: controller.download,
-                  icon: const Icon(
-                    Remix.download_line,
-                    size: 20,
-                  ),
-                  label: Text("下载".i18n),
-                ),
-              ),
-              // Expanded(
-              //   child: TextButton.icon(
-              //     style: TextButton.styleFrom(
-              //       textStyle: const TextStyle(fontSize: 14),
-              //     ),
-              //     onPressed: controller.related,
-              //     icon: const Icon(
-              //       Remix.links_line,
-              //       size: 20,
-              //     ),
-              //     label: const Text("相关"),
-              //   ),
-              // ),
-            ],
+      bottomNavigationBar: _buildActions(context),
+    );
+  }
+
+  Widget _buildActions(BuildContext context) {
+    final theme = Theme.of(context);
+    return Obx(() {
+      final ready = !controller.pageLoadding.value &&
+          controller.detail.value.volumes
+              .any((volume) => volume.chapters.isNotEmpty);
+      final continuing = controller.history.value != null;
+      final readButton = FilledButton(
+        onPressed: ready ? controller.read : null,
+        style: FilledButton.styleFrom(
+          minimumSize: const Size.fromHeight(48),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        child: Text(continuing ? '继续阅读'.i18n : '开始阅读'.i18n),
+      );
+      final secondary = [
+        _detailAction(
+            controller.subscribeStatus.value
+                ? Remix.heart_fill
+                : Remix.heart_line,
+            controller.subscribeStatus.value ? '已订阅'.i18n : '订阅'.i18n,
+            ready ? controller.subscribe : null,
+            selected: controller.subscribeStatus.value),
+        _detailAction(
+            Remix.chat_2_line, '评论'.i18n, ready ? controller.comment : null),
+        _detailAction(
+            Remix.download_line, '下载'.i18n, ready ? controller.download : null),
+      ];
+      return Container(
+        decoration: BoxDecoration(
+          color: theme.scaffoldBackgroundColor,
+          border: Border(
+              top:
+                  BorderSide(color: theme.dividerColor.withValues(alpha: .12))),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: LayoutBuilder(builder: (context, constraints) {
+              if (constraints.maxWidth < 300 ||
+                  MediaQuery.textScalerOf(context).scale(14) > 21) {
+                return Column(mainAxisSize: MainAxisSize.min, children: [
+                  readButton,
+                  const SizedBox(height: 4),
+                  Row(children: [
+                    for (final action in secondary) Expanded(child: action)
+                  ]),
+                ]);
+              }
+              return Row(children: [
+                for (final action in secondary)
+                  SizedBox(width: 56, child: action),
+                const SizedBox(width: 12),
+                Expanded(child: readButton),
+              ]);
+            }),
           ),
         ),
+      );
+    });
+  }
+
+  Widget _detailAction(IconData icon, String label, VoidCallback? onTap,
+      {bool selected = false}) {
+    return TextButton(
+      onPressed: onTap,
+      style: TextButton.styleFrom(
+        foregroundColor:
+            selected ? Colors.blue : Get.textTheme.bodyMedium?.color,
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
+        minimumSize: const Size(48, 48),
       ),
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Icon(icon, size: 21),
+        const SizedBox(height: 3),
+        Text(label, style: const TextStyle(fontSize: 11)),
+      ]),
     );
+  }
+
+  Widget _buildResume(BuildContext context) {
+    return Obx(() {
+      final history = controller.history.value;
+      if (history == null) return const SizedBox(height: 8);
+      final primary = Theme.of(context).colorScheme.primary;
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Material(
+          color: primary.withValues(alpha: .08),
+          borderRadius: BorderRadius.circular(12),
+          child: ListTile(
+            leading: Icon(Icons.bookmark_rounded, color: primary),
+            title: Text('上次看到'.i18n,
+                style: TextStyle(fontSize: 12, color: primary)),
+            subtitle: Text('${history.chapterName} · 第${history.page}页'.i18n,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.titleSmall),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: controller.read,
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildHeader() {
@@ -198,7 +216,8 @@ class ComicDetailPage extends StatelessWidget {
                   controller.detail.value.cover,
                   width: 120,
                   height: 160,
-                  borderRadius: 4,
+                  borderRadius: 12,
+                  thumbnail: true,
                 ),
                 AppStyle.hGap12,
                 Expanded(
@@ -208,7 +227,8 @@ class ComicDetailPage extends StatelessWidget {
                     children: [
                       Text(
                         controller.detail.value.title.i18n,
-                        style: Get.textTheme.titleMedium,
+                        style: Get.textTheme.titleLarge
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       AppStyle.vGap8,
                       _buildInfoItems(
@@ -305,12 +325,25 @@ class ComicDetailPage extends StatelessWidget {
             style: const TextStyle(
               color: Colors.grey,
               fontSize: 14,
+              height: 1.6,
             ),
-            maxLines: controller.expandDescription.value ? 999 : 2,
+            maxLines: controller.expandDescription.value ? null : 3,
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        AppStyle.vGap12,
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            onPressed: () => controller.expandDescription.toggle(),
+            icon: Icon(
+                controller.expandDescription.value
+                    ? Icons.expand_less
+                    : Icons.expand_more,
+                size: 18),
+            label: Text(
+                controller.expandDescription.value ? '收起简介'.i18n : '展开简介'.i18n),
+          ),
+        ),
         Divider(
           color: Colors.grey.withValues(alpha: .2),
           height: 1.0,
@@ -330,7 +363,7 @@ class ComicDetailPage extends StatelessWidget {
     }
     var normal = Get.textTheme.bodyMedium!.color;
     if (controller.isChapterRead(chapter.chapterId)) {
-      return normal?.withValues(alpha: 0.35);
+      return Get.isDarkMode ? Colors.white60 : Colors.black54;
     }
     return normal;
   }
@@ -415,8 +448,8 @@ class ComicDetailPage extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                "${item.title}(共${item.chapters.length}话)".i18n,
-                                style: Get.textTheme.titleSmall,
+                                "${item.title} · ${item.chapters.length}话".i18n,
+                                style: Get.textTheme.titleMedium,
                               ),
                             ),
                             item.sortType.value == 1
@@ -455,9 +488,26 @@ class ComicDetailPage extends StatelessWidget {
                           ],
                         ),
                       ),
+                      Obx(() {
+                        final readCount = item.chapters
+                            .where((chapter) =>
+                                controller.isChapterRead(chapter.chapterId))
+                            .length;
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Text(
+                              '已看过 $readCount / ${item.chapters.length} 话 · 长按可标记'
+                                  .i18n,
+                              style: Get.textTheme.bodySmall),
+                        );
+                      }),
                       LayoutBuilder(builder: (ctx, constraints) {
                         var count = constraints.maxWidth ~/ 160;
-                        if (count < 3) count = 3;
+                        final textScale =
+                            MediaQuery.textScalerOf(ctx).scale(14) / 14;
+                        count = (constraints.maxWidth / (110 * textScale))
+                            .floor()
+                            .clamp(1, 12);
 
                         return Obx(
                           () => MasonryGridView.count(
@@ -480,7 +530,7 @@ class ComicDetailPage extends StatelessWidget {
                                       textStyle: const TextStyle(fontSize: 14),
                                       tapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
-                                      minimumSize: const Size.fromHeight(40),
+                                      minimumSize: const Size.fromHeight(48),
                                     ),
                                     onPressed: () {
                                       item.showAll.value = true;
@@ -499,6 +549,28 @@ class ComicDetailPage extends StatelessWidget {
                                           foregroundColor: _chapterColor(
                                             item.chapters[i],
                                           ),
+                                          backgroundColor:
+                                              item.chapters[i].chapterId ==
+                                                      controller.history.value
+                                                          ?.chapterId
+                                                  ? Theme.of(ctx)
+                                                      .colorScheme
+                                                      .primary
+                                                      .withValues(alpha: .12)
+                                                  : null,
+                                          side: BorderSide(
+                                              color:
+                                                  item.chapters[i].chapterId ==
+                                                          controller.history
+                                                              .value?.chapterId
+                                                      ? Theme.of(ctx)
+                                                          .colorScheme
+                                                          .primary
+                                                      : Colors.grey.withValues(
+                                                          alpha: .22)),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
                                           textStyle:
                                               const TextStyle(fontSize: 14),
                                           tapTargetSize:

@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:zai_x/models/db/comic_history.dart';
+import 'package:zai_x/services/db_service.dart';
 import 'package:zai_x/modules/user/subscribe/comic/comic_subscribe_controller.dart';
 import 'package:zai_x/requests/user_request.dart';
 import 'package:zai_x/services/app_settings_service.dart';
@@ -132,6 +134,41 @@ void main() {
     expect(c.list.map((e) => e.id), [2, 1]);
     expect(repository.read('A')!.items.length, 2);
     await Future<void>.delayed(Duration.zero);
+  });
+
+  test('recent reading does not remove subscriptions or change update ordering',
+      () async {
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(ComicHistoryAdapter());
+    }
+    final historyBox =
+        await Hive.openBox<ComicHistory>('recent-order', path: dir.path);
+    final db = Get.put(DBService()..comicHistoryBox = historyBox);
+    await db.putComicHistory(ComicHistory(
+        comicId: 1,
+        chapterId: 10,
+        comicName: 'Comic 1',
+        comicCover: '',
+        chapterName: 'Chapter 10',
+        updateTime: DateTime(2026, 9, 9),
+        page: 17));
+    await repository.save(
+        'A',
+        ComicShelfSnapshot([
+          shelfComic(1, time: 100),
+          shelfComic(2, time: 300),
+        ], DateTime(2026)));
+    final c = controller(
+        _Request((_) async => const ComicSubscriptionPage([], total: 0)));
+    expect(c.sort.value, AppSettingsService.kSubscribeSortDefault);
+    expect(db.getComicHistoryList().first.comicId, 1);
+    expect(c.list.map((book) => book.id), [2, 1]);
+    c.setType(3);
+    expect(c.list, isEmpty);
+    c.resetFilters();
+    expect(c.list.map((book) => book.id), [2, 1]);
+    expect(db.getComicHistoryList().first.page, 17);
+    await historyBox.close();
   });
 
   test('account change discards in-flight results from the previous user',

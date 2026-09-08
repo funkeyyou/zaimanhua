@@ -144,7 +144,7 @@ class DMZJApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'ZAI-X',
+      title: '再漫画X'.i18n,
       scrollBehavior: AppScrollBehavior(),
       theme: AppStyle.lightTheme,
       darkTheme: AppStyle.darkTheme,

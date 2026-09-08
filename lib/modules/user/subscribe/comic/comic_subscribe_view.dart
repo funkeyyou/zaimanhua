@@ -7,7 +7,10 @@ import 'package:zai_x/routes/app_navigator.dart';
 import 'package:zai_x/services/comic_completion_service.dart';
 import 'package:zai_x/widgets/keep_alive_wrapper.dart';
 import 'package:zai_x/widgets/net_image.dart';
-import 'package:zai_x/widgets/page_grid_view.dart';
+import 'package:easy_refresh/easy_refresh.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:zai_x/modules/bookshelf/recent_comics.dart';
+import 'package:zai_x/widgets/status/app_error_widget.dart';
 import 'package:zai_x/widgets/shadow_card.dart';
 import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
@@ -20,183 +23,222 @@ class ComicSubscribeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return KeepAliveWrapper(
       child: Column(
         children: [
-          Obx(
-            () => Row(
-              children: [
-                buildFilter(
-                  // 題材標籤（由漫畫詳情補抓後快取）
-                  types: controller.tagOptions,
-                  value: controller.tag.value,
-                  onSelected: (e) {
-                    controller.setTag(e.toString());
-                  },
-                  loading: controller.tagLoading.value,
-                ),
-                buildFilter(
-                  types: controller.types,
-                  value: controller.type.value,
-                  onSelected: (e) {
-                    controller.setType(e);
-                  },
-                ),
-                buildFilter(
-                  types: controller.sorts,
-                  value: controller.sort.value,
-                  onSelected: (e) {
-                    controller.setSort(e);
-                  },
-                ),
-              ],
-            ),
-          ),
-          Obx(() => SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: AppStyle.edgeInsetsH12,
-                child: Row(
-                  children: controller.readFilters.entries
-                      .map((entry) => Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: ChoiceChip(
-                              label: Text(entry.value),
-                              selected:
-                                  controller.readFilter.value == entry.key,
-                              showCheckmark: true,
-                              checkmarkColor:
-                                  Theme.of(context).colorScheme.primary,
-                              selectedColor: Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withValues(alpha: .2),
-                              side: BorderSide(
-                                  color: controller.readFilter.value ==
-                                          entry.key
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Colors.transparent),
-                              onSelected: (_) =>
-                                  controller.setReadFilter(entry.key),
-                            ),
-                          ))
-                      .toList(),
-                ),
-              )),
-          Obx(() {
-            final saved = controller.savedAt.value;
-            return SizedBox(
-              height: 36,
-              child: Padding(
-                padding: AppStyle.edgeInsetsH12,
-                child: Row(children: [
-                  if (controller.refreshing.value) ...[
-                    const SizedBox(
-                        width: 12,
-                        height: 12,
-                        child: CircularProgressIndicator(strokeWidth: 2)),
-                    AppStyle.hGap8,
-                  ],
-                  Expanded(
-                      child: Text(
-                    controller.refreshFailed.value
-                        ? '刷新失败，保留上次的书架'.i18n
-                        : controller.refreshing.value
-                            ? '正在检查更新…'.i18n
-                            : saved == null
-                                ? ''
-                                : '上次同步：${Utils.friendlyTimestamp(saved.millisecondsSinceEpoch ~/ 1000)}'
-                                    .i18n,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 11, color: Colors.grey),
-                  )),
-                  if (controller.hasPendingUpdate.value)
-                    TextButton(
-                      onPressed: controller.editMode.value
-                          ? null
-                          : controller.showPendingUpdate,
-                      child: Text('查看更新'.i18n),
-                    )
-                  else if (controller.refreshFailed.value)
-                    TextButton(
-                        onPressed: controller.refreshData,
-                        child: Text('重试'.i18n)),
-                ]),
-              ),
-            );
-          }),
-          Divider(
-            color: Colors.grey.withValues(alpha: .2),
-            height: 1.0,
-          ),
           Expanded(
-            child: Stack(
-              children: [
-                LayoutBuilder(builder: (context, constraints) {
-                  var count = constraints.maxWidth ~/ 160;
-                  if (count < 3) count = 3;
-                  return PageGridView(
-                    pageController: controller,
-                    firstRefresh: false,
-                    loadMore: false,
-                    crossAxisCount: count,
-                    padding: AppStyle.edgeInsetsA12,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    itemBuilder: (context, i) {
-                      var item = controller.list[i];
-                      return buildItem(item);
-                    },
-                  );
-                }),
-                // 補分頁與排序期間蓋住中間狀態，排好再顯示
-                Obx(
-                  () => Visibility(
-                    visible: controller.preparing.value,
-                    child: Container(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      child: const AppLoaddingWidget(),
+            child: LayoutBuilder(builder: (context, constraints) {
+              final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
+              final count = ((constraints.maxWidth - 20) / (100 * scale + 12))
+                  .floor()
+                  .clamp(1, 24);
+              return Obx(() => EasyRefresh(
+                    header: const MaterialHeader(),
+                    controller: controller.easyRefreshController,
+                    onRefresh: controller.refreshData,
+                    child: CustomScrollView(
+                      controller: controller.scrollController,
+                      slivers: [
+                        const SliverToBoxAdapter(child: RecentComics()),
+                        SliverToBoxAdapter(child: _buildFilters(context)),
+                        if (controller.preparing.value)
+                          const SliverToBoxAdapter(
+                            child: SizedBox(
+                                height: 220, child: AppLoaddingWidget()),
+                          )
+                        else if (controller.pageError.value)
+                          SliverToBoxAdapter(
+                            child: SizedBox(
+                                height: 260,
+                                child: AppErrorWidget(
+                                  errorMsg: controller.errorMsg.value,
+                                  onRefresh: controller.refreshData,
+                                )),
+                          )
+                        else if (controller.list.isEmpty)
+                          SliverToBoxAdapter(
+                              child: Padding(
+                            padding: const EdgeInsets.all(32),
+                            child: Column(children: [
+                              Icon(Icons.auto_stories_outlined,
+                                  size: 40, color: theme.disabledColor),
+                              const SizedBox(height: 12),
+                              Text('这里还没有作品'.i18n,
+                                  style: theme.textTheme.titleSmall),
+                              const SizedBox(height: 6),
+                              Text('试试其他筛选，或订阅喜欢的漫画'.i18n,
+                                  textAlign: TextAlign.center,
+                                  style: theme.textTheme.bodySmall),
+                              if (controller.tag.value.isNotEmpty ||
+                                  controller.type.value != 1 ||
+                                  controller.readFilter.value != 0)
+                                TextButton(
+                                    onPressed: controller.resetFilters,
+                                    child: Text('清除筛选'.i18n)),
+                            ]),
+                          ))
+                        else
+                          SliverPadding(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                            sliver: SliverMasonryGrid.count(
+                              crossAxisCount: count,
+                              mainAxisSpacing: 18,
+                              crossAxisSpacing: 12,
+                              itemBuilder: (context, i) =>
+                                  buildItem(controller.list[i]),
+                              childCount: controller.list.length,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ));
+            }),
+          ),
+          Obx(() => Visibility(
+                visible: controller.editMode.value,
+                child: SafeArea(
+                  top: false,
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    color: theme.colorScheme.primary.withValues(alpha: .08),
+                    child: Wrap(
+                      alignment: WrapAlignment.end,
+                      spacing: 8,
+                      children: [
+                        TextButton.icon(
+                            onPressed: controller.addFavorite,
+                            icon: const Icon(Icons.star_border),
+                            label: Text('添加收藏'.i18n)),
+                        TextButton.icon(
+                            onPressed: controller.cancelSub,
+                            icon: const Icon(Icons.favorite_border),
+                            label: Text('取消订阅'.i18n)),
+                        TextButton(
+                            onPressed: controller.cancelEdit,
+                            child: Text('完成'.i18n)),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
-          Obx(
-            () => Offstage(
-              offstage: !controller.editMode.value,
-              child: SizedBox(
-                height: 48,
-                child: BottomAppBar(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton.icon(
-                        onPressed: controller.addFavorite,
-                        icon: const Icon(Icons.star_border),
-                        label: Text("添加收藏".i18n),
-                      ),
-                      AppStyle.hGap8,
-                      TextButton.icon(
-                        onPressed: controller.cancelSub,
-                        icon: const Icon(Icons.favorite_border),
-                        label: Text("取消订阅".i18n),
-                      ),
-                      AppStyle.hGap8,
-                      TextButton.icon(
-                        onPressed: controller.cancelEdit,
-                        icon: const Icon(Icons.cancel_outlined),
-                        label: Text("取消".i18n),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+              )),
         ],
       ),
     );
+  }
+
+  Widget _buildFilters(BuildContext context) {
+    final theme = Theme.of(context);
+    return Obx(() => Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: [
+                Text('订阅作品'.i18n,
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w600)),
+                const SizedBox(width: 8),
+                Text('${controller.list.length}',
+                    style: theme.textTheme.bodySmall),
+                const Spacer(),
+                TextButton(
+                  onPressed: controller.list.isEmpty
+                      ? null
+                      : () {
+                          if (controller.editMode.value) {
+                            controller.cancelEdit();
+                          } else {
+                            controller.editMode.value = true;
+                          }
+                        },
+                  child:
+                      Text(controller.editMode.value ? '完成'.i18n : '管理'.i18n),
+                ),
+              ]),
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: .06),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(children: [
+                  buildFilter(
+                      types: controller.tagOptions,
+                      value: controller.tag.value,
+                      onSelected: (e) => controller.setTag(e.toString()),
+                      loading: controller.tagLoading.value),
+                  buildFilter(
+                      types: controller.types,
+                      value: controller.type.value,
+                      onSelected: (e) => controller.setType(e)),
+                  buildFilter(
+                      types: controller.sorts,
+                      value: controller.sort.value,
+                      onSelected: (e) => controller.setSort(e)),
+                ]),
+              ),
+              const SizedBox(height: 8),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(children: [
+                  for (final entry in controller.readFilters.entries)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ChoiceChip(
+                        label: Text(entry.value),
+                        selected: controller.readFilter.value == entry.key,
+                        showCheckmark: true,
+                        checkmarkColor: theme.colorScheme.primary,
+                        selectedColor:
+                            theme.colorScheme.primary.withValues(alpha: .16),
+                        side: BorderSide(
+                            color: controller.readFilter.value == entry.key
+                                ? theme.colorScheme.primary
+                                : Colors.transparent),
+                        onSelected: (_) => controller.setReadFilter(entry.key),
+                      ),
+                    ),
+                ]),
+              ),
+              _buildSyncStatus(),
+            ],
+          ),
+        ));
+  }
+
+  Widget _buildSyncStatus() {
+    final saved = controller.savedAt.value;
+    return Row(children: [
+      if (controller.refreshing.value) ...[
+        const SizedBox(
+            width: 12,
+            height: 12,
+            child: CircularProgressIndicator(strokeWidth: 2)),
+        const SizedBox(width: 8),
+      ],
+      Expanded(
+          child: Text(
+        controller.refreshFailed.value
+            ? '刷新失败，保留上次的书架'.i18n
+            : controller.refreshing.value
+                ? '正在检查更新…'.i18n
+                : saved == null
+                    ? ''
+                    : '上次同步：${Utils.friendlyTimestamp(saved.millisecondsSinceEpoch ~/ 1000)}'
+                        .i18n,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontSize: 11, color: Colors.grey),
+      )),
+      if (controller.hasPendingUpdate.value)
+        TextButton(
+            onPressed:
+                controller.editMode.value ? null : controller.showPendingUpdate,
+            child: Text('查看更新'.i18n))
+      else if (controller.refreshFailed.value)
+        TextButton(onPressed: controller.refreshData, child: Text('重试'.i18n)),
+    ]);
   }
 
   Widget buildItem(UserSubscribeComicItemModel item) {
@@ -218,7 +260,7 @@ class ComicSubscribeView extends StatelessWidget {
         item.isChecked.value = true;
         controller.editMode.value = true;
       },
-      radius: 4,
+      radius: 10,
       child: Stack(
         children: [
           Column(
@@ -230,7 +272,7 @@ class ComicSubscribeView extends StatelessWidget {
                     aspectRatio: 27 / 36,
                     child: NetImage(
                       item.cover,
-                      borderRadius: 4,
+                      borderRadius: 10,
                       thumbnail: true,
                     ),
                   ),
@@ -371,13 +413,17 @@ class ComicSubscribeView extends StatelessWidget {
             )
             .toList(),
         child: SizedBox(
-          height: 40,
+          height: 48,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
+              Flexible(
+                  child: Text(
                 (types[value] ?? "").toString().i18n,
-              ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 12),
+              )),
               loading
                   ? const Padding(
                       padding: EdgeInsets.only(left: 6),

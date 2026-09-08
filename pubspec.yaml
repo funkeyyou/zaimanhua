@@ -1,7 +1,7 @@
 name: zai_x
 version: 1.9.0+19000
 publish_to: none
-description: "ZAI-X"
+description: "再漫画X · 再漫画第三方客户端"
 environment: 
   sdk: '>=3.0.0 <4.0.0'
 

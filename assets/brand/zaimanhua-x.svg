@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#2387df"/>
+      <stop offset="1" stop-color="#103969"/>
+    </linearGradient>
+  </defs>
+  <rect id="background" width="1024" height="1024" fill="url(#blue)"/>
+  <g id="mark">
+    <!-- Open pages form an X around the central fold. -->
+    <path d="M232 318 Q360 307 487 423 L487 704 Q365 608 232 626 Z" fill="#f7fbff"/>
+    <path d="M792 318 Q664 307 537 423 L537 704 Q659 608 792 626 Z" fill="#f7fbff"/>
+    <path d="M274 246 Q424 276 512 410 Q600 276 750 246 L750 330 Q604 365 512 511 Q420 365 274 330 Z" fill="#78dff4"/>
+    <path d="M285 677 Q407 678 512 765 Q617 678 739 677" fill="none" stroke="#78dff4" stroke-width="27" stroke-linecap="round"/>
+    <path d="M371 377 L430 405 L566 601 L653 640 L594 612 L458 416 Z" fill="#103969"/>
+    <path d="M653 377 L594 405 L458 601 L371 640 L430 612 L566 416 Z" fill="#103969"/>
+  </g>
+</svg>

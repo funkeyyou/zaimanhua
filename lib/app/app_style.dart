@@ -71,7 +71,7 @@ class AppStyle {
   )).copyWith(
     brightness: Brightness.dark,
     primaryColor: Colors.blue,
-    cardColor: const Color(0xff424242),
+    cardColor: const Color(0xff151a21),
     colorScheme: AppColor.colorSchemeDark,
     scaffoldBackgroundColor: Colors.black,
     tabBarTheme: const TabBarThemeData(

@@ -49,7 +49,7 @@ class AppNotification {
           requestSoundPermission: false,
         ),
         windows: WindowsInitializationSettings(
-          appName: 'ZAI-X',
+          appName: '再漫画X',
           appUserModelId: 'ZAIX.Client.Desktop',
           guid: '6f6b7b0e-6f2f-4a54-9a1c-2b9f8f9d51c7',
         ),

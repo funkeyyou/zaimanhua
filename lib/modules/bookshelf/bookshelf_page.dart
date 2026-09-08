@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zai_x/app/i18n.dart';
+import 'package:zai_x/modules/bookshelf/recent_comics.dart';
 import 'package:zai_x/modules/user/subscribe/comic/comic_subscribe_view.dart';
 import 'package:zai_x/modules/user/subscribe/novel/novel_subscribe_view.dart';
 import 'package:zai_x/modules/user/subscribe/user_subscribe_controller.dart';
 import 'package:zai_x/services/user_service.dart';
+import 'package:zai_x/routes/app_navigator.dart';
 import 'package:zai_x/widgets/tab_appbar.dart';
 
-/// 書架：底部分頁的「我的訂閱」入口
-/// 與「我的 → 我的订阅」共用同一組列表 View，只是改成常駐分頁。
+/// 阅读与订阅的统一入口。
 class BookshelfPage extends StatelessWidget {
   final UserSubscribeController controller;
   BookshelfPage({super.key})
@@ -26,6 +27,14 @@ class BookshelfPage extends StatelessWidget {
           Tab(text: "小说".i18n),
         ],
         controller: controller.tabController,
+        action: TextButton.icon(
+          onPressed: () {
+            final type = controller.tabController.index;
+            AppNavigator.toLocalHistory(type: type);
+          },
+          icon: const Icon(Icons.history_rounded, size: 21),
+          label: Text('浏览记录'.i18n),
+        ),
       ),
       body: Obx(
         () => UserService.instance.logined.value
@@ -36,7 +45,13 @@ class BookshelfPage extends StatelessWidget {
                   NovelSubscribeView(),
                 ],
               )
-            : buildNotLogin(),
+            : ListView(
+                children: [
+                  const RecentComics(),
+                  const SizedBox(height: 32),
+                  buildNotLogin(),
+                ],
+              ),
       ),
     );
   }

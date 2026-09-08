@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:zai_x/app/app_style.dart';
+import 'package:zai_x/widgets/adaptive_workspace.dart';
 import 'package:zai_x/modules/common/empty_page.dart';
 import 'package:zai_x/modules/index/index_controller.dart';
 import 'package:zai_x/routes/app_navigator.dart';
@@ -16,140 +16,92 @@ class IndexPage extends GetView<IndexController> {
   Widget build(BuildContext context) {
     final content = _buildContentNavigator();
     final indexStack = _buildIndexStack();
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        return orientation == Orientation.landscape
-            ? _buildWide(context, indexStack, content)
-            : _buildNarrow(context, indexStack, content);
-      },
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      final wide = constraints.maxWidth >= 840;
+      return Obx(() => Scaffold(
+            body: Row(
+              children: [
+                SizedBox(
+                  width: wide ? 84 : 0,
+                  child: wide ? _buildRail(context) : const SizedBox.shrink(),
+                ),
+                Expanded(
+                  child: AdaptiveWorkspace(
+                    primary: indexStack,
+                    detail: content,
+                    showDetail: controller.showContent.value,
+                  ),
+                ),
+              ],
+            ),
+            bottomNavigationBar: wide || controller.showContent.value
+                ? null
+                : BottomNavigationBar(
+                    currentIndex: controller.index.value,
+                    onTap: controller.setIndex,
+                    type: BottomNavigationBarType.fixed,
+                    showSelectedLabels: true,
+                    showUnselectedLabels: true,
+                    selectedFontSize: 12,
+                    unselectedFontSize: 12,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    elevation: 4,
+                    items: [
+                      for (var i = 0; i < _labels.length; i++)
+                        BottomNavigationBarItem(
+                          icon: Icon(_icons[i]),
+                          activeIcon: Icon(_activeIcons[i]),
+                          label: _labels[i].i18n,
+                        ),
+                    ],
+                  ),
+          ));
+    });
   }
 
-  Widget _buildNarrow(BuildContext context, Widget indexStack, Widget content) {
-    return Stack(
-      children: [
-        Obx(
-          () => Scaffold(
-            body: indexStack,
-            bottomNavigationBar: Theme(
-              data: Theme.of(context).copyWith(
-                splashColor: Colors.transparent,
-              ),
-              child: BottomNavigationBar(
-                currentIndex: controller.index.value,
-                onTap: controller.setIndex,
-                type: BottomNavigationBarType.fixed,
-                showSelectedLabels: true,
-                showUnselectedLabels: true,
-                selectedFontSize: 11,
-                unselectedFontSize: 11,
-                backgroundColor: Theme.of(context).cardColor,
-                items: [
-                  BottomNavigationBarItem(
-                    icon: Icon(Remix.bear_smile_line),
-                    activeIcon: Icon(Remix.bear_smile_fill),
-                    label: "漫画".i18n,
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Remix.article_line),
-                    activeIcon: Icon(Remix.article_fill),
-                    label: "资讯".i18n,
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Remix.book_open_line),
-                    activeIcon: Icon(Remix.book_open_fill),
-                    label: "轻小说".i18n,
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Remix.book_marked_line),
-                    activeIcon: Icon(Remix.book_marked_fill),
-                    label: "书架".i18n,
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Remix.user_smile_line),
-                    activeIcon: Icon(Remix.user_smile_fill),
-                    label: "我的".i18n,
-                  ),
-                ],
-              ),
-            ),
-          ),
+  static const _labels = ['漫画', '资讯', '轻小说', '书架', '我的'];
+  static const _icons = [
+    Remix.book_2_line,
+    Remix.article_line,
+    Remix.book_open_line,
+    Remix.book_marked_line,
+    Remix.user_smile_line,
+  ];
+  static const _activeIcons = [
+    Remix.book_2_fill,
+    Remix.article_fill,
+    Remix.book_open_fill,
+    Remix.book_marked_fill,
+    Remix.user_smile_fill,
+  ];
+
+  Widget _buildRail(BuildContext context) {
+    return NavigationRail(
+      minWidth: 84,
+      scrollable: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      labelType: NavigationRailLabelType.all,
+      onDestinationSelected: controller.setIndex,
+      selectedIndex: controller.index.value,
+      leading: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.asset('assets/images/zaimanhua_x.png',
+              width: 40, height: 40),
         ),
-        Obx(
-          () => IgnorePointer(
-            ignoring: !controller.showContent.value,
-            child: content,
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget _buildWide(BuildContext context, Widget indexStack, Widget content) {
-    return Scaffold(
-      body: Row(
-        children: [
-          Obx(
-            () => Padding(
-              padding: EdgeInsets.only(right: 2),
-              child: NavigationRail(
-                elevation: 2,
-                labelType: NavigationRailLabelType.all,
-                onDestinationSelected: controller.setIndex,
-                selectedIndex: controller.index.value,
-                leading: SizedBox(
-                  height: AppStyle.statusBarHeight,
-                ),
-                selectedLabelTextStyle: TextStyle(
-                  fontSize: 10,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                unselectedLabelTextStyle: TextStyle(
-                  fontSize: 10,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-                destinations: [
-                  NavigationRailDestination(
-                    icon: Icon(Remix.bear_smile_line),
-                    label: Text("漫画".i18n),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Remix.article_line),
-                    label: Text("资讯".i18n),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Remix.book_open_line),
-                    label: Text("轻小说".i18n),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Remix.book_marked_line),
-                    label: Text("书架".i18n),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Remix.user_smile_line),
-                    label: Text("我的".i18n),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            // constraints: const BoxConstraints(maxWidth: 450),
-            width: 450,
-            decoration: BoxDecoration(
-              border: Border(
-                right: BorderSide(
-                  color: Colors.grey.withValues(alpha: .1),
-                ),
-              ),
-            ),
-            child: indexStack,
-          ),
-          Expanded(
-            child: content,
-          ),
-        ],
       ),
+      selectedLabelTextStyle:
+          const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+      unselectedLabelTextStyle: const TextStyle(fontSize: 12),
+      destinations: [
+        for (var i = 0; i < _labels.length; i++)
+          NavigationRailDestination(
+            icon: Icon(_icons[i]),
+            selectedIcon: Icon(_activeIcons[i]),
+            label: Text(_labels[i].i18n),
+          ),
+      ],
     );
   }
 
