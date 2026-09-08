@@ -95,7 +95,8 @@ BEGIN
             VALUE "InternalName", "zai_x" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.xycz. All rights reserved." "\0"
             VALUE "OriginalFilename", "zai_x.exe" "\0"
-            VALUE "ProductName", "再漫畫X" "\0"
+            // path_provider uses ProductName for the existing data directory.
+            VALUE "ProductName", "zai_x" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

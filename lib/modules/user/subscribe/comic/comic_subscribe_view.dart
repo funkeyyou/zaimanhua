@@ -166,41 +166,36 @@ class ComicSubscribeView extends StatelessWidget {
                   buildFilter(
                       types: controller.tagOptions,
                       value: controller.tag.value,
+                      label: controller.tag.value.isEmpty ? '标签'.i18n : null,
+                      tooltip: '题材标签'.i18n,
+                      active: controller.tag.value.isNotEmpty,
                       onSelected: (e) => controller.setTag(e.toString()),
                       loading: controller.tagLoading.value),
                   buildFilter(
                       types: controller.types,
                       value: controller.type.value,
+                      label: controller.type.value == 1 ? '状态'.i18n : null,
+                      tooltip: '连载状态'.i18n,
+                      active: controller.type.value != 1,
                       onSelected: (e) => controller.setType(e)),
+                  buildFilter(
+                      types: controller.readFilters,
+                      value: controller.readFilter.value,
+                      label:
+                          controller.readFilter.value == 1 ? '未读更新'.i18n : null,
+                      tooltip: '阅读进度'.i18n,
+                      active: controller.readFilter.value != 0,
+                      onSelected: (e) => controller.setReadFilter(e)),
                   buildFilter(
                       types: controller.sorts,
                       value: controller.sort.value,
+                      label: (controller.sort.value < 2 ? '订阅' : '更新').i18n +
+                          (controller.sort.value.isEven ? ' ↓' : ' ↑'),
+                      tooltip: '排序'.i18n,
                       onSelected: (e) => controller.setSort(e)),
                 ]),
               ),
               const SizedBox(height: 8),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(children: [
-                  for (final entry in controller.readFilters.entries)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: ChoiceChip(
-                        label: Text(entry.value),
-                        selected: controller.readFilter.value == entry.key,
-                        showCheckmark: true,
-                        checkmarkColor: theme.colorScheme.primary,
-                        selectedColor:
-                            theme.colorScheme.primary.withValues(alpha: .16),
-                        side: BorderSide(
-                            color: controller.readFilter.value == entry.key
-                                ? theme.colorScheme.primary
-                                : Colors.transparent),
-                        onSelected: (_) => controller.setReadFilter(entry.key),
-                      ),
-                    ),
-                ]),
-              ),
               _buildSyncStatus(),
             ],
           ),
@@ -399,9 +394,13 @@ class ComicSubscribeView extends StatelessWidget {
     required dynamic value,
     required Function(dynamic) onSelected,
     bool loading = false,
+    String? label,
+    String? tooltip,
+    bool active = false,
   }) {
     return Expanded(
       child: PopupMenuButton(
+        tooltip: tooltip,
         onSelected: onSelected,
         itemBuilder: (c) => types.keys
             .map(
@@ -419,10 +418,11 @@ class ComicSubscribeView extends StatelessWidget {
             children: <Widget>[
               Flexible(
                   child: Text(
-                (types[value] ?? "").toString().i18n,
+                label ?? (types[value] ?? "").toString().i18n,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 12),
+                style:
+                    TextStyle(fontSize: 12, color: active ? Colors.blue : null),
               )),
               loading
                   ? const Padding(

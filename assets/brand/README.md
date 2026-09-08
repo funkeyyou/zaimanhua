@@ -16,4 +16,6 @@ node tools/generate_brand_icons.cjs [path/to/node_modules]
 
 本次內建 imagegen 呼叫失敗，錯誤為 ChatGPT 帳號不支援工具所用的 gpt-5.4-mini 模型。因此成品是手工繪製的 SVG，再以 sharp 轉出平台資產；不是 AI 生圖結果，沒有使用付費 API 備援。
 
+使用者要求稍後再試，於同次迭代再次呼叫內建工具，仍收到相同 HTTP 400 模型不支援錯誤；第二次提示改為直接設計 open book and letter X、deep ink blue background、azure/cyan accent、ivory pages、central 60 percent safe area、one square icon、no Chinese text/device mockup/watermark。
+
 原生圖嘗試的設計提示：original square comic and light-novel app icon; open book whose curved pages suggest returning to a story; deep ink-blue, azure and ivory; bold clean shapes within the central 60 percent; full-bleed square background; no text, watermark or device mockup. 使用者後續指定名稱「再漫畫X」，最終向量稿相應加入 X 書頁概念。
