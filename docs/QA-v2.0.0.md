@@ -1,6 +1,6 @@
 # v2.0.0 發版紀錄
 
-日期：2026-09-09。狀態：發版準備中。
+日期：2026-09-09。狀態：[v2.0.0 已正式發佈](https://github.com/funkeyyou/zaimanhua/releases/tag/v2.0.0)，發布時間 15:50:17（UTC+8）。
 
 ## 來源與範圍
 
@@ -11,6 +11,21 @@
 
 ## 發版檢查
 
-- 待補入正式 tag、commit、CI 結果，以及下載產物的版本、簽章與 SHA-256。
-- 兩平台產物確認後公開 Release 並設為 latest，檢查匿名更新 API 與下載連結。
-- 依使用者偏好，發布完成後下載頁僅保留最新版；舊 tag 與本機安裝檔備份保留。
+- Tag：`v2.0.0`；提交：`ee60e02439131fb7ed5d162a4afadfbe93390536`。
+- [正式 CI 34324717547](https://github.com/funkeyyou/zaimanhua/actions/runs/34324717547)：analyze、78 個測試、Android release APK、Windows release ZIP 及兩平台資產上傳全數成功。
+- APK：`com.xycz.zmhx`、versionName `2.0.0`、versionCode `20000`；桌面名稱簡體「再漫画X」、繁體「再漫畫X」。
+- APK 簽章驗證通過，與 v1.9.0 實際憑證比對一致；憑證 SHA-256 為 `4e2f84076e0c2a4361a8b23d9678b58b763bb43ecd45f437aa9bd0acd018b222`。
+- Windows ZIP 已完整解壓檢查。EXE 的 FileVersion／ProductVersion 均為 `2.0.0+20000`，FileDescription 為「再漫畫X」，ProductName 保留 `zai_x`，沿用原本資料位置。
+- 匿名 `releases/latest?ts=...` 正確回傳 v2.0.0，非草稿、非預發佈，且包含兩個安裝檔；兩個公開下載連結均回 HTTP 200，Content-Length 與資產大小一致。
+- 下載的兩個檔案 SHA-256 均與 GitHub 資產 digest 一致，存放於 `build/release-2.0.0/current/`。
+
+| 資產 | bytes | SHA-256 |
+| --- | ---: | --- |
+| ZAI-X-android.apk | 88,534,311 | `a4dba16325d538c63d6c7275536643228123127111a3aedc1f9c742d6c499623` |
+| ZAI-X-windows-x64.zip | 29,086,002 | `562128d25cc5781dc34b3fef4509578bc2353b9bac71a4da8be88d8981d0a1e1` |
+
+## 舊版下載整理
+
+- 依使用者只保留最新版的設定，在 2.0.0 公開且下載驗證成功後，移除 v1.9.0 Release 與其線上安裝檔；Release 清單現在僅有 v2.0.0 Latest。
+- v1.9.0 tag 仍保留，指向 `a2525f45f9d1168ffad34c143ab6fff89f8bf9ca`，原始碼歷史未刪除。
+- v1.9.0 APK 與 Windows ZIP 仍保存在 `build/release-1.9.0/current/`，已在刪除遠端資產前核對 SHA-256 與 GitHub 原資產一致；原版本說明亦保留在 `docs/releases/v1.9.0.md`。
