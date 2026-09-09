@@ -328,7 +328,9 @@ class ComicDetailPage extends StatelessWidget {
               height: 1.6,
             ),
             maxLines: controller.expandDescription.value ? null : 3,
-            overflow: TextOverflow.ellipsis,
+            overflow: controller.expandDescription.value
+                ? TextOverflow.visible
+                : TextOverflow.ellipsis,
           ),
         ),
         Align(
@@ -354,6 +356,23 @@ class ComicDetailPage extends StatelessWidget {
 
   Widget _buildChapter() {
     return _buildChapterList();
+  }
+
+  ButtonStyle _chapterButtonStyle(BuildContext context,
+      {ComicDetailChapterItem? chapter}) {
+    final current = chapter != null &&
+        chapter.chapterId == controller.history.value?.chapterId;
+    final primary = Theme.of(context).colorScheme.primary;
+    return OutlinedButton.styleFrom(
+      foregroundColor: chapter == null ? Colors.grey : _chapterColor(chapter),
+      backgroundColor: current ? primary.withValues(alpha: .12) : null,
+      side: BorderSide(
+          color: current ? primary : Colors.grey.withValues(alpha: .22)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      textStyle: const TextStyle(fontSize: 14),
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      minimumSize: const Size.fromHeight(40),
+    );
   }
 
   /// 章节按钮的文字颜色：上次看到的那一话最显眼，看过的变淡
@@ -525,13 +544,7 @@ class ComicDetailPage extends StatelessWidget {
                                 return Tooltip(
                                   message: "展开全部章节".i18n,
                                   child: OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: Colors.grey,
-                                      textStyle: const TextStyle(fontSize: 14),
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      minimumSize: const Size.fromHeight(48),
-                                    ),
+                                    style: _chapterButtonStyle(ctx),
                                     onPressed: () {
                                       item.showAll.value = true;
                                     },
@@ -545,38 +558,9 @@ class ComicDetailPage extends StatelessWidget {
                                   () => Stack(
                                     children: [
                                       OutlinedButton(
-                                        style: OutlinedButton.styleFrom(
-                                          foregroundColor: _chapterColor(
-                                            item.chapters[i],
-                                          ),
-                                          backgroundColor:
-                                              item.chapters[i].chapterId ==
-                                                      controller.history.value
-                                                          ?.chapterId
-                                                  ? Theme.of(ctx)
-                                                      .colorScheme
-                                                      .primary
-                                                      .withValues(alpha: .12)
-                                                  : null,
-                                          side: BorderSide(
-                                              color:
-                                                  item.chapters[i].chapterId ==
-                                                          controller.history
-                                                              .value?.chapterId
-                                                      ? Theme.of(ctx)
-                                                          .colorScheme
-                                                          .primary
-                                                      : Colors.grey.withValues(
-                                                          alpha: .22)),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          textStyle:
-                                              const TextStyle(fontSize: 14),
-                                          tapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
-                                          minimumSize:
-                                              const Size.fromHeight(40),
+                                        style: _chapterButtonStyle(
+                                          ctx,
+                                          chapter: item.chapters[i],
                                         ),
                                         onPressed: () {
                                           controller.readChapter(
