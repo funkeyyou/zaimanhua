@@ -11,6 +11,7 @@ import 'package:zai_x/app/log.dart';
 import 'package:zai_x/modules/comic/reader/comic_reader_controller.dart';
 import 'package:zai_x/services/app_settings_service.dart';
 import 'package:zai_x/widgets/custom_header.dart';
+import 'package:zai_x/widgets/chapter_swipe_boundary.dart';
 import 'package:zai_x/widgets/local_image.dart';
 import 'package:zai_x/widgets/net_image.dart';
 import 'package:zai_x/widgets/status/app_error_widget.dart';
@@ -21,11 +22,6 @@ import 'package:preload_page_view/preload_page_view.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:zai_x/app/i18n.dart';
-
-/// 翻頁模式：翻到最後（或最前）一頁後，再滑多少距離就換話。
-/// 值小到一次普通的翻頁手勢就會超過，換話因此像翻頁一樣順；
-/// 配合 triggerWhenReach，手指還按著就換話，不必長拖再放開。
-const double kChapterSwitchTriggerOffset = 45;
 
 /// 上下捲動模式的換話門檻。
 /// 這裡刻意維持「拉一下再放開」：連續捲動時手指常常還按著就到底，
@@ -325,76 +321,46 @@ class ComicReaderPage extends GetView<ComicReaderController> {
             controller.setDualPageActive(shouldDual);
           });
         }
-        return EasyRefresh(
-          header: MaterialHeader2(
-            // 滑到底就直接換話，不用長拖再放開（triggerWhenReach 只在手指還按著時生效，
-            // 慣性滑動不會誤觸）
-            triggerOffset: kChapterSwitchTriggerOffset,
-            triggerWhenReach: true,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: AppStyle.radius24,
+        return Obx(() => ChapterSwipeBoundary(
+              key: ValueKey(generation),
+              enabled:
+                  !controller.lockSwipe.value && !controller.pageLoadding.value,
+              reverse: reverse,
+              canGoPrevious: controller.currentIndex.value == 0,
+              canGoNext: dualActive
+                  ? controller.currentGroupIndex == groups.length - 1
+                  : controller.currentIndex.value == urls.length - 1,
+              onPrevious: () => controller.forwardChapter(toLastPage: true),
+              onNext: controller.nextChapter,
+              child: PreloadPageView.builder(
+                controller: controller.preloadPageController,
+                onPageChanged: (e) {
+                  if (controller.isClosed ||
+                      generation != controller.pageGeneration) {
+                    return;
+                  }
+                  if (dualActive && e < groups.length) {
+                    controller.currentIndex.value = groups[e].first;
+                  } else {
+                    controller.currentIndex.value = e;
+                  }
+                  controller.markCompletedIfVisible();
+                },
+                reverse: reverse,
+                physics: locked ? const NeverScrollableScrollPhysics() : null,
+                itemCount: dualActive ? groups.length : urls.length,
+                preloadPagesCount: preload,
+                itemBuilder: (_, i) {
+                  if (dualActive) {
+                    if (i >= groups.length) {
+                      return const SizedBox();
+                    }
+                    return buildPageGroup(groups[i], urls, reverse);
+                  }
+                  return buildPageGroup([i], urls, reverse);
+                },
               ),
-              padding: AppStyle.edgeInsetsA12,
-              child: const Icon(
-                Icons.arrow_circle_left,
-                color: Colors.blue,
-              ),
-            ),
-          ),
-          footer: MaterialFooter2(
-            triggerOffset: kChapterSwitchTriggerOffset,
-            triggerWhenReach: true,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: AppStyle.radius24,
-              ),
-              padding: AppStyle.edgeInsetsA12,
-              child: const Icon(
-                Icons.arrow_circle_right,
-                color: Colors.blue,
-              ),
-            ),
-          ),
-          refreshOnStart: false,
-          onRefresh: () async {
-            // 往前翻出本話 → 停在上一話最後一頁
-            controller.forwardChapter(toLastPage: true);
-          },
-          onLoad: () async {
-            controller.nextChapter();
-          },
-          child: PreloadPageView.builder(
-            controller: controller.preloadPageController,
-            onPageChanged: (e) {
-              if (controller.isClosed ||
-                  generation != controller.pageGeneration) {
-                return;
-              }
-              if (dualActive && e < groups.length) {
-                controller.currentIndex.value = groups[e].first;
-              } else {
-                controller.currentIndex.value = e;
-              }
-              controller.markCompletedIfVisible();
-            },
-            reverse: reverse,
-            physics: locked ? const NeverScrollableScrollPhysics() : null,
-            itemCount: dualActive ? groups.length : urls.length,
-            preloadPagesCount: preload,
-            itemBuilder: (_, i) {
-              if (dualActive) {
-                if (i >= groups.length) {
-                  return const SizedBox();
-                }
-                return buildPageGroup(groups[i], urls, reverse);
-              }
-              return buildPageGroup([i], urls, reverse);
-            },
-          ),
-        );
+            ));
       },
     );
   }
