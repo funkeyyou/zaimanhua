@@ -37,8 +37,10 @@ class IndexPage extends GetView<IndexController> {
             bottomNavigationBar: wide || controller.showContent.value
                 ? null
                 : BottomNavigationBar(
-                    currentIndex: controller.index.value,
-                    onTap: controller.setIndex,
+                    currentIndex: controller.navigationOrder
+                        .indexOf(controller.index.value),
+                    onTap: (i) =>
+                        controller.setIndex(controller.navigationOrder[i]),
                     type: BottomNavigationBarType.fixed,
                     showSelectedLabels: true,
                     showUnselectedLabels: true,
@@ -47,7 +49,7 @@ class IndexPage extends GetView<IndexController> {
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     elevation: 4,
                     items: [
-                      for (var i = 0; i < _labels.length; i++)
+                      for (final i in controller.navigationOrder)
                         BottomNavigationBarItem(
                           icon: Icon(_icons[i]),
                           activeIcon: Icon(_activeIcons[i]),
@@ -59,13 +61,14 @@ class IndexPage extends GetView<IndexController> {
     });
   }
 
-  static const _labels = ['漫画', '资讯', '轻小说', '书架', '我的'];
+  static const _labels = ['漫画', '资讯', '轻小说', '书架', '我的', '画廊'];
   static const _icons = [
     Remix.book_2_line,
     Remix.article_line,
     Remix.book_open_line,
     Remix.book_marked_line,
     Remix.user_smile_line,
+    Icons.auto_stories_outlined,
   ];
   static const _activeIcons = [
     Remix.book_2_fill,
@@ -73,6 +76,7 @@ class IndexPage extends GetView<IndexController> {
     Remix.book_open_fill,
     Remix.book_marked_fill,
     Remix.user_smile_fill,
+    Icons.auto_stories,
   ];
 
   Widget _buildRail(BuildContext context) {
@@ -81,8 +85,9 @@ class IndexPage extends GetView<IndexController> {
       scrollable: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       labelType: NavigationRailLabelType.all,
-      onDestinationSelected: controller.setIndex,
-      selectedIndex: controller.index.value,
+      onDestinationSelected: (i) =>
+          controller.setIndex(controller.navigationOrder[i]),
+      selectedIndex: controller.navigationOrder.indexOf(controller.index.value),
       leading: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: ClipRRect(
@@ -95,7 +100,7 @@ class IndexPage extends GetView<IndexController> {
           const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
       unselectedLabelTextStyle: const TextStyle(fontSize: 12),
       destinations: [
-        for (var i = 0; i < _labels.length; i++)
+        for (final i in controller.navigationOrder)
           NavigationRailDestination(
             icon: Icon(_icons[i]),
             selectedIcon: Icon(_activeIcons[i]),

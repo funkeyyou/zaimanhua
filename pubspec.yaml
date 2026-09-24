@@ -1,5 +1,5 @@
 name: zai_x
-version: 2.0.1+20001
+version: 2.1.0+21000
 publish_to: none
 description: "再漫画X · 再漫画第三方客户端"
 environment: 
@@ -23,6 +23,7 @@ dependencies:
   intl: any
   universal_html: ^2.2.4 #HTML解析
   html_unescape: ^2.0.0 #HTML解码
+  html: ^0.15.6
   csslib: ^1.0.0 #CSS解析
 
   #Widget

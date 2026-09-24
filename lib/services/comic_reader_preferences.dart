@@ -39,9 +39,11 @@ class ComicReaderPreferences {
 }
 
 class ComicReaderPreferencesStore {
-  ComicReaderPreferencesStore(this.box);
+  ComicReaderPreferencesStore(this.box,
+      {this.namespace = 'ComicReaderPreferencesV1'});
+  final String namespace;
   final Box box;
-  String _key(int comicId) => 'ComicReaderPreferencesV1:$comicId';
+  String _key(int comicId) => '$namespace:$comicId';
 
   ComicReaderPreferences read(int comicId) =>
       ComicReaderPreferences.fromMap(box.get(_key(comicId)));

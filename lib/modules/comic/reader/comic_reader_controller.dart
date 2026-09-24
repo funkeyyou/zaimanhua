@@ -33,8 +33,14 @@ import 'package:remixicon/remixicon.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zai_x/app/i18n.dart';
+import 'comic_reader_source.dart';
 
 class ComicReaderController extends BaseController {
+  final ComicReaderSource? externalSource;
+  bool get supportsComments => externalSource == null;
+  Map<String, String> get imageHeaders =>
+      externalSource?.headers ?? const {'Referer': 'http://www.zaimanhua.com/'};
+
   /// 是否为条漫
   final bool isLongComic;
   final int comicId;
@@ -51,6 +57,7 @@ class ComicReaderController extends BaseController {
     required this.chapter,
     required this.comicCover,
     required this.isLongComic,
+    this.externalSource,
   }) {
     chapterIndex.value = chapters.indexOf(chapter);
   }
@@ -113,7 +120,9 @@ class ComicReaderController extends BaseController {
 
   final preferences = const ComicReaderPreferences().obs;
   ComicReaderPreferencesStore get _preferencesStore =>
-      ComicReaderPreferencesStore(LocalStorageService.instance.settingsBox);
+      ComicReaderPreferencesStore(LocalStorageService.instance.settingsBox,
+          namespace: externalSource?.preferencesNamespace ??
+              'ComicReaderPreferencesV1');
   int get dualPageMode =>
       preferences.value.dualPage ?? settings.comicReaderDualPage.value;
   bool get coverAlone =>
@@ -146,7 +155,7 @@ class ComicReaderController extends BaseController {
   @override
   void onInit() {
     preferences.value = _preferencesStore.read(comicId);
-    _completion = ComicCompletionService.current();
+    if (externalSource == null) _completion = ComicCompletionService.current();
     initConnectivity();
     initBattery();
     if (isLongComic) {
@@ -278,6 +287,7 @@ class ComicReaderController extends BaseController {
   }
 
   void _saveReadingTime() {
+    if (externalSource != null) return;
     var seconds = DateTime.now().difference(_openedAt).inSeconds;
     ReadingStatsService.recordSeconds(seconds);
     // 「累计观看十分钟漫画」这类任务多半是读完这一段才达成
@@ -326,29 +336,33 @@ class ComicReaderController extends BaseController {
       loadViewPoints();
 
       var result = cached ??
-          await request.chapterDetail(
-            comicId: comicId,
-            chapterId: chapterId,
-            useHD: AppSettingsService.instance.comicReaderHD.value,
-          );
+          await (externalSource?.load() ??
+              request.chapterDetail(
+                comicId: comicId,
+                chapterId: chapterId,
+                useHD: AppSettingsService.instance.comicReaderHD.value,
+              ));
       if (isClosed || generation != _loadGeneration) return;
       if (result.pageUrls.isEmpty) {
         throw AppError("无法读取章节信息".i18n);
       }
-      var his = DBService.instance.getComicHistory(comicId);
+      var his = externalSource == null
+          ? DBService.instance.getComicHistory(comicId)
+          : null;
       if (his != null && his.chapterId == chapterId && his.page != 0) {
         // 最后一页也是有效进度。吐槽页或图片数量变化时停在最后一张图，
         // 不能把越界位置一律重置为第一页。
         initialIndex = (his.page - 1).clamp(0, result.pageUrls.length - 1);
       } else {
-        initialIndex = 0;
+        initialIndex = (externalSource?.readPage() ?? 0)
+            .clamp(0, result.pageUrls.length - 1);
       }
       if (openAtLastPage) {
         openAtLastPage = false;
         initialIndex = result.pageUrls.isEmpty ? 0 : result.pageUrls.length - 1;
       }
       currentIndex.value = initialIndex;
-      if (settings.comicReaderShowViewPoint.value) {
+      if (supportsComments && settings.comicReaderShowViewPoint.value) {
         result.pageUrls.add("TC");
       }
 
@@ -388,6 +402,7 @@ class ComicReaderController extends BaseController {
   /// 只抓内容与前两页图片；换话时就不必再等接口和首图，
   /// 整屏 loading 也可以跳过。
   void prefetchNextChapter() async {
+    if (externalSource != null) return;
     var next = chapterIndex.value + 1;
     if (next >= chapters.length) {
       return;
@@ -444,6 +459,7 @@ class ComicReaderController extends BaseController {
 
   /// 加载吐槽、观点
   void loadViewPoints() async {
+    if (!supportsComments) return;
     try {
       viewPoints.clear();
       var result = await request.viewPoints(
@@ -727,6 +743,7 @@ class ComicReaderController extends BaseController {
 
   /// 查看吐槽
   void showComment() {
+    if (!supportsComments) return;
     setShowControls();
     TextEditingController tucaoController = TextEditingController();
     showModalBottomSheet(
@@ -1102,16 +1119,17 @@ class ComicReaderController extends BaseController {
                       ),
                     ),
                     AppStyle.vGap12,
-                    buildBGItem(
-                      child: SwitchListTile(
-                        value: settings.comicReaderShowViewPoint.value,
-                        onChanged: (e) {
-                          settings.setComicReaderShowViewPoint(e);
-                          setShowViewPoint(e);
-                        },
-                        title: Text("显示吐槽".i18n),
+                    if (supportsComments)
+                      buildBGItem(
+                        child: SwitchListTile(
+                          value: settings.comicReaderShowViewPoint.value,
+                          onChanged: (e) {
+                            settings.setComicReaderShowViewPoint(e);
+                            setShowViewPoint(e);
+                          },
+                          title: Text("显示吐槽".i18n),
+                        ),
                       ),
-                    ),
                     // AppStyle.vGap12,
                     // buildBGItem(
                     //   child: SwitchListTile(
@@ -1235,6 +1253,7 @@ class ComicReaderController extends BaseController {
   }
 
   void markCompletedIfVisible() {
+    if (externalSource != null) return;
     if (isClosed ||
         !_historyReady ||
         pageLoadding.value ||
@@ -1269,6 +1288,7 @@ class ComicReaderController extends BaseController {
   }
 
   void setShowViewPoint(bool value) {
+    if (!supportsComments) return;
     if (value) {
       if (!detail.value.pageUrls.contains("TC")) {
         detail.update((val) {
@@ -1297,6 +1317,12 @@ class ComicReaderController extends BaseController {
     }
     final imageCount = detail.value.pageUrls.where((url) => url != "TC").length;
     if (imageCount == 0) return;
+    if (externalSource != null) {
+      unawaited(externalSource!
+          .writePage(currentIndex.value.clamp(0, imageCount - 1))
+          .catchError((e) => Log.logPrint(e)));
+      return;
+    }
     UserService.instance.updateComicHistory(
       comicId: comicId,
       chapterId: chapter.chapterId,
@@ -1309,6 +1335,7 @@ class ComicReaderController extends BaseController {
 
   /// 记下这一话已经看过，详情页的章节列表会跟着变灰
   void _markChapterRead(int chapterId) async {
+    if (externalSource != null) return;
     try {
       var changed =
           await DBService.instance.markComicChaptersRead(comicId, [chapterId]);
@@ -1352,6 +1379,7 @@ class ComicReaderController extends BaseController {
   }
 
   void likeViewPoint(ComicViewPointModel item) async {
+    if (!supportsComments) return;
     try {
       await request.likeViewPoint(comicId: comicId, id: item.id);
 
@@ -1362,6 +1390,7 @@ class ComicReaderController extends BaseController {
   }
 
   void sendViewPoint(String content) async {
+    if (!supportsComments) return;
     if (!await UserService.instance.login()) {
       SmartDialog.showToast("请先登录".i18n);
       return;

@@ -8,6 +8,8 @@ import 'package:zai_x/services/user_service.dart';
 
 import 'package:get/get.dart';
 import 'package:zai_x/app/i18n.dart';
+import 'package:zai_x/modules/index/index_controller.dart';
+import 'package:zai_x/modules/hitomi/author_unlock.dart';
 
 class UserHomeController extends GetxController {
   final AppSettingsService settings = AppSettingsService.instance;
@@ -60,7 +62,16 @@ class UserHomeController extends GetxController {
       ),
       applicationName: "再漫画X".i18n,
       applicationVersion: "Ver ${Utils.packageInfo.version}",
-      applicationLegalese: "@xiaoyaocz",
+      children: [
+        AuthorUnlock(
+          onUnlock: () async {
+            final index = Get.find<IndexController>();
+            await index.setHitomiEnabled(true);
+            Get.back();
+            index.setIndex(5);
+          },
+        ),
+      ],
     ));
   }
 

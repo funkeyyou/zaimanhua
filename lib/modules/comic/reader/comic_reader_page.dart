@@ -197,6 +197,16 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                           icon: const Icon(Icons.arrow_back),
                         ),
                         AppStyle.hGap12,
+                        if (controller.externalSource != null)
+                          Obx(() => IconButton(
+                                tooltip: '收藏'.i18n,
+                                onPressed:
+                                    controller.externalSource!.toggleFavorite,
+                                icon: Icon(
+                                    controller.externalSource!.favorite.value
+                                        ? Icons.bookmark
+                                        : Icons.bookmark_border),
+                              )),
                         Expanded(
                           child: Obx(
                             () => Text(
@@ -248,7 +258,8 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                                 Obx(
                                   () => Visibility(
                                     visible: controller.settings
-                                        .comicReaderShowViewPoint.value,
+                                            .comicReaderShowViewPoint.value &&
+                                        controller.supportsComments,
                                     child: Expanded(
                                       child: IconButton(
                                         onPressed: controller.showComment,
@@ -429,6 +440,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
             onLoaded: loaded)
         : NetImage(
             url,
+            headers: controller.imageHeaders,
             key: ValueKey('$generation:$page:$url'),
             fit: vertical ? BoxFit.fitWidth : BoxFit.contain,
             progress: true,

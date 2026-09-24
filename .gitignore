@@ -32,6 +32,9 @@ migrate_working_dir/
 .pub/
 /build/
 
+# 本機紀錄（不提交）
+/docs/private/
+
 # Web related
 lib/generated_plugin_registrant.dart
 

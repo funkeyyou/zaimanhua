@@ -12,6 +12,7 @@ class NetImage extends StatefulWidget {
   final bool progress;
   final bool thumbnail;
   final VoidCallback? onLoaded;
+  final Map<String, String> headers;
   const NetImage(this.picUrl,
       {this.width,
       this.height,
@@ -20,6 +21,7 @@ class NetImage extends StatefulWidget {
       this.progress = false,
       this.thumbnail = false,
       this.onLoaded,
+      this.headers = const {'Referer': 'http://www.zaimanhua.com/'},
       super.key});
 
   @override
@@ -95,7 +97,7 @@ class _NetImageState extends State<NetImage>
           shape: BoxShape.rectangle,
           handleLoadingProgress: widget.progress,
           borderRadius: BorderRadius.circular(widget.borderRadius),
-          headers: const {'Referer': "http://www.zaimanhua.com/"},
+          headers: widget.headers,
           loadStateChanged: (e) {
             if (e.extendedImageLoadState == LoadState.loading) {
               animationController.reset();

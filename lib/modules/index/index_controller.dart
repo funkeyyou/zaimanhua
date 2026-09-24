@@ -16,9 +16,22 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:multi_split_view/multi_split_view.dart';
 import 'package:zai_x/app/i18n.dart';
+import 'package:zai_x/services/local_storage_service.dart';
+import 'package:zai_x/modules/hitomi/hitomi_page.dart';
 
 class IndexController extends GetxController {
   final index = 0.obs;
+  final hitomiEnabled = false.obs;
+  // Keep route IDs stable while positioning the optional source after comics.
+  List<int> get navigationOrder => [0, if (hitomiEnabled.value) 5, 1, 2, 3, 4];
+  Future<void> setHitomiEnabled(bool enabled) async {
+    await LocalStorageService.instance.settingsBox
+        .put('HitomiEnabledV1', enabled);
+    if (!enabled && index.value == 5) setIndex(4);
+    hitomiEnabled.value = enabled;
+    if (!enabled) pages[5] = const SizedBox();
+  }
+
   final showContent = false.obs;
   final GlobalKey indexKey = GlobalKey();
   final GlobalKey subRouterKey = GlobalKey();
@@ -40,9 +53,13 @@ class IndexController extends GetxController {
     const SizedBox(),
     const SizedBox(),
     const UserHomePage(),
+    const SizedBox(),
   ];
   @override
   void onInit() {
+    hitomiEnabled.value = LocalStorageService.instance.settingsBox
+            .get('HitomiEnabledV1', defaultValue: false) ==
+        true;
     Future.delayed(Duration.zero, showFirstRun);
     super.onInit();
   }
@@ -51,6 +68,7 @@ class IndexController extends GetxController {
   void onClose() {}
 
   void setIndex(int i) {
+    if (i == 5 && !hitomiEnabled.value) return;
     if (i == 1 && pages[i] is SizedBox) {
       Get.put(NewsHomeController());
       pages[i] = const NewsHomePage();
@@ -59,6 +77,8 @@ class IndexController extends GetxController {
       pages[i] = NovelHomePage();
     } else if (i == 3 && pages[i] is SizedBox) {
       pages[i] = BookshelfPage();
+    } else if (i == 5 && pages[i] is SizedBox) {
+      pages[i] = HitomiPage(onHide: () => setHitomiEnabled(false));
     }
     if (index.value == i) {
       EventBus.instance.emit<int>(EventBus.kBottomNavigationBarClicked, i);
