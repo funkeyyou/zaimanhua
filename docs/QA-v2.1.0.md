@@ -10,8 +10,9 @@
 - 本機 release APK：`com.xycz.zmhx`，versionName `2.1.0`、versionCode `21000`；簽章 SHA-256 `4e2f84076e0c2a4361a8b23d9678b58b763bb43ecd45f437aa9bd0acd018b222`，與 v2.0.1 相同。
 - MuMu：自 2.0.1 覆蓋安裝成功，既有資料保留；導航與關於頁顯示 Ver 2.1.0、funkeyyou；錯誤日誌無 FATAL EXCEPTION、Unhandled Exception、RenderFlex 或 E/flutter。
 - Windows ZIP：下載後 SHA-256 與 GitHub digest 一致，解壓 55 個檔案；EXE ProductVersion `2.1.0+21000`、FileDescription「再漫畫X」、ProductName `zai_x`。實際啟動後導航與分頁標題正常顯示繁體。
+- 正式 APK：下載後 SHA-256 與 GitHub digest 一致；簽章與 v2.0.1 相同，versionCode `21000`，App 名稱「再漫画X」。
 - 匿名 latest API 回傳 v2.1.0（非草稿），資產為 APK 與 Windows ZIP。
-- v2.0.1 的 APK 與 Windows ZIP 已保存在 `build/release-2.0.1/current/`，雜湊與原 GitHub 資產一致。
+- 下載頁已移除 v2.0.1 Release，僅保留 v2.1.0；舊 tag 與 `build/release-2.0.1/current/` 備份保留，刪除前已核對備份雜湊。
 
 | 資產 | bytes | SHA-256（GitHub digest） |
 | --- | ---: | --- |
