@@ -1,0 +1,226 @@
+name: Codex Issue Assistant
+
+"on":
+  issues:
+    types: [opened]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: Issue number to analyze again
+        required: true
+        type: number
+
+permissions: {}
+
+concurrency:
+  group: codex-issue-${{ github.event.issue.number || inputs.issue_number }}
+  cancel-in-progress: false
+
+env:
+  CODEX_INSTALL_COMMAND: ${{ vars.CODEX_INSTALL_COMMAND || 'flutter pub get' }}
+  CODEX_TEST_COMMAND: ${{ vars.CODEX_TEST_COMMAND || 'flutter analyze --no-fatal-infos && flutter test' }}
+  CODEX_BASE_URL: ${{ vars.CODEX_BASE_URL }}
+  CODEX_MODEL: ${{ vars.CODEX_MODEL }}
+
+jobs:
+  triage:
+    if: >-
+      (github.event_name == 'issues' && github.event.sender.type == 'User') ||
+      (github.event_name == 'workflow_dispatch' && github.ref_name == github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: read
+    outputs:
+      auto_fix: ${{ steps.result.outputs.auto_fix }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Prepare trusted instructions and issue data
+        id: prepare
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REQUESTED_ISSUE: ${{ inputs.issue_number }}
+          KEY_CONFIGURED: ${{ secrets.OPENAI_API_KEY != '' }}
+        run: |
+          test "$KEY_CONFIGURED" = true || { echo 'Configure OPENAI_API_KEY first.'; exit 1; }
+          mkdir -p "$RUNNER_TEMP/codex-bot/triage"
+          cp .github/codex/issue_bot.py "$RUNNER_TEMP/codex-bot/issue_bot.py"
+          python3 -I "$RUNNER_TEMP/codex-bot/issue_bot.py" prepare-triage "$RUNNER_TEMP/codex-bot/triage"
+
+      - name: Analyze issue with Codex
+        uses: openai/codex-action@bdf19a4a223ec2549a3e2274a0cf61556bc07675 # v1, verified 2026-10-10
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          responses-api-endpoint: ${{ steps.prepare.outputs.responses_endpoint }}
+          model: ${{ vars.CODEX_MODEL }}
+          permission-profile: ":read-only"
+          safety-strategy: drop-sudo
+          allow-users: "*"
+          prompt-file: ${{ runner.temp }}/codex-bot/triage/prompt.md
+          output-schema-file: .github/codex/triage.schema.json
+          output-file: ${{ runner.temp }}/codex-bot/triage/report.json
+
+      - name: Validate decision
+        id: result
+        run: python3 -I "$RUNNER_TEMP/codex-bot/issue_bot.py" validate-triage "$RUNNER_TEMP/codex-bot/triage"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: codex-triage
+          path: |
+            ${{ runner.temp }}/codex-bot/triage/meta.json
+            ${{ runner.temp }}/codex-bot/triage/issue.json
+            ${{ runner.temp }}/codex-bot/triage/report.json
+          retention-days: 7
+          if-no-files-found: error
+          overwrite: true
+
+  fix:
+    needs: triage
+    if: needs.triage.outputs.auto_fix == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    outputs:
+      resolved: ${{ steps.result.outputs.resolved }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: codex-triage
+          path: ${{ runner.temp }}/codex-bot/triage
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.2"
+          channel: stable
+          cache: false
+
+      - name: Prepare repair instructions
+        id: prepare
+        run: |
+          test -n "$CODEX_TEST_COMMAND" || { echo 'Configure CODEX_TEST_COMMAND first.'; exit 1; }
+          mkdir -p "$RUNNER_TEMP/codex-bot/fix"
+          cp .github/codex/issue_bot.py "$RUNNER_TEMP/codex-bot/issue_bot.py"
+          python3 -I "$RUNNER_TEMP/codex-bot/issue_bot.py" prepare-fix "$RUNNER_TEMP/codex-bot"
+
+      - name: Install project dependencies
+        run: |
+          if [ -n "$CODEX_INSTALL_COMMAND" ]; then
+            bash -eo pipefail -c "$CODEX_INSTALL_COMMAND"
+          fi
+
+      - name: Reproduce and fix with Codex
+        uses: openai/codex-action@bdf19a4a223ec2549a3e2274a0cf61556bc07675 # v1, verified 2026-10-10
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          responses-api-endpoint: ${{ steps.prepare.outputs.responses_endpoint }}
+          model: ${{ vars.CODEX_MODEL }}
+          permission-profile: ":workspace"
+          safety-strategy: drop-sudo
+          allow-users: "*"
+          prompt-file: ${{ runner.temp }}/codex-bot/fix/prompt.md
+          output-schema-file: .github/codex/fix.schema.json
+          output-file: ${{ runner.temp }}/codex-bot/fix/report.json
+
+      - name: Package the candidate patch
+        id: result
+        run: python3 -I "$RUNNER_TEMP/codex-bot/issue_bot.py" package-fix "$RUNNER_TEMP/codex-bot"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: codex-fix
+          path: |
+            ${{ runner.temp }}/codex-bot/fix/meta.json
+            ${{ runner.temp }}/codex-bot/fix/report.json
+            ${{ runner.temp }}/codex-bot/fix/candidate.patch
+          retention-days: 7
+          if-no-files-found: error
+          overwrite: true
+
+  verify:
+    needs: fix
+    if: needs.fix.outputs.resolved == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: codex-fix
+          path: ${{ runner.temp }}/codex-bot/fix
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.2"
+          channel: stable
+          cache: false
+
+      - name: Validate and apply candidate
+        run: |
+          cp .github/codex/issue_bot.py "$RUNNER_TEMP/codex-bot/issue_bot.py"
+          python3 -I "$RUNNER_TEMP/codex-bot/issue_bot.py" apply-fix "$RUNNER_TEMP/codex-bot/fix"
+
+      - name: Install project dependencies
+        run: |
+          if [ -n "$CODEX_INSTALL_COMMAND" ]; then
+            bash -eo pipefail -c "$CODEX_INSTALL_COMMAND"
+          fi
+
+      - name: Independently verify the patch
+        run: |
+          test -n "$CODEX_TEST_COMMAND"
+          bash -eo pipefail -c "$CODEX_TEST_COMMAND"
+
+  publish:
+    needs: [triage, fix, verify]
+    if: always() && !cancelled() && needs.triage.result != 'skipped'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+
+      - uses: actions/download-artifact@v4
+        if: needs.triage.result == 'success'
+        with:
+          name: codex-triage
+          path: ${{ runner.temp }}/codex-bot/triage
+
+      - uses: actions/download-artifact@v4
+        if: needs.fix.result == 'success'
+        with:
+          name: codex-fix
+          path: ${{ runner.temp }}/codex-bot/fix
+
+      - name: Reply to issue and open a verified draft PR
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REQUESTED_ISSUE: ${{ inputs.issue_number }}
+          TRIAGE_STATUS: ${{ needs.triage.result }}
+          FIX_STATUS: ${{ needs.fix.result }}
+          VERIFY_STATUS: ${{ needs.verify.result }}
+        run: python3 -I .github/codex/issue_bot.py publish "$RUNNER_TEMP/codex-bot"
