@@ -338,13 +338,20 @@ def open_pr(target, meta, run_url):
 
 
 def upsert_comment(number, body):
-    body = MARKER + "\n" + body
+    run_marker = "<!-- codex-issue-bot-run:" + str(issue_number(os.environ["GITHUB_RUN_ID"])) + " -->"
+    if os.environ.get("GITHUB_EVENT_NAME") == "issue_comment":
+        event, _ = event_context()
+        comment_id = issue_number(event["comment"]["id"])
+        comment_url = (os.environ["GITHUB_SERVER_URL"] + "/" + os.environ["GITHUB_REPOSITORY"]
+                       + "/issues/" + str(number) + "#issuecomment-" + str(comment_id))
+        body = "回應[這則留言](" + comment_url + ")：\n\n" + body
+    body = MARKER + "\n" + run_marker + "\n" + body
     login = os.environ.get("CODEX_BOT_LOGIN", "github-actions[bot]")
     page = 1
     while True:
         comments = api("GET", "/issues/" + str(number) + "/comments?per_page=100&page=" + str(page))
         for comment in comments:
-            if comment["user"]["login"] == login and MARKER in (comment.get("body") or ""):
+            if comment["user"]["login"] == login and run_marker in (comment.get("body") or ""):
                 api("PATCH", "/issues/comments/" + str(comment["id"]), {"body": body})
                 return
         if len(comments) < 100:

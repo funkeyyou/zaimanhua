@@ -17,6 +17,9 @@
 `Run workflow` 也可選擇本次 effort；選 `default` 會使用 repository 設定。
 分析與修復兩個階段使用同一個 effort。第三方供應商需要接受相應參數。
 
+每次新呼叫會新增一則 bot 回覆，並連結到觸發它的留言。原本的回覆會保留，
+對話依留言時間排列。同一次 Actions run 重試才會更新該次 run 的回覆，避免重複發送。
+
 `CODEX_BOT_MENTION` 可調整呼叫名稱，預設 `@summer-shark`。真正 GitHub App 的
 `@summer-shark[bot]` 也能辨識。只有一般使用者在開啟中的 Issue 留言才會觸發；
 機器人回覆、PR 留言、引用、程式碼區塊與一般提及不會呼叫模型。
