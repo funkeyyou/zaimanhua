@@ -3,12 +3,19 @@ name: Codex Issue Assistant
 "on":
   issues:
     types: [opened]
+  issue_comment:
+    types: [created]
   workflow_dispatch:
     inputs:
       issue_number:
         description: Issue number to analyze again
         required: true
         type: number
+      effort:
+        description: Reasoning effort for this run
+        type: choice
+        default: default
+        options: [default, low, medium, high, xhigh, max]
 
 permissions: {}
 
@@ -21,11 +28,16 @@ env:
   CODEX_TEST_COMMAND: ${{ vars.CODEX_TEST_COMMAND || 'flutter analyze --no-fatal-infos && flutter test' }}
   CODEX_BASE_URL: ${{ vars.CODEX_BASE_URL }}
   CODEX_MODEL: ${{ vars.CODEX_MODEL }}
+  CODEX_BOT_MENTION: ${{ vars.CODEX_BOT_MENTION || '@summer-shark' }}
+  CODEX_REASONING_EFFORT: ${{ vars.CODEX_REASONING_EFFORT || 'max' }}
 
 jobs:
   triage:
     if: >-
       (github.event_name == 'issues' && github.event.sender.type == 'User') ||
+      (github.event_name == 'issue_comment' && github.event.sender.type == 'User' &&
+      !github.event.issue.pull_request && github.event.issue.state == 'open' &&
+      contains(github.event.comment.body, vars.CODEX_BOT_MENTION || '@summer-shark')) ||
       (github.event_name == 'workflow_dispatch' && github.ref_name == github.event.repository.default_branch)
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -34,6 +46,8 @@ jobs:
       issues: read
     outputs:
       auto_fix: ${{ steps.result.outputs.auto_fix }}
+      selected: ${{ steps.prepare.outputs.selected }}
+      reasoning_effort: ${{ steps.prepare.outputs.reasoning_effort }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -45,6 +59,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           REQUESTED_ISSUE: ${{ inputs.issue_number }}
+          REQUESTED_EFFORT: ${{ inputs.effort }}
           KEY_CONFIGURED: ${{ secrets.OPENAI_API_KEY != '' }}
         run: |
           test "$KEY_CONFIGURED" = true || { echo 'Configure OPENAI_API_KEY first.'; exit 1; }
@@ -53,11 +68,13 @@ jobs:
           python3 -I "$RUNNER_TEMP/codex-bot/issue_bot.py" prepare-triage "$RUNNER_TEMP/codex-bot/triage"
 
       - name: Analyze issue with Codex
+        if: steps.prepare.outputs.selected == 'true'
         uses: openai/codex-action@bdf19a4a223ec2549a3e2274a0cf61556bc07675 # v1, verified 2026-10-10
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           responses-api-endpoint: ${{ steps.prepare.outputs.responses_endpoint }}
           model: ${{ vars.CODEX_MODEL }}
+          effort: ${{ steps.prepare.outputs.reasoning_effort }}
           permission-profile: ":read-only"
           safety-strategy: drop-sudo
           allow-users: "*"
@@ -66,10 +83,12 @@ jobs:
           output-file: ${{ runner.temp }}/codex-bot/triage/report.json
 
       - name: Validate decision
+        if: steps.prepare.outputs.selected == 'true'
         id: result
         run: python3 -I "$RUNNER_TEMP/codex-bot/issue_bot.py" validate-triage "$RUNNER_TEMP/codex-bot/triage"
 
       - uses: actions/upload-artifact@v4
+        if: steps.prepare.outputs.selected == 'true'
         with:
           name: codex-triage
           path: |
@@ -109,6 +128,8 @@ jobs:
 
       - name: Prepare repair instructions
         id: prepare
+        env:
+          REQUESTED_EFFORT: ${{ needs.triage.outputs.reasoning_effort }}
         run: |
           test -n "$CODEX_TEST_COMMAND" || { echo 'Configure CODEX_TEST_COMMAND first.'; exit 1; }
           mkdir -p "$RUNNER_TEMP/codex-bot/fix"
@@ -127,6 +148,7 @@ jobs:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           responses-api-endpoint: ${{ steps.prepare.outputs.responses_endpoint }}
           model: ${{ vars.CODEX_MODEL }}
+          effort: ${{ steps.prepare.outputs.reasoning_effort }}
           permission-profile: ":workspace"
           safety-strategy: drop-sudo
           allow-users: "*"
@@ -192,17 +214,36 @@ jobs:
 
   publish:
     needs: [triage, fix, verify]
-    if: always() && !cancelled() && needs.triage.result != 'skipped'
+    if: >-
+      always() && !cancelled() &&
+      (needs.triage.outputs.selected == 'true' || needs.triage.result == 'failure')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: write
       issues: write
       pull-requests: write
+    env:
+      CODEX_APP_ID: ${{ vars.CODEX_APP_ID }}
+      HAS_APP_KEY: ${{ secrets.CODEX_APP_PRIVATE_KEY != '' }}
     steps:
+      - name: Create Summer Shark installation token
+        id: bot-token
+        if: env.CODEX_APP_ID != '' && env.HAS_APP_KEY == 'true'
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.CODEX_APP_ID }}
+          private-key: ${{ secrets.CODEX_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-issues: write
+          permission-pull-requests: write
+
       - uses: actions/checkout@v5
         with:
           ref: ${{ github.sha }}
+          token: ${{ steps.bot-token.outputs.token || github.token }}
 
       - uses: actions/download-artifact@v4
         if: needs.triage.result == 'success'
@@ -218,7 +259,8 @@ jobs:
 
       - name: Reply to issue and open a verified draft PR
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ steps.bot-token.outputs.token || github.token }}
+          CODEX_BOT_LOGIN: ${{ steps.bot-token.outputs.app-slug && format('{0}[bot]', steps.bot-token.outputs.app-slug) || 'github-actions[bot]' }}
           REQUESTED_ISSUE: ${{ inputs.issue_number }}
           TRIAGE_STATUS: ${{ needs.triage.result }}
           FIX_STATUS: ${{ needs.fix.result }}

@@ -13,6 +13,43 @@ import urllib.request
 MAX_JSON = 150_000
 MAX_PATCH = 1_000_000
 MARKER = "<!-- codex-issue-bot -->"
+EFFORTS = {"low", "medium", "high", "xhigh", "max"}
+
+
+def comment_request(event):
+    issue, comment = event.get("issue", {}), event.get("comment", {})
+    if (issue.get("pull_request") or issue.get("state") != "open"
+            or event.get("sender", {}).get("type") != "User"
+            or comment.get("user", {}).get("type") != "User"):
+        return None
+    alias = os.environ.get("CODEX_BOT_MENTION", "@summer-shark").strip()
+    if not re.fullmatch(r"@[A-Za-z0-9][A-Za-z0-9-]*(?:\[bot\])?", alias):
+        raise ValueError("CODEX_BOT_MENTION must be an @bot-name")
+    suffix = "" if alias.lower().endswith("[bot]") else r"(?:\[bot\])?"
+    prefix = re.compile(r"^\s*" + re.escape(alias) + suffix + r"(?=\s|$)", re.IGNORECASE)
+    body = comment.get("body") or ""
+    match = prefix.match(body)
+    if not match:
+        return None
+    text = body[match.end():].strip()
+    effort = ""
+    if text.lower().startswith("effort="):
+        flag = re.match(r"effort=([^\s]+)(?:\s+|$)", text, re.IGNORECASE)
+        effort = flag.group(1).lower() if flag else ""
+        if effort not in EFFORTS:
+            raise ValueError("effort must be low, medium, high, xhigh, or max")
+        text = text[flag.end():].strip()
+    return {"id": comment["id"], "author": comment["user"]["login"],
+            "body": text, "effort": effort}
+
+
+def configured_effort(override=""):
+    effort = override.strip().lower()
+    if effort in {"", "default"}:
+        effort = os.environ.get("CODEX_REASONING_EFFORT", "max").strip().lower() or "max"
+    if effort not in EFFORTS:
+        raise ValueError("Reasoning effort must be low, medium, high, xhigh, or max")
+    return effort
 
 
 def read_json(path):
@@ -134,19 +171,34 @@ def fix_result(path):
 
 
 def prepare_triage(directory):
-    set_output("responses_endpoint", provider_endpoint())
     event, meta = event_context()
+    request = comment_request(event) if os.environ.get("GITHUB_EVENT_NAME") == "issue_comment" else None
+    selected = os.environ.get("GITHUB_EVENT_NAME") != "issue_comment" or request is not None
+    set_output("selected", selected)
+    if not selected:
+        print("No bot command at the beginning of this human issue comment; skipped.")
+        return
+    override = request["effort"] if request else os.environ.get("REQUESTED_EFFORT", "")
+    effort = configured_effort(override)
+    set_output("reasoning_effort", effort)
+    set_output("responses_endpoint", provider_endpoint())
     check_meta(meta)
-    issue = event.get("issue") or api("GET", "/issues/" + str(meta["issue_number"]))
+    issue = (api("GET", "/issues/" + str(meta["issue_number"]))
+             if os.environ.get("GITHUB_EVENT_NAME") == "issue_comment"
+             else event.get("issue") or api("GET", "/issues/" + str(meta["issue_number"])))
     if "pull_request" in issue:
         raise ValueError("Select an issue, not a pull request")
+    if issue["state"] != "open":
+        set_output("selected", False)
+        print("Issue is closed; model run skipped.")
+        return
     comments, truncated = [], False
-    # New issues have no initial comments. Manual runs include existing follow-ups.
-    if os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch":
+    # Manual and mention-triggered runs include existing follow-ups.
+    if os.environ.get("GITHUB_EVENT_NAME") in {"workflow_dispatch", "issue_comment"}:
         page = api("GET", "/issues/" + str(meta["issue_number"]) + "/comments?per_page=30")
         remaining = 20_000
         for comment in page:
-            if comment["user"]["login"] == "github-actions[bot]" and MARKER in (comment.get("body") or ""):
+            if comment["user"].get("type") == "Bot" and MARKER in (comment.get("body") or ""):
                 continue
             body = comment.get("body") or ""
             excerpt = body[:min(8000, remaining)]
@@ -157,6 +209,9 @@ def prepare_triage(directory):
     body = issue.get("body") or ""
     payload = {"title": issue.get("title", "")[:1000], "body": body[:20000], "comments": comments,
                "truncated": truncated or len(body) > 20000, "state": issue["state"]}
+    if request:
+        payload["request"] = {"id": request["id"], "author": request["author"], "body": request["body"][:12000]}
+        payload["truncated"] = payload["truncated"] or len(request["body"]) > 12000
     directory.mkdir(parents=True, exist_ok=True)
     write_json(directory / "meta.json", meta)
     write_json(directory / "issue.json", payload)
@@ -179,6 +234,7 @@ def validate_triage(directory):
 
 def prepare_fix(root):
     set_output("responses_endpoint", provider_endpoint())
+    set_output("reasoning_effort", configured_effort(os.environ.get("REQUESTED_EFFORT", "")))
     triage, target = root / "triage", root / "fix"
     meta = read_json(triage / "meta.json")
     check_meta(meta)
@@ -265,8 +321,9 @@ def open_pr(target, meta, run_url):
             raise ValueError("Existing branch differs from this verified repair")
     else:
         git("switch", "-c", branch)
-        git("config", "user.name", "github-actions[bot]")
-        git("config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com")
+        login = os.environ.get("CODEX_BOT_LOGIN", "github-actions[bot]")
+        git("config", "user.name", login)
+        git("config", "user.email", login + "@users.noreply.github.com")
         git("commit", "-m", "Fix issue #" + str(number) + " via Codex")
         # Only the publishing job has Git credentials; candidate code is never executed here.
         git("push", "origin", "HEAD:refs/heads/" + branch)
@@ -282,11 +339,12 @@ def open_pr(target, meta, run_url):
 
 def upsert_comment(number, body):
     body = MARKER + "\n" + body
+    login = os.environ.get("CODEX_BOT_LOGIN", "github-actions[bot]")
     page = 1
     while True:
         comments = api("GET", "/issues/" + str(number) + "/comments?per_page=100&page=" + str(page))
         for comment in comments:
-            if comment["user"]["login"] == "github-actions[bot]" and MARKER in (comment.get("body") or ""):
+            if comment["user"]["login"] == login and MARKER in (comment.get("body") or ""):
                 api("PATCH", "/issues/comments/" + str(comment["id"]), {"body": body})
                 return
         if len(comments) < 100:
