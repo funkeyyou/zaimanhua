@@ -124,8 +124,11 @@ class TaskCenterController extends BaseController {
     var text = const JsonEncoder.withIndent('  ').convert(rawResponse);
     Utils.copyText(text);
     try {
-      var dir = await getExternalStorageDirectory() ??
-          await getApplicationSupportDirectory();
+      // iOS 没有外部存储；放在“文件”App 看得到的 Documents 目录
+      var dir = Platform.isAndroid
+          ? (await getExternalStorageDirectory() ??
+              await getApplicationSupportDirectory())
+          : await getApplicationDocumentsDirectory();
       var file = File(p.join(dir.path, 'task_list_raw.json'));
       await file.writeAsString(text);
       SmartDialog.showToast(file.path);

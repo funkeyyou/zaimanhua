@@ -2,7 +2,7 @@
 
 [English](README.en.md) · [简体中文 / Full reference](README.md) · [繁體中文](README.zh-TW.md) · [Download](https://github.com/funkeyyou/zaimanhua/releases/latest) · [Report an issue](https://github.com/funkeyyou/zaimanhua/issues)
 
-**An unofficial third-party client for Zaimanhua (再漫画, zaimanhua.com) on Android and Windows.**
+**An unofficial third-party client for Zaimanhua (再漫画, zaimanhua.com) on Android, iOS and Windows.**
 
 Read manga, light novels and news from Zaimanhua, with AI-assisted search, access to hidden titles, dual-page reading on foldables and tablets, and automatic daily check-in. The app interface is in Chinese (Simplified or Traditional).
 
@@ -28,7 +28,7 @@ Read manga, light novels and news from Zaimanhua, with AI-assisted search, acces
 
 ## Requirements
 
-Android 7.0 or later, or Windows 10/11 (64-bit). Most content is readable without an account; subscriptions, progress sync, check-in and some chapters need a Zaimanhua account, which you sign in to inside the app.
+Android 7.0 or later, iOS/iPadOS 15 or later, or Windows 10/11 (64-bit). Most content is readable without an account; subscriptions, progress sync, check-in and some chapters need a Zaimanhua account, which you sign in to inside the app.
 
 This is an unofficial community project, not affiliated with Zaimanhua or DMZJ (动漫之家).
 
@@ -38,10 +38,11 @@ These links always point to the [latest release](https://github.com/funkeyyou/za
 
 - **Android**: [ZAI-X-android.apk](https://github.com/funkeyyou/zaimanhua/releases/latest/download/ZAI-X-android.apk) (mirror: [gh-proxy](https://gh-proxy.com/https://github.com/funkeyyou/zaimanhua/releases/latest/download/ZAI-X-android.apk)). Allow installing apps from unknown sources the first time.
 - **Windows**: [ZAI-X-windows-x64.zip](https://github.com/funkeyyou/zaimanhua/releases/latest/download/ZAI-X-windows-x64.zip) (mirror: [gh-proxy](https://gh-proxy.com/https://github.com/funkeyyou/zaimanhua/releases/latest/download/ZAI-X-windows-x64.zip)). Extract it to a writable folder such as `D:\Apps\ZAI-X` and run `ZAI-X.exe`. No installer or administrator rights are needed. Avoid `C:\Program Files`, where in-app updates cannot replace the files.
+- **iOS / iPadOS**: install [TestFlight](https://apps.apple.com/app/testflight/id899247664) from the App Store, then open the [ZAI-X TestFlight public link](https://testflight.apple.com/join/x3N2EgWr) on the same device and tap Accept, then Install. No jailbreak or signing needed. The public link has a tester limit; if it says the beta is full, try again in a few days. Each TestFlight build lasts 90 days, and TestFlight notifies you about new builds. Each release also includes an unsigned `ZAI-X-ios-unsigned.ipa` that you can sign with your own Apple ID using AltStore, SideStore or Sideloadly.
 
 ## Updates
 
-Open **我的 → 检查更新** (Me → Check for updates) in the app. On Android, the new version installs over the old one and keeps your data. On Windows, v2.2.0 and later update in place; older versions need one manual update by extracting the new ZIP over the old folder. Windows keeps your library, history, settings and downloads in AppData, so replacing the app folder does not lose them.
+Open **我的 → 检查更新** (Me → Check for updates) in the app. On Android, the new version installs over the old one and keeps your data. On iOS, updates come through TestFlight; the in-app check only opens the release page. On Windows, v2.2.0 and later update in place; older versions need one manual update by extracting the new ZIP over the old folder. Windows keeps your library, history, settings and downloads in AppData, so replacing the app folder does not lose them.
 
 ## AI features and privacy
 

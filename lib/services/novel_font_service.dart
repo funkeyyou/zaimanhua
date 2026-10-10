@@ -79,6 +79,13 @@ class NovelFontService extends GetxService {
         XTypeGroup(
           label: 'font',
           extensions: ['ttf', 'otf', 'ttc'],
+          // iOS 的文件选择器只认 UTI
+          uniformTypeIdentifiers: [
+            'public.truetype-ttf-font',
+            'public.opentype-font',
+            'public.truetype-collection-font',
+            'public.font',
+          ],
         ),
       ],
     );

@@ -2,10 +2,10 @@
 
 [简体中文](README.md) · [繁體中文](README.zh-TW.md) · [English](README.en.md) · [下載 Releases](https://github.com/funkeyyou/zaimanhua/releases/latest) · [問題回報](https://github.com/funkeyyou/zaimanhua/issues)
 
-**再漫畫（zaimanhua.com）的第三方客戶端，Android 與 Windows 都能用。**
+**再漫畫（zaimanhua.com）的第三方客戶端，Android、iOS 與 Windows 都能用。**
 
 再漫畫第三方客戶端：看漫畫、輕小說與資訊，支援 AI 搜尋、神隱漫畫、雙頁閱讀與每日自動簽到。
-Unofficial Zaimanhua (再漫畫) client for Android and Windows: manga, light novels and news.
+Unofficial Zaimanhua (再漫畫) client for Android, iOS and Windows: manga, light novels and news.
 
 - **AI 搜尋**：用一句話描述想看的作品，例如「女主很強的奇幻冒險」「類似《葬送的芙莉蓮》的作品」，AI 讀過簡介後挑出符合的漫畫或輕小說，並寫上推薦理由。
 - **找得到神隱作品**：官方搜尋找不到的神隱、下架漫畫，由內建的本地索引補上，詳情與完整章節都能開啟。
@@ -25,7 +25,7 @@ Unofficial Zaimanhua (再漫畫) client for Android and Windows: manga, light no
 
 ### 開始前需要什麼？
 
-Android 7.0 以上的手機、平板或折疊機，或是 Windows 10／11（64 位元）電腦。
+Android 7.0 以上的手機、平板或折疊機，iOS 15 以上的 iPhone／iPad，或是 Windows 10／11（64 位元）電腦。
 多數漫畫、輕小說與資訊不登入也能看；訂閱、閱讀進度同步、簽到與部分章節需要再漫畫帳號，在 App 內登入即可。
 本專案是非官方的社群作品，與再漫畫、動漫之家沒有隸屬關係。
 
@@ -43,12 +43,26 @@ Android 7.0 以上的手機、平板或折疊機，或是 Windows 10／11（64 �
 | --- | --- | --- |
 | Android | [ZAI-X-android.apk](https://github.com/funkeyyou/zaimanhua/releases/latest/download/ZAI-X-android.apk) | [ZAI-X-android.apk](https://gh-proxy.com/https://github.com/funkeyyou/zaimanhua/releases/latest/download/ZAI-X-android.apk) |
 | Windows | [ZAI-X-windows-x64.zip](https://github.com/funkeyyou/zaimanhua/releases/latest/download/ZAI-X-windows-x64.zip) | [ZAI-X-windows-x64.zip](https://gh-proxy.com/https://github.com/funkeyyou/zaimanhua/releases/latest/download/ZAI-X-windows-x64.zip) |
+| iOS／iPadOS | [加入 TestFlight 測試](https://testflight.apple.com/join/x3N2EgWr) | — |
 
 GitHub 下載太慢時可以改用 gh-proxy（第三方加速服務）；下載後可對照 Release 頁面列出的 SHA-256 確認檔案。
 
 ### Android
 
 下載 APK 後點開安裝。第一次安裝時，系統會要求允許安裝未知來源的應用程式。
+
+### iOS／iPadOS（TestFlight）
+
+iOS 版透過 Apple 官方的 TestFlight 發佈，不需要越獄，也不用自己簽名：
+
+1. 在 iPhone 或 iPad 上從 App Store 安裝 [TestFlight](https://apps.apple.com/app/testflight/id899247664)。
+2. 用同一台裝置開啟 [ZAI-X 的 TestFlight 公開連結](https://testflight.apple.com/join/x3N2EgWr)，點「接受」，再點「安裝」。
+3. 之後從主畫面開啟「再漫画X」就能使用。
+
+- 公開連結有名額上限，額滿時會顯示「此 Beta 版已額滿」，請過幾天再試。
+- 每個 TestFlight 版本有效 90 天；有新版時 TestFlight 會通知你，打開 TestFlight 點「更新」即可，書架、紀錄與設定都會保留。
+- iOS 的訂閱更新提醒由系統決定何時在背景執行，可能比 Android 慢；打開 App 時一定會檢查一次。
+- 想自行安裝也可以：每個 Release 附有未簽名的 `ZAI-X-ios-unsigned.ipa`，用 AltStore、SideStore 或 Sideloadly 以自己的 Apple ID 簽名後安裝（免費 Apple ID 每 7 天要重簽一次）。
 
 ### Windows
 
@@ -61,6 +75,7 @@ GitHub 下載太慢時可以改用 gh-proxy（第三方加速服務）；下載�
 App 內「我的 → 檢查更新」讀的是同一個 Releases，下載後會核對 SHA-256：
 
 - **Android**：下載後喚起系統安裝器覆蓋安裝，書架、紀錄與設定都會保留。
+- **iOS**：由 TestFlight 通知並更新；App 內「檢查更新」只會開啟 Release 頁面。
 - **Windows**：v2.2.0 起可在 App 內自動覆蓋更新。App 關閉後換成新版並重新開啟，任何一步失敗都會還原原本的版本。更早的版本請先關閉 App，把新版 ZIP 解壓到原資料夾覆蓋一次。
 
 Windows 版的書架、紀錄、設定與下載內容存在使用者資料夾（AppData），更新或搬動 App 資料夾都不會遺失。
@@ -158,7 +173,7 @@ v2.2.0 起神隱作品也能開啟詳情與章節。仍然無法閱讀時，通�
 
 ### 有 iOS、macOS 或 Linux 版嗎？
 
-目前只提供 Android 與 Windows 安裝包。原始碼保留了其他平台的專案檔，但沒有裝置可以測試，需要的話請自行建置。
+iOS／iPadOS 版透過 TestFlight 提供，安裝方式見[上方說明](#iosipadostestflight)。macOS 與 Linux 目前只保留專案檔，沒有裝置可以測試，需要的話請自行建置。
 
 ## 開發
 

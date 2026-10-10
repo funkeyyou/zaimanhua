@@ -166,3 +166,67 @@ jobs:
             || gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes \
             || true
           gh release upload "$GITHUB_REF_NAME" ZAI-X-windows-x64.zip --repo "$GITHUB_REPOSITORY" --clobber
+
+  build-ios:
+    # 不簽名的 IPA：用 AltStore / SideStore / Sideloadly 以自己的 Apple ID 重新簽名後安裝
+    runs-on: macos-latest
+    needs: analyze
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.2"
+          cache: true
+      - name: Restore packages
+        run: flutter pub get
+      # 打包前换成 comic-index 分支上每天更新的本地漫画索引；取不到或不完整就沿用仓库内的快照
+      - name: Refresh bundled comic index
+        shell: bash
+        run: |
+          if git fetch --depth=1 origin comic-index 2>/dev/null; then
+            tmp="$RUNNER_TEMP/comic-index"
+            mkdir -p "$tmp"
+            git show FETCH_HEAD:comic_index.tsv.gz > "$tmp/comic_index.tsv.gz"
+            git show FETCH_HEAD:comic_index.json > "$tmp/comic_index.json"
+            lines=$(gzip -dc "$tmp/comic_index.tsv.gz" | tail -n +2 | grep -c . || true)
+            count=$(sed -n 's/.*"count": *\([0-9]*\).*/\1/p' "$tmp/comic_index.json")
+            if [ -n "$count" ] && [ "$lines" = "$count" ]; then
+              cp "$tmp/comic_index.tsv.gz" "$tmp/comic_index.json" assets/comic_index/
+              echo "已换成 comic-index 分支的索引（$count 部）"
+            else
+              echo "comic-index 分支的索引不完整，沿用仓库内的快照"
+            fi
+          else
+            echo "没有 comic-index 分支，沿用仓库内的快照"
+          fi
+      - name: Prepare AI defines
+        shell: bash
+        env:
+          ZAI_AI_CONFIG: ${{ secrets.ZAI_AI_CONFIG }}
+        run: dart run tools/ai/make_ai_defines.dart --env ZAI_AI_CONFIG --out "$RUNNER_TEMP/ai_defines.json"
+      - name: Build iOS (no codesign)
+        run: flutter build ios --release --no-codesign --dart-define-from-file="${{ runner.temp }}/ai_defines.json"
+      - name: Package IPA
+        shell: bash
+        run: |
+          mkdir -p Payload
+          cp -R build/ios/iphoneos/Runner.app Payload/
+          zip -qry ZAI-X-ios-unsigned.ipa Payload
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ios-ipa
+          path: ZAI-X-ios-unsigned.ipa
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 \
+            || gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes \
+            || true
+          gh release upload "$GITHUB_REF_NAME" ZAI-X-ios-unsigned.ipa --repo "$GITHUB_REPOSITORY" --clobber

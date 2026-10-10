@@ -27,6 +27,20 @@ class Utils {
   static DateFormat dateTimeFormat = DateFormat("MM-dd HH:mm");
   static DateFormat dateTimeFormatWithYear = DateFormat("yyyy-MM-dd HH:mm");
 
+  /// iPad 的分享面板是 popover，必须指定锚点，否则 share_plus 会直接报错。
+  /// 没有具体按钮可锚定时，就以屏幕中央为锚点。
+  static Rect? sharePositionOrigin() {
+    var context = Get.context;
+    if (context == null) return null;
+    var size = MediaQuery.maybeSizeOf(context);
+    if (size == null || size.isEmpty) return null;
+    return Rect.fromCenter(
+      center: Offset(size.width / 2, size.height / 2),
+      width: 1,
+      height: 1,
+    );
+  }
+
   /// 版本号解析
   static int parseVersion(String version) {
     var sp = version.split('.');
@@ -217,7 +231,10 @@ class Utils {
             onTap: () {
               Get.back();
               SharePlus.instance.share(
-                ShareParams(text: content.isEmpty ? url : "$content\n$url"),
+                ShareParams(
+                  text: content.isEmpty ? url : "$content\n$url",
+                  sharePositionOrigin: sharePositionOrigin(),
+                ),
               );
             },
           ),

@@ -16,6 +16,7 @@ import 'package:zai_x/services/db_service.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:zai_x/app/i18n.dart';
+import 'package:zai_x/app/utils.dart';
 
 class ComicDownloadedDetailController extends GetxController {
   final ComicDownloadedItem info;
@@ -235,7 +236,10 @@ class ComicDownloadedDetailController extends GetxController {
       exitEditMode();
       if (mobile) {
         await SharePlus.instance.share(
-          ShareParams(files: files.map((e) => XFile(e)).toList()),
+          ShareParams(
+            files: files.map((e) => XFile(e)).toList(),
+            sharePositionOrigin: Utils.sharePositionOrigin(),
+          ),
         );
       } else {
         SmartDialog.showToast('已导出到：$outputDir'.i18n);
