@@ -13,6 +13,9 @@ class CommentRequest {
   /// - [objId] ID
   /// - [page] 页数
   /// - [pageSize] 每页数量
+  ///
+  /// 需带登录凭证：标记为「需登录」的作品（is_need_login=1），
+  /// 未带 Authorization 时接口一律返回空列表（#6）。
   Future<List<CommentItem>> getComment({
     required int type,
     required int objId,
@@ -31,6 +34,7 @@ class CommentRequest {
         "page": page,
         "size": pageSize,
       },
+      needLogin: true,
     );
     HttpClient.checkErrno(result);
     if (result["data"]["commentIdList"] == null) {
