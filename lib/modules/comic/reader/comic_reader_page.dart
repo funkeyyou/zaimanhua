@@ -9,6 +9,7 @@ import 'package:zai_x/app/app_constant.dart';
 import 'package:zai_x/app/app_style.dart';
 import 'package:zai_x/app/log.dart';
 import 'package:zai_x/modules/comic/reader/comic_reader_controller.dart';
+import 'package:zai_x/modules/comic/reader/vertical_page_width.dart';
 import 'package:zai_x/services/app_settings_service.dart';
 import 'package:zai_x/widgets/custom_header.dart';
 import 'package:zai_x/widgets/chapter_swipe_boundary.dart';
@@ -87,11 +88,10 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                                 ? controller.nextPage()
                                 : controller.forwardPage();
                           },
-                          child: Container(
-                            width: double.infinity,
-                            height: double.infinity,
-                            color: Colors.transparent,
-                          ),
+                          // 不要给子元件上色：有颜色的 Container 会把触控整块吃掉，
+                          // 下方的列表收不到滑动（条漫收窄后两侧空白就滑不动）。
+                          // 这里只接点击，滑动交给底下的阅读列表。
+                          child: const SizedBox.expand(),
                         ),
                       ),
                       Expanded(
@@ -107,11 +107,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
                                 ? controller.forwardPage()
                                 : controller.nextPage();
                           },
-                          child: Container(
-                            width: double.infinity,
-                            height: double.infinity,
-                            color: Colors.transparent,
-                          ),
+                          child: const SizedBox.expand(),
                         ),
                       ),
                     ],
@@ -449,6 +445,28 @@ class ComicReaderPage extends GetView<ComicReaderController> {
   }
 
   Widget buildVertical() {
+    // 与 buildHorizontal 相同：响应式读取留在 Obx 的 build 期间，再交给 LayoutBuilder
+    final widthMode = controller.settings.comicReaderVerticalWidthMode.value;
+    final widthPercent =
+        controller.settings.comicReaderVerticalWidthPercent.value;
+    return LayoutBuilder(
+      builder: (context, box) {
+        final pageWidth = verticalPageWidth(
+          maxWidth: box.maxWidth,
+          maxHeight: box.maxHeight,
+          mode: widthMode,
+          percent: widthPercent,
+        );
+        return buildVerticalList(pageWidth);
+      },
+    );
+  }
+
+  /// 上下滚动列表。[pageWidth] 小于屏宽时图片置中，两侧空白仍在列表内，可直接滑动。
+  Widget buildVerticalList(double pageWidth) {
+    Widget fit(Widget child) => Center(
+          child: SizedBox(width: pageWidth, child: child),
+        );
     return EasyRefresh(
       header: MaterialHeader2(
         triggerOffset: kScrollChapterSwitchTriggerOffset,
@@ -492,15 +510,15 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         itemBuilder: (_, i) {
           if (i == controller.detail.value.pageUrls.length - 1 &&
               controller.detail.value.pageUrls[i] == "TC") {
-            return buildViewPoints(shrinkWrap: true);
+            return fit(buildViewPoints(shrinkWrap: true));
           }
           var url = controller.detail.value.pageUrls[i];
-          return Container(
+          return fit(Container(
             constraints: const BoxConstraints(
               minHeight: 200,
             ),
             child: buildPageImage(url, i, vertical: true),
-          );
+          ));
         },
       ),
     );

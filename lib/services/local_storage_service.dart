@@ -105,6 +105,14 @@ class LocalStorageService extends GetxService {
   /// 双页模式下首页（封面）单独占一页
   static const String kComicReaderDualPageCover = "ComicReaderDualPageCover";
 
+  /// 条漫宽度模式 0=铺满 1=自动 2=自定义（上下滚动时生效）
+  static const String kComicReaderVerticalWidthMode =
+      "ComicReaderVerticalWidthMode";
+
+  /// 条漫自定义宽度（占屏宽百分比）
+  static const String kComicReaderVerticalWidthPercent =
+      "ComicReaderVerticalWidthPercent";
+
   /// 订阅更新提醒
   static const String kSubscribeNotify = "SubscribeNotify";
 

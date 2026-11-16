@@ -47,6 +47,10 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kComicReaderDualPage, 1);
     comicReaderDualPageCover.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderDualPageCover, true);
+    comicReaderVerticalWidthMode.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderVerticalWidthMode, 1);
+    comicReaderVerticalWidthPercent.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderVerticalWidthPercent, 70);
     subscribeNotify.value = LocalStorageService.instance
         .getValue(LocalStorageService.kSubscribeNotify, false);
     subscribeNotifyHours.value = LocalStorageService.instance
@@ -507,6 +511,24 @@ class AppSettingsService extends GetxController {
     comicReaderDualPageCover.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kComicReaderDualPageCover, value);
+  }
+
+  /// 条漫宽度（上下滚动时生效），见 VerticalPageWidthMode
+  /// * [0] 铺满
+  /// * [1] 自动：方形折叠屏展开、平板、横屏时收窄
+  /// * [2] 自定义百分比
+  RxInt comicReaderVerticalWidthMode = 1.obs;
+  void setComicReaderVerticalWidthMode(int value) {
+    comicReaderVerticalWidthMode.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderVerticalWidthMode, value);
+  }
+
+  RxInt comicReaderVerticalWidthPercent = 70.obs;
+  void setComicReaderVerticalWidthPercent(int value) {
+    comicReaderVerticalWidthPercent.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderVerticalWidthPercent, value);
   }
 
   /// 订阅更新提醒（仅 Android/iOS）

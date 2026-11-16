@@ -34,6 +34,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zai_x/app/i18n.dart';
 import 'comic_reader_source.dart';
+import 'vertical_page_width.dart';
 
 class ComicReaderController extends BaseController {
   final ComicReaderSource? externalSource;
@@ -1082,6 +1083,16 @@ class ComicReaderController extends BaseController {
                         ),
                       ),
                     ),
+                    Visibility(
+                      //条漫宽度只在上下滚动时生效
+                      visible: direction.value == ReaderDirection.kUpToDown,
+                      child: Padding(
+                        padding: AppStyle.edgeInsetsT12,
+                        child: buildBGItem(
+                          child: buildVerticalWidthSetting(),
+                        ),
+                      ),
+                    ),
                     AppStyle.vGap12,
                     buildBGItem(
                       child: SwitchListTile(
@@ -1181,6 +1192,90 @@ class ComicReaderController extends BaseController {
       ),
       onPressed: onTap,
       child: child,
+    );
+  }
+
+  /// 条漫宽度：方形折叠屏展开或平板上，收窄图片让一屏看到更多内容。
+  /// 两侧空白仍在滚动列表内，与系统的「16:9 显示」不同，空白处也能滑动。
+  Widget buildVerticalWidthSetting() {
+    final mode = settings.comicReaderVerticalWidthMode.value;
+    final percent = settings.comicReaderVerticalWidthPercent.value
+        .clamp(kVerticalPageWidthMinPercent, kVerticalPageWidthMaxPercent);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListTile(
+          title: Text("条漫宽度".i18n),
+          subtitle: Text(
+            "两侧空白也能滑动".i18n,
+            style: const TextStyle(fontSize: 12),
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildSelectedButton(
+                onTap: () => settings.setComicReaderVerticalWidthMode(
+                    VerticalPageWidthMode.kFull),
+                selected: mode == VerticalPageWidthMode.kFull,
+                child: Text("铺满".i18n),
+              ),
+              AppStyle.hGap8,
+              buildSelectedButton(
+                onTap: () => settings.setComicReaderVerticalWidthMode(
+                    VerticalPageWidthMode.kAuto),
+                selected: mode == VerticalPageWidthMode.kAuto,
+                child: Text("自动".i18n),
+              ),
+              AppStyle.hGap8,
+              buildSelectedButton(
+                onTap: () => settings.setComicReaderVerticalWidthMode(
+                    VerticalPageWidthMode.kCustom),
+                selected: mode == VerticalPageWidthMode.kCustom,
+                child: Text("自定义".i18n),
+              ),
+            ],
+          ),
+        ),
+        if (mode == VerticalPageWidthMode.kAuto)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "直板手机铺满；方形折叠屏展开、平板或横屏时收窄到 16:9 的宽度".i18n,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+            ),
+          ),
+        if (mode == VerticalPageWidthMode.kCustom)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 16, 4),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Slider(
+                    value: percent.toDouble(),
+                    min: kVerticalPageWidthMinPercent.toDouble(),
+                    max: kVerticalPageWidthMaxPercent.toDouble(),
+                    divisions: (kVerticalPageWidthMaxPercent -
+                            kVerticalPageWidthMinPercent) ~/
+                        5,
+                    label: "$percent%",
+                    onChanged: (e) =>
+                        settings.setComicReaderVerticalWidthPercent(e.round()),
+                  ),
+                ),
+                SizedBox(
+                  width: 44,
+                  child: Text(
+                    "$percent%",
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 
