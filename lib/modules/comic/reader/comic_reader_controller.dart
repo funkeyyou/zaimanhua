@@ -34,6 +34,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zai_x/app/i18n.dart';
 import 'comic_reader_source.dart';
+import 'continuous_chapters.dart';
 import 'vertical_page_width.dart';
 
 class ComicReaderController extends BaseController {
@@ -129,10 +130,28 @@ class ComicReaderController extends BaseController {
   bool get coverAlone =>
       preferences.value.coverAlone ?? settings.comicReaderDualPageCover.value;
   int _layoutGeneration = 0;
-  final _loadedPages = <int>{};
-  bool _completionRecorded = false;
+
+  /// 各话已解码完成的页（章节id -> 页码）
+  final _loadedPages = <int, Set<int>>{};
+
+  /// 已记为读完的章节id
+  final _completedChapters = <int>{};
   ComicCompletionService? _completion;
   int get pageGeneration => _loadGeneration;
+
+  /// 上下滚动时同一条列表里的各话；没开连续阅读时只有当前这一话
+  final segments = <ReaderSegment>[].obs;
+
+  /// 当前所在的是 [segments] 的第几段
+  int _activeSegment = 0;
+
+  ContinuousChapters get continuous => ContinuousChapters(segments);
+
+  /// 连续阅读：上下滚动到本话底部时直接接上下一话
+  bool get continuousReading =>
+      direction.value == ReaderDirection.kUpToDown &&
+      externalSource == null &&
+      settings.comicReaderContinuous.value;
 
   /// 左手模式
   bool get leftHandMode => settings.comicReaderLeftHandMode.value;
@@ -310,8 +329,33 @@ class ComicReaderController extends BaseController {
             position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
         .index;
 
-    currentIndex.value = index;
+    final position = continuous.resolve(index);
+    if (position == null) return;
+    final switched = position.segment != _activeSegment;
+    if (switched) {
+      _activateSegment(position.segment);
+    }
+    currentIndex.value = position.isHeader ? 0 : position.page;
+    if (switched) {
+      uploadHistory();
+    }
     markCompletedIfVisible();
+  }
+
+  /// 捲进另一话时，把阅读状态（章节、进度、吐槽、已读）切过去
+  void _activateSegment(int index) {
+    if (index < 0 || index >= segments.length || index == _activeSegment) {
+      return;
+    }
+    // 先存好上一话停在哪
+    uploadHistory();
+    _activeSegment = index;
+    final segment = segments[index];
+    chapterIndex.value = segment.chapterIndex;
+    detail.value = segment.detail;
+    buildPageGroups();
+    _markChapterRead(segment.detail.chapterId);
+    loadViewPoints();
   }
 
   /// 加载信息
@@ -320,7 +364,8 @@ class ComicReaderController extends BaseController {
     final generation = ++_loadGeneration;
     _historyReady = false;
     _loadedPages.clear();
-    _completionRecorded = false;
+    _completedChapters.clear();
+    _appendFuture = null;
     final chapterId = chapters[chapterIndex.value].chapterId;
     try {
       // 预先抓好的下一话可以直接用，省掉整屏 loading
@@ -368,6 +413,10 @@ class ComicReaderController extends BaseController {
       }
 
       detail.value = result;
+      segments.value = [
+        ReaderSegment(chapterIndex: chapterIndex.value, detail: result),
+      ];
+      _activeSegment = 0;
       buildPageGroups();
       // 章节内容真的载入了才算看过，避免 VIP、载入失败的话被标成已读
       _markChapterRead(chapterId);
@@ -424,24 +473,94 @@ class ComicReaderController extends BaseController {
       if (isClosed) return;
       _prefetchedChapters.clear();
       _prefetchedChapters[item.chapterId] = result;
-      for (var url in result.pageUrls.take(2)) {
-        if (isClosed) return;
-        if (url.isEmpty || url == "TC") {
-          continue;
-        }
-        try {
-          await ExtendedNetworkImageProvider(
-            url,
-            cache: true,
-            headers: const {'Referer': "http://www.zaimanhua.com/"},
-          ).getNetworkImageData();
-        } catch (_) {}
-      }
+      await _precacheFirstPages(result);
     } catch (e) {
       Log.logPrint(e);
     } finally {
       _prefetchingChapterId = null;
     }
+  }
+
+  Future<void> _precacheFirstPages(ComicChapterDetail result) async {
+    for (var url in result.pageUrls.take(2)) {
+      if (isClosed) return;
+      if (url.isEmpty || url == "TC") {
+        continue;
+      }
+      try {
+        await ExtendedNetworkImageProvider(
+          url,
+          cache: true,
+          headers: const {'Referer': "http://www.zaimanhua.com/"},
+        ).getNetworkImageData();
+      } catch (_) {}
+    }
+  }
+
+  Future<bool>? _appendFuture;
+  int? _appendingChapterId;
+
+  /// 连续阅读：把下一话接在列表最后面。同一话只会抓一次。
+  Future<bool> appendNextChapter() {
+    if (!continuousReading || segments.isEmpty) return Future.value(false);
+    final next = segments.last.chapterIndex + 1;
+    if (next >= chapters.length || chapters[next].isVip) {
+      return Future.value(false);
+    }
+    final item = chapters[next];
+    if (_appendingChapterId == item.chapterId && _appendFuture != null) {
+      return _appendFuture!;
+    }
+    _appendingChapterId = item.chapterId;
+    final future = _appendChapter(next, _loadGeneration);
+    _appendFuture = future;
+    return future;
+  }
+
+  Future<bool> _appendChapter(int index, int generation) async {
+    final item = chapters[index];
+    try {
+      final result = _prefetchedChapters.remove(item.chapterId) ??
+          await request.chapterDetail(
+            comicId: comicId,
+            chapterId: item.chapterId,
+            useHD: AppSettingsService.instance.comicReaderHD.value,
+          );
+      if (isClosed ||
+          generation != _loadGeneration ||
+          segments.isEmpty ||
+          segments.last.chapterIndex != index - 1 ||
+          result.pageUrls.isEmpty) {
+        return false;
+      }
+      if (supportsComments && settings.comicReaderShowViewPoint.value) {
+        result.pageUrls.add("TC");
+      }
+      segments.add(
+        ReaderSegment(chapterIndex: index, detail: result, header: true),
+      );
+      unawaited(_precacheFirstPages(result));
+      return true;
+    } catch (e) {
+      Log.logPrint(e);
+      return false;
+    } finally {
+      if (_appendingChapterId == item.chapterId) {
+        _appendingChapterId = null;
+        _appendFuture = null;
+      }
+    }
+  }
+
+  /// 上下滚动拉到最底：连续阅读时接上下一话，接不上再照旧换话
+  Future<void> loadNextFromBottom() async {
+    if (continuousReading &&
+        segments.isNotEmpty &&
+        _activeSegment == segments.length - 1 &&
+        await appendNextChapter()) {
+      return;
+    }
+    nextChapter();
   }
 
   /// 距离本话结尾还有几页时开始预抓
@@ -453,6 +572,13 @@ class ComicReaderController extends BaseController {
       return;
     }
     if (currentIndex.value < urls.length - kPrefetchAheadPages) {
+      return;
+    }
+    if (continuousReading) {
+      // 只在最后一段快看完时才往后接
+      if (_activeSegment == segments.length - 1) {
+        appendNextChapter();
+      }
       return;
     }
     prefetchNextChapter();
@@ -565,6 +691,11 @@ class ComicReaderController extends BaseController {
       SmartDialog.showToast("后面没有了".i18n);
       return;
     }
+    // 下一话已经接在列表里，直接捲过去就好
+    if (continuousReading && _activeSegment + 1 < segments.length) {
+      _jumpToSegment(_activeSegment + 1, 0);
+      return;
+    }
 
     chapterIndex.value += 1;
     loadDetail();
@@ -579,10 +710,21 @@ class ComicReaderController extends BaseController {
       SmartDialog.showToast("前面没有了".i18n);
       return;
     }
+    if (continuousReading && _activeSegment > 0) {
+      final previous = segments[_activeSegment - 1];
+      _jumpToSegment(_activeSegment - 1,
+          toLastPage ? previous.detail.pageUrls.length - 1 : 0);
+      return;
+    }
 
     openAtLastPage = toLastPage;
     chapterIndex.value -= 1;
     loadDetail();
+  }
+
+  void _jumpToSegment(int segment, int page) {
+    if (!itemScrollController.isAttached) return;
+    itemScrollController.jumpTo(index: continuous.indexOf(segment, page));
   }
 
   DateTime? _lastChapterSwitchAt;
@@ -727,7 +869,8 @@ class ComicReaderController extends BaseController {
     //竖向
     if (direction.value == ReaderDirection.kUpToDown) {
       if (itemScrollController.isAttached) {
-        itemScrollController.jumpTo(index: page);
+        itemScrollController.jumpTo(
+            index: continuous.indexOf(_activeSegment, page));
       }
       return;
     }
@@ -1093,6 +1236,27 @@ class ComicReaderController extends BaseController {
                         ),
                       ),
                     ),
+                    Visibility(
+                      visible: direction.value == ReaderDirection.kUpToDown &&
+                          externalSource == null,
+                      child: Padding(
+                        padding: AppStyle.edgeInsetsT12,
+                        child: buildBGItem(
+                          child: SwitchListTile(
+                            value: settings.comicReaderContinuous.value,
+                            onChanged: (e) {
+                              settings.setComicReaderContinuous(e);
+                              if (e) maybePrefetchNextChapter();
+                            },
+                            title: Text("连续阅读".i18n),
+                            subtitle: Text(
+                              "看到这话底部直接接上下一话".i18n,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                     AppStyle.vGap12,
                     buildBGItem(
                       child: SwitchListTile(
@@ -1341,27 +1505,32 @@ class ComicReaderController extends BaseController {
   }
 
   /// 图片解码完成后回报。预加载的末页、旧话的迟到回调不能提前清除更新提醒。
-  void onPageImageLoaded(int generation, int page) {
+  void onPageImageLoaded(int generation, int page, {int? chapterId}) {
     if (isClosed || generation != _loadGeneration) return;
-    _loadedPages.add(page);
+    (_loadedPages[chapterId ?? detail.value.chapterId] ??= <int>{}).add(page);
     markCompletedIfVisible();
   }
 
   void markCompletedIfVisible() {
     if (externalSource != null) return;
+    final chapterId = detail.value.chapterId;
     if (isClosed ||
         !_historyReady ||
         pageLoadding.value ||
         pageError.value ||
-        _completionRecorded) {
+        _completedChapters.contains(chapterId)) {
       return;
     }
     final count = detail.value.pageUrls.where((url) => url != 'TC').length;
-    if (count == 0 || !_loadedPages.contains(count - 1)) return;
+    if (count == 0 ||
+        !(_loadedPages[chapterId]?.contains(count - 1) ?? false)) {
+      return;
+    }
     bool visible;
     if (direction.value == ReaderDirection.kUpToDown) {
+      final last = continuous.indexOf(_activeSegment, count - 1);
       visible = itemPositionsListener.itemPositions.value.any((p) =>
-          p.index == count - 1 &&
+          p.index == last &&
           p.itemTrailingEdge > 0 &&
           p.itemTrailingEdge <= 1.01);
     } else {
@@ -1371,33 +1540,36 @@ class ComicReaderController extends BaseController {
           : currentIndex.value == count - 1;
     }
     if (!visible) return;
-    _completionRecorded = true;
-    final generation = _loadGeneration;
+    _completedChapters.add(chapterId);
     final service = _completion ?? ComicCompletionService.current();
     unawaited(service
-        .setChapters(comicId, [detail.value.chapterId], completed: true)
+        .setChapters(comicId, [chapterId], completed: true)
         .catchError((e) {
-      if (generation == _loadGeneration) _completionRecorded = false;
+      _completedChapters.remove(chapterId);
       Log.logPrint(e);
     }));
   }
 
   void setShowViewPoint(bool value) {
     if (!supportsComments) return;
-    if (value) {
-      if (!detail.value.pageUrls.contains("TC")) {
-        detail.update((val) {
-          val!.pageUrls.add("TC");
-        });
-      }
-    } else {
-      if (detail.value.pageUrls.contains("TC")) {
-        detail.update((val) {
-          val!.pageUrls.remove("TC");
-        });
+    final targets = <ComicChapterDetail>{
+      detail.value,
+      for (final segment in segments) segment.detail,
+    };
+    for (final target in targets) {
+      if (value && !target.pageUrls.contains("TC")) {
+        target.pageUrls.add("TC");
+      } else if (!value) {
+        target.pageUrls.remove("TC");
       }
     }
+    detail.refresh();
+    segments.refresh();
     buildPageGroups();
+    if (direction.value == ReaderDirection.kUpToDown && segments.length > 1) {
+      // 前面几话的吐槽页增减会让位置位移，重新对回当前页
+      _restoreAfterLayout(currentIndex.value);
+    }
   }
 
   void uploadHistory() {

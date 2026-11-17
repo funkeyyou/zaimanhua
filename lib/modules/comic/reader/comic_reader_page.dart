@@ -9,12 +9,14 @@ import 'package:zai_x/app/app_constant.dart';
 import 'package:zai_x/app/app_style.dart';
 import 'package:zai_x/app/log.dart';
 import 'package:zai_x/modules/comic/reader/comic_reader_controller.dart';
+import 'package:zai_x/modules/comic/reader/continuous_chapters.dart';
 import 'package:zai_x/modules/comic/reader/vertical_page_width.dart';
 import 'package:zai_x/services/app_settings_service.dart';
 import 'package:zai_x/widgets/custom_header.dart';
 import 'package:zai_x/widgets/chapter_swipe_boundary.dart';
 import 'package:zai_x/widgets/local_image.dart';
 import 'package:zai_x/widgets/net_image.dart';
+import 'package:zai_x/widgets/vertical_zoom_view.dart';
 import 'package:zai_x/widgets/status/app_error_widget.dart';
 import 'package:zai_x/widgets/status/app_loadding_widget.dart';
 import 'package:get/get.dart';
@@ -426,18 +428,18 @@ class ComicReaderPage extends GetView<ComicReaderController> {
     );
   }
 
-  Widget buildPageImage(String url, int page, {bool vertical = false}) {
+  Widget buildPageImage(String url, int page,
+      {bool vertical = false, int? chapterId}) {
     final generation = controller.pageGeneration;
-    void loaded() => controller.onPageImageLoaded(generation, page);
+    void loaded() =>
+        controller.onPageImageLoaded(generation, page, chapterId: chapterId);
+    final key = ValueKey('$generation:${chapterId ?? 0}:$page:$url');
     return controller.detail.value.isLocal
-        ? LocalImage(url,
-            key: ValueKey('$generation:$page:$url'),
-            fit: BoxFit.contain,
-            onLoaded: loaded)
+        ? LocalImage(url, key: key, fit: BoxFit.contain, onLoaded: loaded)
         : NetImage(
             url,
             headers: controller.imageHeaders,
-            key: ValueKey('$generation:$page:$url'),
+            key: key,
             fit: vertical ? BoxFit.fitWidth : BoxFit.contain,
             progress: true,
             onLoaded: loaded,
@@ -449,6 +451,8 @@ class ComicReaderPage extends GetView<ComicReaderController> {
     final widthMode = controller.settings.comicReaderVerticalWidthMode.value;
     final widthPercent =
         controller.settings.comicReaderVerticalWidthPercent.value;
+    // 连续阅读接上新的一话时要重建列表，所以在这里读取（LayoutBuilder 内不会被追踪）
+    final chapters = ContinuousChapters(controller.segments.toList());
     return LayoutBuilder(
       builder: (context, box) {
         final pageWidth = verticalPageWidth(
@@ -457,13 +461,14 @@ class ComicReaderPage extends GetView<ComicReaderController> {
           mode: widthMode,
           percent: widthPercent,
         );
-        return buildVerticalList(pageWidth);
+        return buildVerticalList(pageWidth, chapters);
       },
     );
   }
 
   /// 上下滚动列表。[pageWidth] 小于屏宽时图片置中，两侧空白仍在列表内，可直接滑动。
-  Widget buildVerticalList(double pageWidth) {
+  /// 开了连续阅读时，[chapters] 里会有接在后面的几话。
+  Widget buildVerticalList(double pageWidth, ContinuousChapters chapters) {
     Widget fit(Widget child) => Center(
           child: SizedBox(width: pageWidth, child: child),
         );
@@ -501,25 +506,60 @@ class ComicReaderPage extends GetView<ComicReaderController> {
         controller.forwardChapter();
       },
       onLoad: () async {
-        controller.nextChapter();
+        await controller.loadNextFromBottom();
       },
-      child: ScrollablePositionedList.builder(
-        itemScrollController: controller.itemScrollController,
-        itemCount: controller.detail.value.pageUrls.length,
-        itemPositionsListener: controller.itemPositionsListener,
-        itemBuilder: (_, i) {
-          if (i == controller.detail.value.pageUrls.length - 1 &&
-              controller.detail.value.pageUrls[i] == "TC") {
-            return fit(buildViewPoints(shrinkWrap: true));
-          }
-          var url = controller.detail.value.pageUrls[i];
-          return fit(Container(
-            constraints: const BoxConstraints(
-              minHeight: 200,
+      child: VerticalZoomView(
+        builder: (context, scrollLocked) => ScrollablePositionedList.builder(
+          itemScrollController: controller.itemScrollController,
+          itemCount: chapters.itemCount,
+          itemPositionsListener: controller.itemPositionsListener,
+          // 双指缩放时停住列表，免得边捏边跑
+          physics: scrollLocked ? const NeverScrollableScrollPhysics() : null,
+          itemBuilder: (_, i) {
+            final position = chapters.resolve(i);
+            if (position == null) {
+              return const SizedBox();
+            }
+            final segment = chapters.segments[position.segment];
+            if (position.isHeader) {
+              return fit(buildChapterDivider(segment));
+            }
+            final url = segment.detail.pageUrls[position.page];
+            if (url == "TC") {
+              return fit(buildViewPoints(shrinkWrap: true));
+            }
+            return fit(Container(
+              constraints: const BoxConstraints(
+                minHeight: 200,
+              ),
+              child: buildPageImage(url, position.page,
+                  vertical: true, chapterId: segment.detail.chapterId),
+            ));
+          },
+        ),
+      ),
+    );
+  }
+
+  /// 连续阅读时两话之间的分隔
+  Widget buildChapterDivider(ReaderSegment segment) {
+    final title = segment.chapterIndex < controller.chapters.length
+        ? controller.chapters[segment.chapterIndex].chapterTitle
+        : segment.detail.chapterTitle;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+      child: Row(
+        children: [
+          const Expanded(child: Divider(color: Colors.white24)),
+          Padding(
+            padding: AppStyle.edgeInsetsH12,
+            child: Text(
+              title.i18n,
+              style: const TextStyle(color: Colors.white70, fontSize: 14),
             ),
-            child: buildPageImage(url, i, vertical: true),
-          ));
-        },
+          ),
+          const Expanded(child: Divider(color: Colors.white24)),
+        ],
       ),
     );
   }

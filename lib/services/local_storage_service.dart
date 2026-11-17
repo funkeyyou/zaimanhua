@@ -113,6 +113,9 @@ class LocalStorageService extends GetxService {
   static const String kComicReaderVerticalWidthPercent =
       "ComicReaderVerticalWidthPercent";
 
+  /// 上下滚动时连续阅读（看到底直接接上下一话）
+  static const String kComicReaderContinuous = "ComicReaderContinuous";
+
   /// 订阅更新提醒
   static const String kSubscribeNotify = "SubscribeNotify";
 

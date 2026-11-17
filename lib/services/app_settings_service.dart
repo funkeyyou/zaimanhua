@@ -51,6 +51,8 @@ class AppSettingsService extends GetxController {
         .getValue(LocalStorageService.kComicReaderVerticalWidthMode, 1);
     comicReaderVerticalWidthPercent.value = LocalStorageService.instance
         .getValue(LocalStorageService.kComicReaderVerticalWidthPercent, 70);
+    comicReaderContinuous.value = LocalStorageService.instance
+        .getValue(LocalStorageService.kComicReaderContinuous, true);
     subscribeNotify.value = LocalStorageService.instance
         .getValue(LocalStorageService.kSubscribeNotify, false);
     subscribeNotifyHours.value = LocalStorageService.instance
@@ -529,6 +531,14 @@ class AppSettingsService extends GetxController {
     comicReaderVerticalWidthPercent.value = value;
     LocalStorageService.instance
         .setValue(LocalStorageService.kComicReaderVerticalWidthPercent, value);
+  }
+
+  /// 上下滚动时连续阅读：看到本话底部直接接上下一话
+  RxBool comicReaderContinuous = true.obs;
+  void setComicReaderContinuous(bool value) {
+    comicReaderContinuous.value = value;
+    LocalStorageService.instance
+        .setValue(LocalStorageService.kComicReaderContinuous, value);
   }
 
   /// 订阅更新提醒（仅 Android/iOS）
