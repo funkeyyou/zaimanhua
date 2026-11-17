@@ -86,7 +86,7 @@ void main() {
       reader.currentIndex.value = 4;
       reader.uploadHistory();
       reader.loadViewPoints();
-      reader.setShowViewPoint(true);
+      reader.syncViewPointPages();
       reader.markCompletedIfVisible();
       expect(saved, 4);
       expect(reader.detail.value.pageUrls, hasLength(5));

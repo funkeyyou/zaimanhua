@@ -522,7 +522,7 @@ class ComicReaderPage extends GetView<ComicReaderController> {
             }
             final segment = chapters.segments[position.segment];
             if (position.isHeader) {
-              return fit(buildChapterDivider(segment));
+              return const SizedBox.shrink();
             }
             final url = segment.detail.pageUrls[position.page];
             if (url == "TC") {
@@ -537,29 +537,6 @@ class ComicReaderPage extends GetView<ComicReaderController> {
             ));
           },
         ),
-      ),
-    );
-  }
-
-  /// 连续阅读时两话之间的分隔
-  Widget buildChapterDivider(ReaderSegment segment) {
-    final title = segment.chapterIndex < controller.chapters.length
-        ? controller.chapters[segment.chapterIndex].chapterTitle
-        : segment.detail.chapterTitle;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-      child: Row(
-        children: [
-          const Expanded(child: Divider(color: Colors.white24)),
-          Padding(
-            padding: AppStyle.edgeInsetsH12,
-            child: Text(
-              title.i18n,
-              style: const TextStyle(color: Colors.white70, fontSize: 14),
-            ),
-          ),
-          const Expanded(child: Divider(color: Colors.white24)),
-        ],
       ),
     );
   }

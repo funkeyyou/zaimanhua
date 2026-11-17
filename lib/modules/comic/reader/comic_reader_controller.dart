@@ -153,6 +153,13 @@ class ComicReaderController extends BaseController {
       externalSource == null &&
       settings.comicReaderContinuous.value;
 
+  /// 每话结尾要不要接吐槽页。连续阅读时两话要无缝接上，不放吐槽区；
+  /// 吐槽仍可从下方菜单的吐槽按钮打开。
+  bool get showViewPointPage =>
+      supportsComments &&
+      settings.comicReaderShowViewPoint.value &&
+      !continuousReading;
+
   /// 左手模式
   bool get leftHandMode => settings.comicReaderLeftHandMode.value;
 
@@ -408,7 +415,7 @@ class ComicReaderController extends BaseController {
         initialIndex = result.pageUrls.isEmpty ? 0 : result.pageUrls.length - 1;
       }
       currentIndex.value = initialIndex;
-      if (supportsComments && settings.comicReaderShowViewPoint.value) {
+      if (showViewPointPage) {
         result.pageUrls.add("TC");
       }
 
@@ -533,12 +540,9 @@ class ComicReaderController extends BaseController {
           result.pageUrls.isEmpty) {
         return false;
       }
-      if (supportsComments && settings.comicReaderShowViewPoint.value) {
-        result.pageUrls.add("TC");
-      }
-      segments.add(
-        ReaderSegment(chapterIndex: index, detail: result, header: true),
-      );
+      // 连续阅读接上的话不放吐槽页（见 showViewPointPage），也不加分隔，
+      // 下一话第一张图直接接在上一话最后一张后面；换话只反映在状态栏。
+      segments.add(ReaderSegment(chapterIndex: index, detail: result));
       unawaited(_precacheFirstPages(result));
       return true;
     } catch (e) {
@@ -1246,6 +1250,7 @@ class ComicReaderController extends BaseController {
                             value: settings.comicReaderContinuous.value,
                             onChanged: (e) {
                               settings.setComicReaderContinuous(e);
+                              syncViewPointPages();
                               if (e) maybePrefetchNextChapter();
                             },
                             title: Text("连续阅读".i18n),
@@ -1300,7 +1305,7 @@ class ComicReaderController extends BaseController {
                           value: settings.comicReaderShowViewPoint.value,
                           onChanged: (e) {
                             settings.setComicReaderShowViewPoint(e);
-                            setShowViewPoint(e);
+                            syncViewPointPages();
                           },
                           title: Text("显示吐槽".i18n),
                         ),
@@ -1448,6 +1453,8 @@ class ComicReaderController extends BaseController {
     initialIndex = currentIndex.value;
     _savePreferences(preferences.value.copyWith(direction: value));
     direction.value = value;
+    // 上下滚动与左右翻页的吐槽页规则不同（连续阅读只在上下滚动生效）
+    syncViewPointPages();
     buildPageGroups();
     _restoreAfterLayout(initialIndex);
   }
@@ -1478,6 +1485,7 @@ class ComicReaderController extends BaseController {
     direction.value = isLongComic
         ? ReaderDirection.kUpToDown
         : settings.comicReaderDirection.value;
+    syncViewPointPages();
     buildPageGroups();
     _restoreAfterLayout(page);
   }
@@ -1550,26 +1558,29 @@ class ComicReaderController extends BaseController {
     }));
   }
 
-  void setShowViewPoint(bool value) {
+  /// 依目前设置（显示吐槽、连续阅读、阅读方向）补上或拿掉各话结尾的吐槽页
+  void syncViewPointPages() {
     if (!supportsComments) return;
+    final value = showViewPointPage;
     final targets = <ComicChapterDetail>{
       detail.value,
       for (final segment in segments) segment.detail,
     };
+    var changed = false;
     for (final target in targets) {
       if (value && !target.pageUrls.contains("TC")) {
         target.pageUrls.add("TC");
-      } else if (!value) {
-        target.pageUrls.remove("TC");
+        changed = true;
+      } else if (!value && target.pageUrls.remove("TC")) {
+        changed = true;
       }
     }
+    if (!changed) return;
     detail.refresh();
     segments.refresh();
     buildPageGroups();
-    if (direction.value == ReaderDirection.kUpToDown && segments.length > 1) {
-      // 前面几话的吐槽页增减会让位置位移，重新对回当前页
-      _restoreAfterLayout(currentIndex.value);
-    }
+    // 吐槽页增减会让位置位移（或当前正停在吐槽页），重新对回当前页
+    _restoreAfterLayout(currentIndex.value);
   }
 
   void uploadHistory() {
